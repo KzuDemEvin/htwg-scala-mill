@@ -1,12 +1,34 @@
-case class Cell(x:Int, y:Int)
+case class Stone(value:Boolean, color:String) {
+  def isSet:Boolean = value
+  def whichColor:String = color
+}
 
-val cell1 = Cell(4,5)
-cell1.x
-cell1.y
+val stone1 = Stone(value = true, "white")
+val stone2 = Stone(value = true, "black")
+val stone3 = Stone(value = false, "white")
 
-case class Field(cells: Array[Cell])
 
-val field1 = Field(Array.ofDim[Cell](1))
-field1.cells(0)=cell1
-field1.cells(0).x
-field1.cells(0).y
+//case class Field(stones: Vector[Stone])
+
+val playground = Vector[Stone]()
+playground ++ Seq(stone1, stone2, stone3)
+
+val colorStone1 = stone1.whichColor
+printf("Color stone1: %s", colorStone1)
+
+def printGameboard(): String = {
+  val gameboard =
+    """|
+     |0------0------0
+       || 0----0----0 |
+       ||   0--0--0   |
+       |0   0     0   0
+       ||   0--0--0   |
+       || 0----0----0 |
+       |0------0------0
+       |""".stripMargin
+  return gameboard
+}
+val gb = printGameboard()
+
+printf("%s", gb)
