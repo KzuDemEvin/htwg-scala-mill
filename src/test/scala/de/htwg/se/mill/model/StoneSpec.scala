@@ -3,35 +3,34 @@ package de.htwg.se.mill.model
 import org.scalatest.{Matchers, WordSpec}
 
 class StoneSpec extends WordSpec with Matchers {
-  "A Stone" when {
-    "new" should {
-      val newStone = Stone(false, "white")
-      "have a value set to false" in {
-        newStone.value should be(false)
+  "A Stone" when { "new" should {
+      val newStone = Stone(0, "white")
+      "have value 0" in {
+        newStone.value should be(0)
       }
-      "have a color" in {
-        val stoneWhite = Stone(false, "white")
-        val stoneBlack = Stone(false, "black")
-        "which is white" in {
-          stoneWhite.color should be("white")
-        }
-        "which is black" in
-          stoneBlack.toString should be("Your Name")
+      "not be placed" in {
+        newStone.isSet should be(false)
       }
-    }
-    "is placed" should {
-        val stone = Stone(true, "white")
-        "have a value set to true" in {
-          stone.value should be(true)
-        }
-      "have a color" in {
-        val stoneWhite = Stone(false, "white")
-        val stoneBlack = Stone(false, "black")
-        "which is white" in {
-          stoneWhite.color should be("white")
-        }
-        "which is black" in
-          stoneBlack.toString should be("Your Name")
+      "have a color variable value white" in {
+        newStone.color should be("white")
+      }
+      "have a color white" in {
+        newStone.whichColor should be ("white")
+      }
+   }
+    "placed" should {
+      val placedStone = Stone(1, "black")
+      "have value 1" in {
+        placedStone.value should be(1)
+      }
+      "be placed" in {
+        placedStone.isSet should be(true)
+      }
+      "have a color variable value black" in {
+        placedStone.color should be("black")
+      }
+      "have a color black" in {
+        placedStone.whichColor should be("black")
       }
     }
   }
