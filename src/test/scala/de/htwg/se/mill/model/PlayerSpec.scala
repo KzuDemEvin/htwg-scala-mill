@@ -3,13 +3,22 @@ package de.htwg.se.mill.model
 import org.scalatest._
 
 class PlayerSpec extends WordSpec with Matchers {
-  "A Player" when { "new" should {
-    val player = Player("Your Name")
-    "have a name"  in {
-      player.name should be("Your Name")
+  val player1 = Player("Kevin")
+
+  "A Player" when {
+    "new" should {
+      "have a name" in {
+        player1.name should be("Kevin")
+      }
+      "should start with 9 stones" in {
+        player1.amountStones should be(9)
+      }
     }
-    "have a nice String representation" in {
-      player.toString should be("Your Name")
-    }
-  }}
+  }
+
+  "At each time a Player" should {
+   "have a nice String representation" in {
+     player1.toString should be("Name: Kevin, Amount of Stones: 9")
+   }
+  }
 }
