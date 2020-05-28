@@ -1,10 +1,10 @@
 package de.htwg.se.mill
 
-import de.htwg.se.mill.model.Player
+import de.htwg.se.mill.model.{Player, Stone}
 
 object Mill {
   def main(args: Array[String]): Unit = {
-    val student = Player("Your Name")
+    val student = Player("Kevin")
     println("Hello, " + student.name)
     val gameboard = printGameboard()
     printf("Gameboard for mill:\n")
