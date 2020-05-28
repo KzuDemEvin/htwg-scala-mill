@@ -20,13 +20,13 @@ def printGameboard(): String = {
   val gameboard =
     """|
      |0------0------0
-       || 0----0----0 |
-       ||   0--0--0   |
-       |0   0     0   0
-       ||   0--0--0   |
-       || 0----0----0 |
-       |0------0------0
-       |""".stripMargin
+     || 0----0----0 |
+     ||   0--0--0   |
+     |0   0     0   0
+     ||   0--0--0   |
+     || 0----0----0 |
+     |0------0------0
+     |""".stripMargin
   return gameboard
 }
 val gb = printGameboard()
