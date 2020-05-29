@@ -3,46 +3,41 @@ package de.htwg.se.mill.model
 import org.scalatest.{Matchers, WordSpec}
 
 class StoneSpec extends WordSpec with Matchers {
-  "A Stone" when { "new" should {
-      val newStone = Stone(0, "white")
+  "A Stone" when {
+    "white" should {
+      val whiteStone = Stone(0, Color.white)
+      "have a color variable value white" in {
+        whiteStone.color should be(Color.white)
+      }
+      "have a color white" in {
+        whiteStone.whichColor should be (Color.white)
+      }
+    }
+    "black" should {
+      val blackStone = new Stone(1, Color.black)
+      "have a color variable value black" in {
+        blackStone.color should be(Color.black)
+      }
+      "have a color black" in {
+        blackStone.whichColor should be(Color.black)
+      }
+    }
+    "new" should {
+      val newStone = new Stone(0, Color.white)
       "have value 0" in {
         newStone.value should be(0)
       }
       "not be placed" in {
         newStone.isSet should be(false)
       }
-      "have a color variable value white" in {
-        newStone.color should be("white")
-      }
-      "have a color variable value black" in {
-        newStone.color should be("black")
-      }
-      "have a color white" in {
-        newStone.whichColor should be ("white")
-      }
-      "have a color black" in {
-        newStone.whichColor should be("black")
-      }
-   }
-    "placed" should {
-      val placedStone = Stone(1, "black")
+    }
+    "placed in " should {
+      val placedStone = Stone(1, Color.black)
       "have value 1" in {
         placedStone.value should be(1)
       }
-      "be placed" in {
+      "is placed" in{
         placedStone.isSet should be(true)
-      }
-      "have a color variable value black" in {
-        placedStone.color should be("black")
-      }
-      "have a color variable value black" in {
-        placedStone.color should be("white")
-      }
-      "have a color black" in {
-        placedStone.whichColor should be("black")
-      }
-      "have a color white" in {
-        placedStone.whichColor should be("white")
       }
     }
   }

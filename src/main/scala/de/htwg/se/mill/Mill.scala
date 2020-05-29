@@ -9,6 +9,7 @@ object Mill {
     val gameboard = printGameboard()
     printf("Gameboard for mill:\n")
     printf(gameboard)
+    printf("%d", student.amountStones)
   }
 
   def printGameboard(): String = {

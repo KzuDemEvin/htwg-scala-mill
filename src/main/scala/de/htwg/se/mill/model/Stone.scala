@@ -1,6 +1,6 @@
 package de.htwg.se.mill.model
 
-case class Stone(value: Int, color: String) {
+case class Stone(value: Int, color: Color.Value) {
   def isSet:Boolean = value != 0
-  def whichColor:String = color
+  def whichColor:Color.Value = color
 }
