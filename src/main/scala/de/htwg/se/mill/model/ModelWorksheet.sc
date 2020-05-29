@@ -5,7 +5,7 @@ val stone2 = Stone(1, "black")
 val stone3 = Stone(0, "pink")
 
 
-//case class Field(stones: Vector[Stone])
+case class Field(stones: Vector[Stone])
 
 val playground = Vector[Stone]()
 playground ++ Seq(stone1, stone2, stone3)
@@ -15,19 +15,39 @@ val isSet = stone1.value
 val stoneB = Stone(0, "black")
 printf("Color stone1: %s", colorStone1)
 
-def printGameboard(): String = {
-  val gameboard =
+val gameboard1 =
     """|
-       |1------2------3
-       || 4----5----6 |
-       || | 7--8--9 | |
+       |0--0--0
+       |0     0
+       |0--0--0
+       |""".stripMargin
+val gameboard2 =
+    """|
+       |0----0----0
+       || 0--0--0 |
+       |0-0     0-0
+       || 0--0--0 |
+       |0----0----0
+       |""".stripMargin
+  val gameboard3 =
+    """|
+       |0------0------0
+       || 0----0----0 |
+       || | 0--0--0 | |
        |0-0-0     0-0-0
        || | 0--0--0 | |
        || 0----0----0 |
        |0------0------0
        |""".stripMargin
-  return gameboard
-}
-val gb = printGameboard()
-
-printf("%s", gb)
+  val gameboard4 =
+    """|
+       |0--------0--------0
+       || 0------0------0 |
+       || | 0----0----0 | |
+       || | | 0--0--0 | | |
+       |0-0-0-0     0-0-0-0
+       || | | 0--0--0 | | |
+       || | 0----0----0 | |
+       || 0------0------0 |
+       |0--------0--------0
+       |""".stripMargin

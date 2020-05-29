@@ -1,9 +1,13 @@
 package de.htwg.se.mill.model
 
-case class Player(name: String, amountStones: Int = 9) {
+case class Player(val name: String, val amountStones: Int) {
+   val noMagicNumber = 9
    def this (name: String) {
-      this(name, 9)
+      this(name, noMagicNumber)
    }
-   override def toString:String = "Name: " + name + ", Amount of Stones: " + amountStones
+
+   override def toString:String = {
+      "Name: " + name + ", Amount of Stones: " + amountStones
+   }
 }
 

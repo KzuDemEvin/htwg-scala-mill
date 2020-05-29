@@ -14,14 +14,8 @@ class StoneSpec extends WordSpec with Matchers {
       "have a color variable value white" in {
         newStone.color should be("white")
       }
-      "have a color variable value black" in {
-        newStone.color should be("black")
-      }
       "have a color white" in {
         newStone.whichColor should be ("white")
-      }
-      "have a color black" in {
-        newStone.whichColor should be("black")
       }
    }
     "placed" should {
@@ -35,14 +29,8 @@ class StoneSpec extends WordSpec with Matchers {
       "have a color variable value black" in {
         placedStone.color should be("black")
       }
-      "have a color variable value black" in {
-        placedStone.color should be("white")
-      }
       "have a color black" in {
         placedStone.whichColor should be("black")
-      }
-      "have a color white" in {
-        placedStone.whichColor should be("white")
       }
     }
   }
