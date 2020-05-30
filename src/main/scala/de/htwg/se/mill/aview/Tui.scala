@@ -4,5 +4,5 @@ import de.htwg.se.mill.model._
 
 abstract class Tui {
 
-  def processInputLine(input: String, grid:Grid)
+  //def processInputLine(input: String, grid:Grid)
 }
