@@ -40,6 +40,9 @@ import de.htwg.se.mill.model.{Cell, Player, Stone, Color, Field}
 
 //val pg =  new FieldCreator()
 val pg1 = new Player("Kevin")
+val test1 = new Field(3, Cell(true))
+val c1 = Cell(true)
+val c1 = Cell(true)
 
 
 
