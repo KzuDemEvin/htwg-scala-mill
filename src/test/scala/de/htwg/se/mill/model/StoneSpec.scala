@@ -14,7 +14,7 @@ class StoneSpec extends WordSpec with Matchers {
       }
     }
     "black" should {
-      val blackStone = new Stone(1, Color.black)
+      val blackStone = Stone(1, Color.black)
       "have a color variable value black" in {
         blackStone.color should be(Color.black)
       }
@@ -23,7 +23,7 @@ class StoneSpec extends WordSpec with Matchers {
       }
     }
     "new" should {
-      val newStone = new Stone(0, Color.white)
+      val newStone = Stone(0, Color.white)
       "have value 0" in {
         newStone.value should be(0)
       }

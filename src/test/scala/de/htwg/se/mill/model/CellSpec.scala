@@ -25,12 +25,4 @@ class CellSpec extends WordSpec with Matchers {
     }
   }
 
-//  "Every Cell" should {
-//    "have coordinates" should {
-//      val randomCell = Cell(filled = true)
-//      "should have coordinates (0,1,2)" in {
-//
-//      }
-//    }
-//  }
 }
