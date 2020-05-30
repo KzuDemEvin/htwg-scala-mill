@@ -31,8 +31,6 @@ class PlayerSpec extends WordSpec with Matchers {
           player1.toString should be("Name: Kevin, Amount of Stones: 9")
         }
       }
-
     }
   }
-
 }
