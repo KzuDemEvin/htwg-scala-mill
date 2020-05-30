@@ -41,4 +41,5 @@ class StoneSpec extends WordSpec with Matchers {
       }
     }
   }
+
 }
