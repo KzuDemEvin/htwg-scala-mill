@@ -1,32 +1,53 @@
-import de.htwg.se.mill.model.{Cell, Color, Field, Player, Stone}
+import de.htwg.se.mill.model.Stone
+
+val stone1 = Stone(0, "white")
+val stone2 = Stone(1, "black")
+val stone3 = Stone(0, "pink")
 
 
-//val pg =  new FieldCreator()
+case class Field(stones: Vector[Stone])
 
-//case class Field[Cell](field: Vector[Vector[Cell]]) {
-//  def this(size:Int, filling:Cell) = this(Vector.tabulate(size, size){(x1, x2) => filling})
-//
-//  val allowedPosition = List((0,0),(0,3),(0,6),(1,1),(1,3),(1,5),(2,2),(2,4),(3,0),(3,1),(3,2),
-//    (3,4),(3,5),(3,6),(4,2),(4,3),(4,4),(5,1),(6,0),(6,3),(6,6))
-//
-//  val size:Int = field.size
-//
-//  def cell(row:Int, col:Int):Cell = field (row)(col)
-//
-//  def allowedCell(row:Int, col:Int):Boolean = allowedPosition.contains((row, col))
-//
-//  def refill(filling:Cell):Field[Cell] = copy(Vector.tabulate(size, size){(x1, x2) => filling})
-//
-//  def replaceCell(x1:Int, x2:Int, cell:Cell):Field[Cell] = copy(field.updated(x1, field(x1).updated(x2, cell)))
-//
-//  def available(row:Int, col:Int):Boolean = {
-//    val cellTmp = cell(row,col)
-//    val celle = if(cellTmp == Cell(true)) Cell(true) else Cell(false)
-//    if (celle.isSet && allowedCell(row, col)) true else false
-//  }
-//}
+val playground = Vector[Stone]()
+playground ++ Seq(stone1, stone2, stone3)
 
-val pg1 = new Player("Kevin")
-val a = Stone(3, Color.white)
-val f1 = new Field(3, Cell(false))
-val b = Cell(false)
+val colorStone1 = stone1.whichColor
+val isSet = stone1.value
+val stoneB = Stone(0, "black")
+printf("Color stone1: %s", colorStone1)
+
+val gameboard1 =
+    """|
+       |0--0--0
+       |0     0
+       |0--0--0
+       |""".stripMargin
+val gameboard2 =
+    """|
+       |0----0----0
+       || 0--0--0 |
+       |0-0     0-0
+       || 0--0--0 |
+       |0----0----0
+       |""".stripMargin
+  val gameboard3 =
+    """|
+       |0------0------0
+       || 0----0----0 |
+       || | 0--0--0 | |
+       |0-0-0     0-0-0
+       || | 0--0--0 | |
+       || 0----0----0 |
+       |0------0------0
+       |""".stripMargin
+  val gameboard4 =
+    """|
+       |0--------0--------0
+       || 0------0------0 |
+       || | 0----0----0 | |
+       || | | 0--0--0 | | |
+       |0-0-0-0     0-0-0-0
+       || | | 0--0--0 | | |
+       || | 0----0----0 | |
+       || 0------0------0 |
+       |0--------0--------0
+       |""".stripMargin

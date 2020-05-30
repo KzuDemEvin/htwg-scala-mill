@@ -2,6 +2,7 @@ package de.htwg.se.mill.aview
 
 import de.htwg.se.mill.model._
 
-class Tui {
+abstract class Tui {
 
+  def processInputLine(input: String, grid:Grid)
 }
