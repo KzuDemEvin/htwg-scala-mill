@@ -22,23 +22,23 @@ class StoneSpec extends WordSpec with Matchers {
         blackStone.whichColor should be(Color.black)
       }
     }
-    "new" should {
-      val newStone = Stone(0, Color.white)
-      "have value 0" in {
-        newStone.value should be(0)
-      }
-      "not be placed" in {
-        newStone.isSet should be(false)
-      }
-    }
-    "placed in " should {
-      val placedStone = Stone(1, Color.black)
-      "have value 1" in {
-        placedStone.value should be(1)
-      }
-      "is placed" in{
-        placedStone.isSet should be(true)
-      }
-    }
+//    "new" should {
+//      val newStone = Stone(0, Color.white)
+//      "have value 0" in {
+//        newStone.value should be(0)
+//      }
+//      "not be placed" in {
+//        newStone.isSet should be(false)
+//      }
+//    }
+//    "placed in " should {
+//      val placedStone = Stone(1, Color.black)
+//      "have value 1" in {
+//        placedStone.value should be(1)
+//      }
+//      "is placed" in{
+//        placedStone.isSet should be(true)
+//      }
+//    }
   }
 }

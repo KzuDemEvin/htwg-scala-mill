@@ -26,7 +26,5 @@ case class Field(allCells: Matrix[Cell]) {
     if (allCells.allowedCell(row, col) && cell1.isSet) true else false
   }
 
-
-
   def set(row:Int, col:Int, c:Cell) : Field = copy(allCells.replaceCell(row, col, c))
 }
