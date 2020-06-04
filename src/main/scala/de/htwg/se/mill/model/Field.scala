@@ -27,4 +27,31 @@ case class Field(allCells: Matrix[Cell]) {
   }
 
   def set(row:Int, col:Int, c:Cell) : Field = copy(allCells.replaceCell(row, col, c))
+
+//  def checkMiddle(a:Int):Boolean = {
+//
+//  }
+//  def printGameboard(): Unit = {
+//    var a, b, x = 0
+//    var t = (size - 1) / 2
+//    for( a <- 0 until size){
+//      for (b <- 0 until size) {
+//        if (((a == t || a == size - 4) && (b != t))
+//          || ((a == 0 || a == size - 1) && (b == 0 + x * t ))
+//          || ((a == 1 || a == size - 2) && (b == 1 + x * (t - 1)))
+//          || ((a == 2 || a == size - 3) && (b == 2 + x * (t - 2)) && (b < size - 2))) {
+//          printf(" o ")
+//          x = x + 1
+//        } else {
+//          printf(" - ")
+//        }
+//      }
+//      x = 0
+//      printf("\n")
+//    }
+//  }
+//
+//  override def toString: String = {
+//
+//  }
 }
