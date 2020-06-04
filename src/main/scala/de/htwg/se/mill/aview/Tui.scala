@@ -8,7 +8,7 @@ class Tui {
   def exeInputLine(input: String, playground:Field):Field = {
     input match {
       case "new" => new Field(3)
-      case "random" => new FieldCreator(3).fillRandomly(6)
+      case "random" => new FieldCreator().createField(7).fillRandomly(6)
       //case "white stone" =>
       case "quit" => playground
       case "exit" => sys.exit(0)
