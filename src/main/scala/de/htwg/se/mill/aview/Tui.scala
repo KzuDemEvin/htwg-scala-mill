@@ -1,19 +1,26 @@
 package de.htwg.se.mill.aview
 
-import de.htwg.se.mill.model._
-import scala.sys
+import de.htwg.se.mill.controller.Controller
+import de.htwg.se.mill.model.{Cell, Color, Stone}
+import de.htwg.se.mill.util.Observer
 
-class Tui {
 
+class Tui(controller: Controller) extends Observer {
 
-  def exeInputLine(input: String, playground:Field):Field = {
+  controller.add(this)
+  val size = 7
+  val amountStones = 6
+
+  def execInput(input: String):Unit = {
     input match {
-      case "new" => new Field(3)
-      case "random" => new FieldCreator().createField(7).fillRandomly(6)
-      //case "white stone" =>
-      case "quit" => playground
+      case "new" => controller.createEmptyField(size)
+      case "random" => controller.createRandomField(size, amountStones)
+      case "white" => controller.set(0, 0, Cell(true, Stone(1, Color.white)))
+      case "black" => controller.set(1, 1, Cell(true, Stone(1, Color.black)))
       case "exit" => sys.exit(0)
       case _ => throw new IllegalArgumentException("Invalid arguments!")
     }
   }
+
+  override def update: Unit = println(controller.fieldToString)
 }

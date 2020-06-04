@@ -3,12 +3,29 @@ import de.htwg.se.mill.model.{Cell, Color, Field, FieldCreator, Stone}
 import scala.util.Random
 
 
-
-FieldCreator(3)
-
-val b = Cell(filled = false, Stone(1, Color.white))
+//val b = Cell(filled = false, new Stone(1, Color.white))
 val colorset = Color.values.toIndexedSeq
 val h = colorset.apply(0)
+
+val gb = new FieldCreator().createField(7)
+
+var a, b, x = 0
+var t = (gb.size - 1) / 2
+for( a <- 0 until gb.size){
+  for (b <- 0 until gb.size) {
+    if (((a == t || a == gb.size - 4) && (b != t))
+    || ((a == 0 || a == gb.size - 1) && (b == 0 + x * t ))
+    || ((a == 1 || a == gb.size - 2) && (b == 1 + x * (t - 1)))
+    || ((a == 2 || a == gb.size - 3) && (b == 2 + x * (t - 2)) && (b < gb.size - 2))) {
+      printf(" o ")
+      x = x + 1
+    } else {
+      printf(" - ")
+    }
+  }
+  x = 0
+  printf("\n")
+}
 
 
 

@@ -1,22 +1,23 @@
 package de.htwg.se.mill
 
 import de.htwg.se.mill.aview.Tui
-import de.htwg.se.mill.model.Field
+import de.htwg.se.mill.controller.Controller
+import de.htwg.se.mill.model.{Field, FieldCreator}
+
 import scala.io.StdIn.readLine
 
 object Mill {
+  val controller = new Controller(new Field(7))
+  val tui = new Tui(controller)
+  controller.notifyObservers
 
   def main(args: Array[String]): Unit = {
-    val tui = new Tui
-    var field = new Field(3)
     var input:String = ""
+    print("possible commands: new, random, exit  -->")
 
     do {
-      val gb = printGameboard()
-      printf(gb)
-      print("possible commands: new, random, quit, exit  -->")
       input = readLine()
-      field = tui.exeInputLine(input, field)
+      tui.execInput(input)
     } while (true)
   }
 
