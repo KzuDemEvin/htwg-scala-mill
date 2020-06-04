@@ -22,4 +22,38 @@ case class Field[Cell](field: Vector[Vector[Cell]]) {
     val celle = if(cellTmp == Cell(true)) Cell(true) else Cell(false)
     if (celle.isSet && allowedCell(row, col)) true else false
   }
+
+  def printGameboard(): String = {
+    val sb = "Your Mill field:\n"
+    var a, b, c = 0
+    var t = (size - 1) / 2
+    for( a <- 0 until size){
+      for (b <- 0 until size) {
+        if ((a == t || a == size - 4) && (b != t)) { // middle of the field
+          x = x + 1
+          sb + " o "
+        } else if((a == 0 || a == size - 1) && (b == 0 + x * t )) {
+          x = x + 1
+          sb + " o "
+        } else if ((a == 1 || a == size - 2) && (b == 1 + x * (t - 1))) {
+          x = x + 1
+          sb + " o "
+        } else if ((a == 2 || a == size - 3) && (b == 2 + x * (t - 2))
+          && (b < size - 2)) {
+          x = x + 1
+          sb + " o "
+        } else {
+          sb + " o "
+        }
+      }
+      x = 0
+      sb + "\n"
+    }
+    sb
+  }
+
+  override def toString: String = {
+    val string = ""
+    string
+  }
 }

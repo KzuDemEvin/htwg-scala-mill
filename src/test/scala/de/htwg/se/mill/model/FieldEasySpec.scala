@@ -30,5 +30,4 @@ class FieldEasySpec extends WordSpec with Matchers {
       changedField.cell(0) should be(Cell(false))
     }
   }
-
 }
