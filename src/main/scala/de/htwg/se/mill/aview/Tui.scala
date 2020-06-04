@@ -5,6 +5,7 @@ import scala.sys
 
 class Tui {
 
+
   def exeInputLine(input: String, playground:Field):Field = {
     input match {
       case "new" => new Field(3)

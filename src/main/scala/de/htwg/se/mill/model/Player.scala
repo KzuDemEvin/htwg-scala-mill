@@ -6,5 +6,6 @@ case class Player(name: String, amountStones: Int = 9) {
       this(name, 9)
    }
    override def toString:String = "Name: " + name + ", Amount of Stones: " + amountStones
+
 }
 

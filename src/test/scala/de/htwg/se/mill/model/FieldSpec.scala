@@ -1,4 +1,4 @@
-package de.htwg.se.mill.model
+//package de.htwg.se.mill.model
 //
 //import org.scalatest._
 //
