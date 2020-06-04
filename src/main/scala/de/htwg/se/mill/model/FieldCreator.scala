@@ -33,4 +33,5 @@ class FieldCreator(size:Int) {
       field
     }
   }
+
 }
