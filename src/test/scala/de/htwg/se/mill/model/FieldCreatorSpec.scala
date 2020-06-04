@@ -11,7 +11,7 @@ class FieldCreatorSpec extends WordSpec with Matchers {
     }
       "should throw an exception" in {
         val evenField = new FieldCreator()
-        an [RuntimeException] should be thrownBy(evenField.createField(2))
+        an [IllegalArgumentException] should be thrownBy(evenField.createField(2))
       }
   }
 

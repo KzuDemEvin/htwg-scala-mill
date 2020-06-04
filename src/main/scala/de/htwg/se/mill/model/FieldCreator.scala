@@ -10,7 +10,7 @@ class FieldCreator() {
       field
     }
     else {
-      throw new RuntimeException("Fieldsize must be odd")
+      throw new IllegalArgumentException("Fieldsize must be odd")
     }
   }
 
@@ -23,9 +23,13 @@ class FieldCreator() {
   }
 
   def setStoneAnywhere(field: Field): Field = {
-    val row = Random.nextInt(field.size)
-    val col = Random.nextInt(field.size)
-    val color = Random.nextInt(1)
+    var row = 0
+    var col = 0
+    do {
+      row = Random.nextInt(field.size)
+      col = Random.nextInt(field.size)
+    } while (!field.possiblePosition(row, col))
+    val color = Random.nextInt(2)
     val colorset = Color.values.toIndexedSeq
     if (field.available(row, col)) {
       field.set(row, col, Cell(filled = true, Stone(1, colorset.apply(color))))

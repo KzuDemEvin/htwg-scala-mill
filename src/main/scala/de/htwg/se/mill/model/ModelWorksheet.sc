@@ -8,24 +8,54 @@ val colorset = Color.values.toIndexedSeq
 val h = colorset.apply(0)
 
 val gb = new FieldCreator().createField(7)
+//var string = ""
+//var a, b, x = 0
+//var t = (gb.size - 1) / 2
+//for( a <- 0 until gb.size){
+//  for (b <- 0 until gb.size) {
+//    if (((a == t || a == gb.size - 4) && (b != t))
+//    || ((a == 0 || a == gb.size - 1) && (b == 0 + x * t ))
+//    || ((a == 1 || a == gb.size - 2) && (b == 1 + x * (t - 1)))
+//    || ((a == 2 || a == gb.size - 3) && (b == 2 + x * (t - 2)) && (b < gb.size - 2))) {
+//      string + (" o ")
+//      //string.concat(" o ")
+//      x = x + 1
+//    } else {
+//      string + (" - ")
+//    }
+//  }
+//  x = 0
+//  printf("\n")
+//}
+//printf(string)
+//var string = "Mill Gameboard:\n"
+//var a, b, counter = 0
+////var t = (gb.size - 1) / 2
+//for( a <- 0 until gb.size){
+//  for (b <- 0 until gb.size) {
+//    if (counter == 7) {
+//      printf("\n")
+//      string += "\n"
+//      counter = 0
+//    }
+//    if (gb.possiblePosition(a, b)) {
+//      counter = counter + 1
+//      string += " o "
+//      printf(" o ")
+//    } else {
+//      counter = counter + 1
+//      string += " - "
+//      printf(" - ")
+//    }
+//  }
+//}
+printf(string)
 
-var a, b, x = 0
-var t = (gb.size - 1) / 2
-for( a <- 0 until gb.size){
-  for (b <- 0 until gb.size) {
-    if (((a == t || a == gb.size - 4) && (b != t))
-    || ((a == 0 || a == gb.size - 1) && (b == 0 + x * t ))
-    || ((a == 1 || a == gb.size - 2) && (b == 1 + x * (t - 1)))
-    || ((a == 2 || a == gb.size - 3) && (b == 2 + x * (t - 2)) && (b < gb.size - 2))) {
-      printf(" o ")
-      x = x + 1
-    } else {
-      printf(" - ")
-    }
-  }
-  x = 0
-  printf("\n")
-}
+var s = "Hallo"
+val w = " Welt!"
+s.concat(w)
+println(s)
+
 
 
 

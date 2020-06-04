@@ -13,7 +13,7 @@ object Mill {
 
   def main(args: Array[String]): Unit = {
     var input:String = ""
-    print("possible commands: new, random, exit  -->")
+    print("possible commands: new, random, white, black, exit  -->")
 
     do {
       input = readLine()

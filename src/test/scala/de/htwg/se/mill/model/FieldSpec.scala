@@ -19,3 +19,9 @@
 //    }
 //  }
 //}
+
+package de.htwg.se.mill.model
+
+import org.scalatest.{Matchers, WordSpec}
+
+
