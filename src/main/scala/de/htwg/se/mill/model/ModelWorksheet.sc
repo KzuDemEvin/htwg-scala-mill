@@ -1,10 +1,15 @@
-import de.htwg.se.mill.model.{Cell, Color, Field, FieldCreator, Stone}
+import de.htwg.se.mill.aview.Tui
+import de.htwg.se.mill.model.{Cell, Color, Field, FieldCreator, Matrix, Stone}
 
 import scala.util.Random
 
 
+val z = Matrix[Cell]
+val h = new Tui
+val f = new FieldCreator()
+val c = Cell(false, Stone(0, Color.noColor))
+//val fi = Field[Matrix[Cell]]
 
-FieldCreator(3)
 
 val b = Cell(filled = false, Stone(1, Color.white))
 val colorset = Color.values.toIndexedSeq
