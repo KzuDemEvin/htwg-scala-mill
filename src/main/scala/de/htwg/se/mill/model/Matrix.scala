@@ -15,5 +15,4 @@ case class Matrix[T](allRows: Vector[Vector[T]]) {
   def refill(filling: T): Matrix[T] = copy(Vector.tabulate(size, size) { (x1, x2) => filling })
 
   def replaceCell(x1: Int, x2: Int, cell: T): Matrix[T] = copy(allRows.updated(x1, allRows(x1).updated(x2, cell)))
-
 }

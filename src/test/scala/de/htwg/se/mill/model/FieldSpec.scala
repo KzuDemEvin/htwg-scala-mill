@@ -16,7 +16,6 @@
 //        val field1 = field.replace(1, 2, 3, Cell(false))
 //        field1.coordinates(1,2,3) should be(Cell(false))
 //      }
-//
 //    }
 //  }
 //}

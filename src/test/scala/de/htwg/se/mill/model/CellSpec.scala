@@ -22,7 +22,6 @@ import org.scalatest.{Matchers, WordSpec}
 //      "is filled" in {
 //        nonEmptyCell.isSet should be(true)
 //      }
-//
 //    }
 //  }
 //}

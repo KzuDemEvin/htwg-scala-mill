@@ -4,7 +4,6 @@ import org.scalatest._
 
 class PlayerSpec extends WordSpec with Matchers {
 
-
   "A Player" when {
     "new" should {
       "with extra specification of amount of stones" should {

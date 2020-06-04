@@ -14,4 +14,5 @@ class FieldCreatorSpec extends WordSpec with Matchers {
         an [RuntimeException] should be thrownBy(evenField.createField(2))
       }
   }
+
 }

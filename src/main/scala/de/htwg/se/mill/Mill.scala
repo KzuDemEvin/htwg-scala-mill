@@ -6,7 +6,6 @@ import scala.io.StdIn.readLine
 
 object Mill {
 
-
   def main(args: Array[String]): Unit = {
     val tui = new Tui
     var field = new Field(3)

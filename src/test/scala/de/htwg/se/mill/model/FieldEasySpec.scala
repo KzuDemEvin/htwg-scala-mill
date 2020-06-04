@@ -30,5 +30,4 @@ package de.htwg.se.mill.model
 //      changedField.cell(0) should be(Cell(false))
 //    }
 //  }
-//
 //}
