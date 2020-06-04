@@ -3,6 +3,8 @@ package de.htwg.se.mill.model
 import scala.util.Random
 
 class FieldCreator(size:Int) {
+
+
   def fillRandomly(amountStones: Int): Field = {
     var modField = new Field(size)
     for {n <- 1 to amountStones} {
