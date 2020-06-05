@@ -1,8 +1,7 @@
 package de.htwg.se.mill.aview
 
 import de.htwg.se.mill.controller.Controller
-import de.htwg.se.mill.model.Field
-
+import de.htwg.se.mill.model.{Color, Field}
 import org.scalatest.{Matchers, WordSpec}
 
 class TuiSpec extends WordSpec with Matchers{
@@ -22,21 +21,12 @@ class TuiSpec extends WordSpec with Matchers{
       tui.execInput("black")
       controller.field.available(1, 1) should be(false)
     }
-    "throw an exception when something weird is in input" in {
-      an [IllegalArgumentException] should be thrownBy(tui.execInput("something weird"))
+//    "return false when something weird was entered" in {
+//      tui.execInput("something weird") should
+//    }
+    "set a white stone on input 'white'" in {
+      tui.execInput("white")
+      controller.field.cell(0,0).content.whichColor should be(Color.white)
     }
-//    "set a cell on input '123'" in {
-//      tui.execInput("123")
-//      controller.grid.cell(1,2).value should be(3)
-//    }
-//    "create a random Sudoku on input 'r'" in {
-//      tui.processInputLine("r")
-//      controller.grid.valid should be(true)
-//    }
-//    "solve a Sudoku on input 's'" in {
-//      tui.processInputLine("n")
-//      tui.processInputLine("s")
-//      controller.grid.solved should be(true)
-//    }
   }
 }

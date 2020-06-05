@@ -1,6 +1,7 @@
 import de.htwg.se.mill.model.{Cell, Color, Field, FieldCreator, Stone}
 
-import scala.util.Random
+import scala.io.StdIn.readLine
+
 
 
 //val b = Cell(filled = false, new Stone(1, Color.white))
@@ -27,34 +28,21 @@ val gb = new FieldCreator().createField(7)
 //  x = 0
 //  printf("\n")
 //}
-//printf(string)
-//var string = "Mill Gameboard:\n"
-//var a, b, counter = 0
-////var t = (gb.size - 1) / 2
-//for( a <- 0 until gb.size){
-//  for (b <- 0 until gb.size) {
-//    if (counter == 7) {
-//      printf("\n")
-//      string += "\n"
-//      counter = 0
-//    }
-//    if (gb.possiblePosition(a, b)) {
-//      counter = counter + 1
-//      string += " o "
-//      printf(" o ")
-//    } else {
-//      counter = counter + 1
-//      string += " - "
-//      printf(" - ")
-//    }
-//  }
-//}
-printf(string)
+
+val smallField = new Field(4)
+smallField.cell(0,0)
+
+val field = new FieldCreator().fillRandomly(7, 9)
+field.placedStones
 
 var s = "Hallo"
 val w = " Welt!"
 s.concat(w)
 println(s)
+
+var input = ""
+input += "random 7"
+input.split(" ")
 
 
 

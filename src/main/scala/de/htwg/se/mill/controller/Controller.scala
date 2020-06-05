@@ -4,6 +4,9 @@ import de.htwg.se.mill.model.{Cell, Field, FieldCreator}
 import de.htwg.se.mill.util.Observable
 
 class Controller(var field:Field) extends Observable {
+
+  var bool = false
+
   def createEmptyField(size: Int): Unit = {
     field = new Field(size)
     notifyObservers

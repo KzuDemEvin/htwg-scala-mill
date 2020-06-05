@@ -17,10 +17,9 @@ class Tui(controller: Controller) extends Observer {
       case "random" => controller.createRandomField(size, amountStones)
       case "white" => controller.set(0, 0, Cell(true, Stone(1, Color.white)))
       case "black" => controller.set(1, 1, Cell(true, Stone(1, Color.black)))
-      case "exit" => sys.exit(0)
-      case _ => throw new IllegalArgumentException("Invalid arguments!")
+      case _ =>
     }
   }
 
-  override def update: Unit = println(controller.fieldToString)
+  override def update: Boolean = { println(controller.fieldToString);true}
 }

@@ -1,6 +1,5 @@
 package de.htwg.se.mill.model
 
-
 case class Player(name: String, amountStones: Int = 9) {
    def this (name: String) {
       this(name, 9)

@@ -20,8 +20,21 @@
 //  }
 //}
 
-package de.htwg.se.mill.model
-
-import org.scalatest.{Matchers, WordSpec}
-
-
+//package de.htwg.se.mill.model
+//
+//import org.scalatest.{Matchers, WordSpec}
+//
+//class FieldSpec extends WordSpec with Matchers {
+//  "A Field is the playingfield of Sudoku. A Field. A Field" when {
+//    "to be constructed" should {
+//      val tinyField = new Field(1)
+//      val smallField = new Field(3)
+//      val normalField = new Field(7)
+//      val awkwardField = new Field(4)
+//    }
+//    "for test purposes only created with a Matrix of Cells" in {
+//      val awkwardGrid = Field(new Matrix(2, Cell(0)))
+//      val testGrid = Grid(Matrix[Cell](Vector(Vector(Cell(0), Cell(0)), Vector(Cell(0), Cell(0)))))
+//    }
+//  }
+//}
