@@ -23,7 +23,7 @@ case class Field(allCells: Matrix[Cell]) {
 
   override def toString: String = {
     var string = "Mill Gameboard:\n"
-    var a, b, counter = 0
+    var counter = 0
     for (a <- 0 until size) {
       for (b <- 0 until size) {
         if (counter == 7) {
