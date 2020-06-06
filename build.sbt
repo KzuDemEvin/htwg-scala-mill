@@ -1,6 +1,6 @@
 name          := "htwg-scala-mill"
 //organization  := "de.htwg.se"
-version       := "0.0.1"
+version       := "0.6"
 scalaVersion  := "2.13.2"
 
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.1.2"
