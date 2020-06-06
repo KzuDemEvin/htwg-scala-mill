@@ -9,6 +9,9 @@ val colorset = Color.values.toIndexedSeq
 val h = colorset.apply(0)
 
 val gb = new FieldCreator().createField(7)
+val x = gb.cell(0,0)
+val y = new Cell()
+gb.set(0, 0, Cell(true, Stone(1)))
 //var string = ""
 //var a, b, x = 0
 //var t = (gb.size - 1) / 2
