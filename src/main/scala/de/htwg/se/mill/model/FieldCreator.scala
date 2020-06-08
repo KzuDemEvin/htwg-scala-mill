@@ -31,9 +31,6 @@ class FieldCreator() {
     } while (!field.possiblePosition(row, col))
     val color = Random.nextInt(2)
     val colorset = Color.values.toIndexedSeq
-    if (field.available(row, col)) {
-      field.set(row, col, Cell(filled = true, Stone(1, colorset.apply(color))))
-    }
-    field
+    field.set(row, col, Cell(filled = true, Stone(1, colorset.apply(color))))
   }
 }
