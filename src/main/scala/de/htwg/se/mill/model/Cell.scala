@@ -4,6 +4,7 @@ case class Cell(filled:Boolean, content: Stone) {
   def this() {
     this(false, Stone(0, Color.noColor))
   }
+
   def isSet: Boolean = filled
   def getContent:Stone = content
 }
