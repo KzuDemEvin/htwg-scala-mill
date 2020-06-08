@@ -8,9 +8,9 @@ class FieldCreator() {
     if (size % 2 == 1) {
       val field = new Field(size)
       field
-    }
-    else {
-      throw new IllegalArgumentException("Fieldsize must be odd")
+    } else {
+      val field = new Field(size + 1)
+      field
     }
   }
 

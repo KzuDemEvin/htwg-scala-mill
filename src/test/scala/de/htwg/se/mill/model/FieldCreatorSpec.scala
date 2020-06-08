@@ -9,9 +9,9 @@ class FieldCreatorSpec extends WordSpec with Matchers {
       val tinyField = new FieldCreator().createField(7)
       tinyField.cell(0,0).filled should be(false)
     }
-      "should throw an exception" in {
-        val evenField = new FieldCreator()
-        an [IllegalArgumentException] should be thrownBy(evenField.createField(2))
+      "should change its size from even to odd" in {
+        val notEvenField = new FieldCreator().createField(6)
+        notEvenField.size should be(7)
       }
   }
 
