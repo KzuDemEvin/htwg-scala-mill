@@ -16,7 +16,7 @@ class FieldCreator() {
 
   def fillRandomly(size:Int, amountStones: Int): Field = {
     var modField = createField(size)
-    for {n <- 1 to amountStones} {
+    for {n <- 0 until amountStones} {
       modField = setStoneAnywhere(modField)
     }
     modField
@@ -33,8 +33,7 @@ class FieldCreator() {
     val colorset = Color.values.toIndexedSeq
     if (field.available(row, col)) {
       field.set(row, col, Cell(filled = true, Stone(1, colorset.apply(color))))
-    } else {
-      field
     }
+    field
   }
 }
