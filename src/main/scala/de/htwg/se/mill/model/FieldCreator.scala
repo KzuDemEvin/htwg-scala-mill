@@ -28,7 +28,8 @@ class FieldCreator() {
     do {
       row = Random.nextInt(field.size)
       col = Random.nextInt(field.size)
-    } while (!field.possiblePosition(row, col))
+    } while (!field.possiblePosition(row, col) && !field.available(row, col))
+    println(row + " " + col)
     val color = Random.nextInt(2)
     val colorset = Color.values.toIndexedSeq
     field.set(row, col, Cell(filled = true, Stone(1, colorset.apply(color))))
