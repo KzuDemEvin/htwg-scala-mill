@@ -22,7 +22,7 @@ case class Field(allCells: Matrix[Cell]) {
     var placedStones = 0
     for (x <- this.allCells.allowedPosition) {
       if (!this.available(x._1, x._2)) {
-        placedStones += 1
+        placedStones = placedStones + 1
       }
     }
     placedStones
