@@ -1,11 +1,12 @@
 package de.htwg.se.mill.controller
 
 import de.htwg.se.mill.model.{Cell, Field, FieldCreator}
-import de.htwg.se.mill.util.Observable
+import de.htwg.se.mill.util.{Observable, UndoManager}
 
 class Controller(var field:Field) extends Observable {
 
-  var bool = false
+  private val undoManager = new UndoManager
+
 
   def createEmptyField(size: Int): Unit = {
     field = new Field(size)
@@ -20,7 +21,17 @@ class Controller(var field:Field) extends Observable {
   def fieldToString: String = field.toString
 
   def set(row: Int, col: Int, c: Cell): Unit = {
-    field = field.set(row, col, c)
+    undoManager.doStep(new SetCommand(row, col, c, this))
+    notifyObservers
+  }
+
+  def undo: Unit = {
+    undoManager.undoStep
+    notifyObservers
+  }
+
+  def redo: Unit = {
+    undoManager.redoStep
     notifyObservers
   }
 }
