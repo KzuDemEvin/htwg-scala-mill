@@ -21,9 +21,6 @@ class TuiSpec extends WordSpec with Matchers{
       tui.execInput("black")
       controller.field.available(1, 1) should be(false)
     }
-//    "return false when something weird was entered" in {
-//      tui.execInput("something weird") should
-//    }
     "set a white stone on input 'white'" in {
       tui.execInput("white")
       controller.field.cell(0,0).content.whichColor should be(Color.white)

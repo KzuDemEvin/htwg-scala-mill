@@ -1,10 +1,12 @@
-import de.htwg.se.mill.model.{Cell, Color, Field, FieldCreator, Stone}
+import de.htwg.se.mill.model.{Cell, Color, Field, FieldCreator, Matrix, Stone}
 
 import scala.io.StdIn.readLine
 
-
-
-//val b = Cell(filled = false, new Stone(1, Color.white))
+val s = Stone(0, Color.noColor)
+val hallo = Cell(false, Stone(0, Color.noColor))
+val c = new Cell()
+val f = Field(new Matrix(2, new Cell))
+val b = Cell(filled = false, Stone(1, Color.white))
 val colorset = Color.values.toIndexedSeq
 val h = colorset.apply(0)
 
@@ -33,12 +35,15 @@ val smallField = new Field(4)
 smallField.cell(0,0)
 
 val field = new FieldCreator().fillRandomly(7, 9)
-field.placedStones
 
-var s = "Hallo"
-val w = " Welt!"
-s.concat(w)
-println(s)
+
+val field1 = Field(new Matrix[Cell](Vector(Vector(Cell(true, Stone(1, Color.white)), Cell(true, Stone(1, Color.black))),
+  Vector(Cell(true, Stone(1, Color.black)), Cell(true, Stone(1, Color.white))))))
+field1.cell(0,0)
+field1.cell(0,1)
+field1.cell(1,0)
+field1.cell(1,1)
+
 
 var input = ""
 input += "random 7"
