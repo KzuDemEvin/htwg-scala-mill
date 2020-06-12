@@ -8,15 +8,15 @@ class FieldCreator() {
     if (size % 2 == 1) {
       val field = new Field(size)
       field
-    }
-    else {
-      throw new IllegalArgumentException("Fieldsize must be odd")
+    } else {
+      val field = new Field(size + 1)
+      field
     }
   }
 
   def fillRandomly(size:Int, amountStones: Int): Field = {
     var modField = createField(size)
-    for {n <- 1 to amountStones} {
+    for {n <- 0 until amountStones} {
       modField = setStoneAnywhere(modField)
     }
     modField
@@ -28,13 +28,10 @@ class FieldCreator() {
     do {
       row = Random.nextInt(field.size)
       col = Random.nextInt(field.size)
-    } while (!field.possiblePosition(row, col))
+    }
+    while (!field.available(row, col))
     val color = Random.nextInt(2)
     val colorset = Color.values.toIndexedSeq
-    if (field.available(row, col)) {
-      field.set(row, col, Cell(filled = true, Stone(1, colorset.apply(color))))
-    } else {
-      field
-    }
+    field.set(row, col, Cell(filled = true, Stone(1, colorset.apply(color))))
   }
 }

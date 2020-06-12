@@ -17,7 +17,7 @@ class CellSpec extends WordSpec with Matchers {
       }
     }
     "by default a not filled Cell has no Stone" should {
-      val emptyCell = new Cell
+      val emptyCell = new Cell()
       "should be filled with no Stone" in {
         emptyCell.content should be(Stone(0, Color.noColor))
       }
