@@ -5,7 +5,7 @@ import scala.util.Random
 class FieldCreateRandomStrategy extends FieldCreateStrategyTemplate {
 
   def fill(_field: Field): Field = {
-    val num = 18
+    val num = 24
     var field = new Field(_field.size)
     for (i <- 0 until num) {
       field = placeRandomStone(field)
