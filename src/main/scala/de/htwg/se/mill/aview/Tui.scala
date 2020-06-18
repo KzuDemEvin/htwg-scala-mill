@@ -19,8 +19,8 @@ class Tui(controller: Controller) extends Observer {
       case "redo" => controller.redo
       case _ => input.toList.filter(place => place != ' ').filter(_.isDigit).map(place =>  place.toString.toInt) match {
         case row :: column :: value :: Nil => value match {
-          case 0 => controller.set(row, column, Cell(true, Stone(1, Color.white)))
-          case _ => controller.set(row, column, Cell(true, Stone(1, Color.black)))
+          case 0 => controller.set(row, column, Cell(true, Stone("w+")))
+          case _ => controller.set(row, column, Cell(true, Stone("b+")))
         }
         case _ =>
       }

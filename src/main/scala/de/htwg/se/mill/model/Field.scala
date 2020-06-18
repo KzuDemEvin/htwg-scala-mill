@@ -3,7 +3,7 @@ package de.htwg.se.mill.model
 
 case class Field(allCells: Matrix[Cell]) {
   def this(size:Int) {
-    this(new Matrix[Cell](size, Cell(false, Stone(0, Color.noColor))))
+    this(new Matrix[Cell](size, Cell(false, Stone("n"))))
   }
 
   val size:Int = allCells.size
