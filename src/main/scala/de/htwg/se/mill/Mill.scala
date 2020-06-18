@@ -18,7 +18,7 @@ object Mill {
     if(!input.isEmpty) {tui.execInput(input) }
     else {
       do {
-        printf("Possible commands: new, random, white, black, exit  -->")
+        printf("Possible commands: new, random, place <location,0/1>, undo, redo, exit  -->")
         input = readLine()
         tui.execInput(input)
       } while (input != "exit")
