@@ -15,7 +15,7 @@ case class Field(allCells: Matrix[Cell]) {
   def available(row:Int, col:Int):Boolean = if (possiblePosition(row, col) && !cell(row, col).isSet) true else false
 
   def set(row:Int, col:Int, c:Cell) : Field = {
-    copy(allCells.replaceCell(row, col, c))
+      copy(allCells.replaceCell(row, col, c))
   }
 
   def placedStones():Int = {
