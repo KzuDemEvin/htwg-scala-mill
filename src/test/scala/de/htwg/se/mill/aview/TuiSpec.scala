@@ -29,6 +29,17 @@ class TuiSpec extends WordSpec with Matchers{
       tui.execInput("white")
       controller.field.cell(0,0).content.whichColor should be(Color.white)
     }
+    "undo on input 'undo'" in {
+      tui.execInput("white")
+      tui.execInput("undo")
+      controller.field.cell(0,0).isSet should be(false)
+    }
+    "redo on input 'redo'" in {
+      tui.execInput("white")
+      tui.execInput("undo")
+      tui.execInput("redo")
+      controller.field.cell(0,0).isSet should be(true)
+    }
     "do nothing on bad input like'something'" in {
       val old = controller.fieldToString
       tui.execInput("something")

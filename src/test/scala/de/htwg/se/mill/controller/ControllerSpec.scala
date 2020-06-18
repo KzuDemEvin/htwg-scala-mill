@@ -34,4 +34,26 @@ class ControllerSpec extends WordSpec with Matchers {
       }
     }
   }
+  "new" should {
+    val field = new Field(7)
+    val controller = new Controller(field)
+    "handle undo/redo correctly on an empty undo-stack" in {
+      controller.field.cell(0, 0).isSet should be(false)
+      controller.undo
+      controller.field.cell(0, 0).isSet should be(false)
+      controller.redo
+      controller.field.cell(0, 0).isSet should be(false)
+    }
+    "handle undo/redo of setting a cell correctly" in {
+      controller.set(0, 0, Cell(true, Stone(1, Color.white)))
+      controller.field.cell(0, 0).isSet should be(true)
+      controller.field.cell(0, 0).getContent should be(Stone(1, Color.white))
+      controller.undo
+      controller.field.cell(0, 0).isSet should be(false)
+      controller.field.cell(0, 0).getContent should be(Stone(0, Color.noColor))
+      controller.redo
+      controller.field.cell(0, 0).isSet should be(true)
+      controller.field.cell(0, 0).getContent should be(Stone(1, Color.white))
+    }
+  }
 }
