@@ -2,10 +2,12 @@ package de.htwg.se.mill.controller
 
 import de.htwg.se.mill.model.{Cell, Field, FieldCreator}
 import de.htwg.se.mill.util.{Observable, UndoManager}
+import de.htwg.se.mill.controller.GameState._
 
 class Controller(var field:Field) extends Observable {
 
   private val undoManager = new UndoManager
+  var gameState: GameState = IDLE
 
 
   def createEmptyField(size: Int): Unit = {
