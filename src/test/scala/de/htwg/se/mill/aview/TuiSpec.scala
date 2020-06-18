@@ -13,9 +13,9 @@ class TuiSpec extends WordSpec with Matchers{
       tui.execInput("new")
       controller.field should be(new Field(7))
     }
-    "place 6 random stones on " in {
+    "place 18 random stones on " in {
       tui.execInput("random")
-      controller.field.placedStones() should be(6)
+      controller.field.placedStones() should be(18)
     }
     "set a white stone on 0, 0" in {
       tui.execInput("white")
