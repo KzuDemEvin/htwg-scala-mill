@@ -13,29 +13,26 @@ class TuiSpec extends WordSpec with Matchers{
       tui.execInput("new")
       controller.field should be(new Field(7))
     }
-    "place 18 random stones on " in {
+    "place 24 random stones" in {
       tui.execInput("random")
-      controller.field.placedStones() should be(18)
+      controller.field.placedStones() should be(24)
     }
-    "set a white stone on 0, 0" in {
-      tui.execInput("white")
+    "set a white stone on input 'place 000'" in {
+      tui.execInput("place 000")
       controller.field.available(0, 0) should be(false)
+      controller.field.cell(0, 0).content.whichColor should be(Color.white)
     }
-    "set a black stone on 1, 1" in {
-      tui.execInput("black")
-      controller.field.available(1, 1) should be(false)
+    "set a black stone on input 'place 031" in {
+      tui.execInput("place 031")
+      controller.field.available(0, 3) should be(false)
+      controller.field.cell(0, 3).content.whichColor should be(Color.black)
     }
     "set a white stone on input 'white'" in {
-      tui.execInput("white")
+      tui.execInput("place 000")
       controller.field.cell(0,0).content.whichColor should be(Color.white)
     }
-    "undo on input 'undo'" in {
-      tui.execInput("white")
-      tui.execInput("undo")
-      controller.field.cell(0,0).isSet should be(false)
-    }
     "redo on input 'redo'" in {
-      tui.execInput("white")
+      tui.execInput("place 000")
       tui.execInput("undo")
       tui.execInput("redo")
       controller.field.cell(0,0).isSet should be(true)
