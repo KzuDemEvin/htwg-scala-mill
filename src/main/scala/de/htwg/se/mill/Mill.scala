@@ -14,11 +14,14 @@ object Mill {
   def main(args: Array[String]): Unit = {
     var input:String = ""
 
-    do {
-      printf("Possible commands: new, random, white, black, exit  -->")
-      input = readLine()
-      tui.execInput(input)
-    } while (input != "exit")
+    if(args.length>0) input = args(0)
+    if(!input.isEmpty) {tui.execInput(input) }
+    else {
+      do {
+        printf("Possible commands: new, random, white, black, exit  -->")
+        input = readLine()
+        tui.execInput(input)
+      } while (input != "exit")
+    }
   }
-
 }
