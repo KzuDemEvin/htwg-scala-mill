@@ -28,7 +28,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.field.possiblePosition(0,0) should be(true)
       }
       "notify its Observer after setting a cell" in {
-        controller.set(0,0, Cell(true, Stone(1, Color.white)))
+        controller.set(0,0, Cell(true, Stone("w+")))
         observer.updated should be(true)
         controller.field.cell(0,0).content.whichColor should be (Color.white)
       }
@@ -45,15 +45,15 @@ class ControllerSpec extends WordSpec with Matchers {
       controller.field.cell(0, 0).isSet should be(false)
     }
     "handle undo/redo of setting a cell correctly" in {
-      controller.set(0, 0, Cell(true, Stone(1, Color.white)))
+      controller.set(0, 0, Cell(true, Stone("w+")))
       controller.field.cell(0, 0).isSet should be(true)
-      controller.field.cell(0, 0).getContent should be(Stone(1, Color.white))
+      controller.field.cell(0, 0).getContent should be(Stone("w+"))
       controller.undo
       controller.field.cell(0, 0).isSet should be(false)
-      controller.field.cell(0, 0).getContent should be(Stone(0, Color.noColor))
+      controller.field.cell(0, 0).getContent should be(Stone("n"))
       controller.redo
       controller.field.cell(0, 0).isSet should be(true)
-      controller.field.cell(0, 0).getContent should be(Stone(1, Color.white))
+      controller.field.cell(0, 0).getContent should be(Stone("w+"))
     }
   }
 }

@@ -22,7 +22,10 @@ class FieldCreateRandomStrategy extends FieldCreateStrategyTemplate {
     }
     while (!field.available(row, col))
     val color = Random.nextInt(2)
-    val colorset = Color.values.toIndexedSeq
-    field.set(row, col, Cell(filled = true, Stone(1, colorset.apply(color))))
+    if (color == 0) {
+      field.set(row, col, Cell(filled = true, Stone("w+")))
+    } else {
+      field.set(row, col, Cell(filled = true, Stone("b+")))
+    }
   }
 }

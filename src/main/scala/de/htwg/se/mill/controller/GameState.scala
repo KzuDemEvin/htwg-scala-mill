@@ -4,11 +4,11 @@ object GameState extends Enumeration {
     type GameState = Value
     val IDLE, FINISHED = Value
 
-    val map = Map[GameState, String](
+    val map: Map[GameState, String] = Map[GameState, String](
       IDLE -> "",
       FINISHED ->"Game ended")
 
-    def message(gameState: GameState) = {
+    def message(gameState: GameState): String = {
       map(gameState)
     }
 }

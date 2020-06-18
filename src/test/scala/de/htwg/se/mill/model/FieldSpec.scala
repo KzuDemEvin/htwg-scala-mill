@@ -26,13 +26,13 @@ class FieldSpec extends WordSpec with Matchers {
         normalField.available(0, 0) should be(true)
       }
       "allow to set individual Cells and remain immutable" in {
-        val changedField = normalField.set(0, 0, Cell(true, Stone(1, Color.white)))
-        changedField.cell(0, 0) should be(Cell(true, Stone(1, Color.white)))
+        val changedField = normalField.set(0, 0, Cell(true, Stone("w+")))
+        changedField.cell(0, 0) should be(Cell(true, Stone("w+")))
         normalField.cell(0, 0) should be(new Cell())
       }
       "should return a string which looks like the gameboard" in {
-        var blackwhiteField = normalField.set(0, 0, Cell(true, Stone(1, Color.white)))
-        blackwhiteField = blackwhiteField.set(1, 1, Cell(true, Stone(1, Color.black)))
+        var blackwhiteField = normalField.set(0, 0, Cell(true, Stone("w+")))
+        blackwhiteField = blackwhiteField.set(1, 1, Cell(true, Stone("b+")))
         blackwhiteField.toString should be("Mill Gameboard:\n w  -  -  o  -  -  o \n -  b  -  o  -  o  - \n -  -  o  o  o  -  - \n o  o  o  -  o  o  o \n -  -  o  o  o  -  - \n -  o  -  o  -  o  - \n o  -  -  o  -  -  o \n")
       }
     }
