@@ -19,7 +19,12 @@ class Tui(controller: Controller) extends Observer {
       case "black" => controller.set(1, 1, Cell(true, Stone(1, Color.black)))
       case "undo" => controller.undo
       case "redo" => controller.redo
-      case _ =>
+//      case _ => input.toList.filter(p => p != ' ').filter(_.isDigit).map(p =>  p.toString.toInt) match {
+//        case row :: column :: value :: Nil => value match {
+//          case 0 => controller.set(row, column, Cell(true, Stone(1, Color.white)))
+//          case _ => controller.set(row, column, Cell(true, Stone(1, Color.black)))
+//        }
+        case _ =>
     }
   }
 
