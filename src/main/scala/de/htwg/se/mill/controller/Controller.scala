@@ -1,8 +1,7 @@
 package de.htwg.se.mill.controller
 
-import de.htwg.se.mill.model.{Cell, Field, RandomStrategy, FieldCreator}
+import de.htwg.se.mill.model.{Cell, Field, RandomStrategy}
 import de.htwg.se.mill.util.{Observable, UndoManager}
-import de.htwg.se.mill.controller.GameState._
 
 class Controller(var field:Field) extends Observable {
 
