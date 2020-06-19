@@ -7,7 +7,7 @@ import de.htwg.se.mill.controller.GameState._
 class Controller(var field:Field) extends Observable {
 
   private val undoManager = new UndoManager
-  var gameState: GameState = INPROGRESS
+  var gameState = GameState.handle(InProgessEvent())
 
 
   def createEmptyField(size: Int): Unit = {

@@ -1,6 +1,6 @@
 package de.htwg.se.mill.aview
 
-import de.htwg.se.mill.controller.{Controller, GameState}
+import de.htwg.se.mill.controller.{Controller, GameState, InProgessEvent, WhiteTurnEvent}
 import de.htwg.se.mill.model.{Cell, Color, Stone}
 import de.htwg.se.mill.util.Observer
 
@@ -28,8 +28,8 @@ class Tui(controller: Controller) extends Observer {
 
   override def update: Boolean = {
     println(controller.fieldToString)
-    println(GameState.message(controller.gameState))
-    controller.gameState=GameState.INPROGRESS
+    println(GameState.state)
+    GameState.handle(InProgessEvent())
     true
   }
 }
