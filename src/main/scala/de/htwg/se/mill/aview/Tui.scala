@@ -9,12 +9,11 @@ class Tui(controller: Controller) extends Observer {
 
   controller.add(this)
   val size = 7
-  val amountStones = 6
 
   def execInput(input: String):Unit = {
     input match {
       case "new" => controller.createEmptyField(size)
-      case "random" => controller.createRandomField(size, amountStones)
+      case "random" => controller.createRandomField(size)
       case "undo" => controller.undo
       case "redo" => controller.redo
       case _ => input.toList.filter(place => place != ' ').filter(_.isDigit).map(place =>  place.toString.toInt) match {
@@ -30,7 +29,7 @@ class Tui(controller: Controller) extends Observer {
   override def update: Boolean = {
     println(controller.fieldToString)
     println(GameState.message(controller.gameState))
-    controller.gameState=GameState.IDLE
+    controller.gameState=GameState.INPROGRESS
     true
   }
 }

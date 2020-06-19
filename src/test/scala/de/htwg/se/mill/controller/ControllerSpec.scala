@@ -23,7 +23,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.field.size should be(7)
       }
       "notify its Observer after random creation" in {
-        controller.createRandomField(7, 9)
+        controller.createRandomField(7)
         observer.updated should be(true)
         controller.field.possiblePosition(0,0) should be(true)
       }
