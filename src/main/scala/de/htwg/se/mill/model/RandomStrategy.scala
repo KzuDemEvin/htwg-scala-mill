@@ -2,7 +2,7 @@ package de.htwg.se.mill.model
 
 import scala.util.Random
 
-class RandomStrategy extends StrategyPattern {
+class RandomStrategy extends Strategy {
 
   def fill(_field: Field): Field = {
     val num = 24
