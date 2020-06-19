@@ -20,7 +20,7 @@ object Mill {
       do {
         printf("Possible commands: new, random, place <location,0/1>, undo, redo, exit  -->")
         input = readLine()
-        tui.execInput(input)
+        println(tui.execInput(input).get)
       } while (input != "exit")
     }
   }

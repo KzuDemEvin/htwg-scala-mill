@@ -1,29 +1,34 @@
 package de.htwg.se.mill.controller
 
-trait Event
+trait GameState {
+  def handle:String
+}
 
-case class InProgessEvent() extends Event
+case class InProgessState() extends GameState {
+  override def handle: String = "Game in progress"
+}
 
-case class FinishedEvent() extends Event
+case class FinishedState() extends GameState {
+  override def handle: String = "Game finished"
+}
 
-case class WhiteTurnEvent() extends Event
+case class WhiteTurnState() extends GameState {
+  override def handle: String = "White's turn"
+}
 
-case class BlackTurnEvent() extends Event
+case class BlackTurnState() extends GameState {
+  override def handle: String = "Black's turn"
+}
 
 object GameState {
-  var state = inProgress
-  def handle(e: Event): String = {
+  var state = InProgessState().handle
+  def handle(e: GameState): String = {
     e match {
-      case p: InProgessEvent => state = inProgress
-      case f: FinishedEvent => state = finished
-      case w: WhiteTurnEvent => state = WhiteTurn
-      case b: BlackTurnEvent => state = BlackTurn
+      case InProgessState() => state = InProgessState().handle
+      case FinishedState() => state = FinishedState().handle
+      case WhiteTurnState() => state = WhiteTurnState().handle
+      case BlackTurnState() => state = BlackTurnState().handle
     }
     state
   }
-
-  def inProgress: String = "Game in progress"
-  def finished: String = "Game finished"
-  def WhiteTurn: String = "White's turn"
-  def BlackTurn: String = "Black's turn"
 }
