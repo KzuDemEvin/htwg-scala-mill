@@ -2,7 +2,7 @@ package de.htwg.se.mill.model
 
 import org.scalatest.{Matchers, WordSpec}
 
-class FieldCreateRandomStrategySpec extends WordSpec with Matchers {
+class RandomStrategySpec extends WordSpec with Matchers {
   "A FieldCreator " should {
     "create an empty Field and fill it with stones with a creation strategy" in {
       val field= (new RandomStrategy).createNewField(7)
