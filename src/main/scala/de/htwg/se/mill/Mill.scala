@@ -2,12 +2,12 @@ package de.htwg.se.mill
 
 import de.htwg.se.mill.aview.Tui
 import de.htwg.se.mill.controller.Controller
-import de.htwg.se.mill.model.{FieldCreator}
+import de.htwg.se.mill.model.{Field}
 
 import scala.io.StdIn.readLine
 
 object Mill {
-  val controller = new Controller(new FieldCreator().createField(7))
+  val controller = new Controller(new Field(7))
   val tui = new Tui(controller)
   controller.notifyObservers
 
