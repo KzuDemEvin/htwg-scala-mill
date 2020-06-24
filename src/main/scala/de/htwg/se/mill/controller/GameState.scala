@@ -20,6 +20,22 @@ case class BlackTurnState() extends GameState {
   override def handle: String = "Black's turn"
 }
 
+case class NewState() extends GameState {
+  override def handle: String = "New field"
+}
+
+case class SetState() extends GameState {
+  override def handle: String = "Set"
+}
+
+case class UndoState() extends GameState {
+  override def handle: String = "Undo"
+}
+
+case class RedoState() extends GameState {
+  override def handle: String = "Redo"
+}
+
 object GameState {
   var state = InProgessState().handle
   def handle(e: GameState): String = {
@@ -28,6 +44,10 @@ object GameState {
       case FinishedState() => state = FinishedState().handle
       case WhiteTurnState() => state = WhiteTurnState().handle
       case BlackTurnState() => state = BlackTurnState().handle
+      case NewState() => state = NewState().handle
+      case SetState() => state = SetState().handle
+      case UndoState() => state = UndoState().handle
+      case RedoState() => state = RedoState().handle
     }
     state
   }

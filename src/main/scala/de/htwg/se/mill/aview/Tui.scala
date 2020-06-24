@@ -4,12 +4,14 @@ import de.htwg.se.mill.controller.{Controller, GameState, InProgessState, WhiteT
 import de.htwg.se.mill.model.{Cell, Stone}
 import de.htwg.se.mill.util.Observer
 
+import scala.swing.Reactor
+
 import scala.util.{Failure, Success, Try}
 
 
-class Tui(controller: Controller) extends Observer {
+class Tui(controller: Controller) extends Reactor {
 
-  controller.add(this)
+  listenTo(controller)
   val size = 7
 
   def execInput(input: String): Try[String] = {
@@ -22,7 +24,7 @@ class Tui(controller: Controller) extends Observer {
         Success("valid command: " + input)
       case "redo" => controller.redo
         Success("valid command: " + input)
-      case _ => input.toList.filter(place => place != ' ').filter(_.isDigit).map(place =>  place.toString.toInt) match {
+      case _ => input.toList.filter(p => p != ' ').filter(_.isDigit).map(p =>  p.toString.toInt) match {
         case row :: column :: value :: Nil => value match {
           case 0 => controller.set(row, column, Cell(true, Stone("w+")))
             Success("valid command: " + input)
