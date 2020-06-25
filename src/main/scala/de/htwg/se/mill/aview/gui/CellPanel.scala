@@ -16,12 +16,11 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
 
   def myCell = controller.cell(row, column)
 
-  val button = new Button("Set") {
-    controller.set(row, column)
-  }
+  val setbutton = new Button("Set")
+
 
   val cell = new BoxPanel(Orientation.Vertical) {
-    contents += button
+    contents += setbutton
     preferredSize = new Dimension(100, 100)
     background = highlightedCellColor
     //background = if (controller.available(row, column)) givenCellColor else cellColor
@@ -29,6 +28,9 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
     listenTo(mouse.clicks)
     listenTo(controller)
     reactions += {
+      case ButtonClicked(setbutton) => {
+        controller.set(row, column)
+      }
       case e: CellChanged => {
         repaint
       }
@@ -40,7 +42,7 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
 
   def redraw:Unit = {
     contents.clear()
-    label.text = cellText(row, column)
+    //label.text = cellText(row, column)
       //setBackground(cell)
     contents += cell
     repaint

@@ -8,7 +8,7 @@ import de.htwg.se.mill.model.Color
 
 import scala.io.Source._
 
-class CellClicked(val row: Int, val column: Int) extends Event
+//class CellClicked(val row: Int, val column: Int) extends Event
 
 class SwingGui(controller: Controller) extends Frame {
 
@@ -32,7 +32,6 @@ class SwingGui(controller: Controller) extends Frame {
 
   reactions += {
     case event: CellChanged     => updateField
-    case event: CandidatesChanged => updateField
   }
 
   def updateField: Unit = {
