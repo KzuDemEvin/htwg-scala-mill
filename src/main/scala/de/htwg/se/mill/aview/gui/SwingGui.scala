@@ -15,7 +15,7 @@ class SwingGui(controller: Controller) extends Frame {
   title = "Mill"
   var cells = Array.ofDim[CellPanel](controller.gridSize, controller.gridSize)
 
-  def highlightpanel = new FlowPanel {
+  def highlightpanel:FlowPanel = new FlowPanel {
     contents += new Label("Highlight:")
     for {index <- 0 to controller.gridSize} {
       val button = Button(if (index == 0) "" else index.toString) {
@@ -27,26 +27,20 @@ class SwingGui(controller: Controller) extends Frame {
     }
   }
 
-  def gridPanel = new GridPanel(controller.blockSize, controller.blockSize) {
+  def gridPanel:GridPanel = new GridPanel(controller.fieldsize, controller.fieldsize) {
     border = LineBorder(java.awt.Color.BLACK, 2)
-    background = java.awt.Color.BLACK
+    background = java.awt.Color.ORANGE
     for {
-      outerRow <- 0 until controller.blockSize
-      outerColumn <- 0 until controller.blockSize
+      row <- 0 until controller.fieldsize
+      col <- 0 until controller.fieldsize
     } {
-      contents += new GridPanel(controller.blockSize, controller.blockSize) {
+      if ()
+      contents += new FlowPanel {
         border = LineBorder(java.awt.Color.BLACK, 2)
-        for {
-          innerRow <- 0 until controller.blockSize
-          innerColumn <- 0 until controller.blockSize
-        } {
-          val x = outerRow * controller.blockSize + innerRow
-          val y = outerColumn * controller.blockSize + innerColumn
-          val cellPanel = new CellPanel(x, y, controller)
-          cells(x)(y) = cellPanel
-          contents += cellPanel
-          listenTo(cellPanel)
-        }
+        val cellPanel = new CellPanel(row, col, controller)
+        cells(row)(col) = cellPanel
+        contents += cellPanel
+        listenTo(cellPanel)
       }
     }
   }
@@ -61,19 +55,16 @@ class SwingGui(controller: Controller) extends Frame {
   menuBar = new MenuBar {
     contents += new Menu("File") {
       mnemonic = Key.F
-      contents += new MenuItem(Action("New") { controller.createEmptyField(controller) })
-      contents += new MenuItem(Action("Random") { controller.createRandomGrid(controller.gridSize,controller.gridSize) })
-      contents += new MenuItem(Action("Quit") { System.exit(0) })
+      contents += new MenuItem(Action("New Game") { controller.createEmptyField(7) })
+      contents += new MenuItem(Action("Random") { controller.createRandomField(7) })
+      contents += new MenuItem(Action("Exit") { System.exit(0) })
     }
     contents += new Menu("Edit") {
       mnemonic = Key.E
       contents += new MenuItem(Action("Undo") { controller.undo })
       contents += new MenuItem(Action("Redo") { controller.redo })
     }
-    contents += new Menu("Solve") {
-      mnemonic = Key.S
-      contents += new MenuItem(Action("Solve") { controller.solve })
-    }
+
     contents += new Menu("Highlight") {
       mnemonic = Key.H
       for { index <- 0 to controller.gridSize } {
@@ -82,11 +73,7 @@ class SwingGui(controller: Controller) extends Frame {
     }
     contents += new Menu("Options") {
       mnemonic = Key.O
-      contents += new MenuItem(Action("Show all candidates") { controller.toggleShowAllCandidates })
-      contents += new MenuItem(Action("Size 1*1") { controller.resize(1) })
-      contents += new MenuItem(Action("Size 4*4") { controller.resize(4) })
-      contents += new MenuItem(Action("Size 9*9") { controller.resize(9) })
-
+      contents += new MenuItem(Action("Show all Stones per Player") { controller.toggleShowAllCandidates })
     }
   }
 
