@@ -2,9 +2,11 @@ package de.htwg.se.mill.aview.gui
 
 import scala.swing._
 import javax.swing.table._
+
 import scala.swing.event._
 import de.htwg.se.mill.controller.Controller
 import de.htwg.se.mill.controller.CellChanged
+import de.htwg.se.mill.model.{Cell, Stone}
 
 class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel {
 
@@ -14,17 +16,12 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
 
   def myCell = controller.cell(row, column)
 
-  //def cellText(row: Int, col: Int) = if (controller.isSet(row, col)) "filled" + controller.cell(row, col).content.whichColor.toString else "leer"
-  def cellText(row: Int, col: Int) = "besetzt"
-
-  val label =
-    new Label {
-      text = cellText(row, column)
-      font = new Font("Verdana", 1, 20)
-    }
+  val button = new Button("Set") {
+    controller.set(row, column, Cell(true, Stone("")))
+  }
 
   val cell = new BoxPanel(Orientation.Vertical) {
-    contents += label
+    contents += button
     preferredSize = new Dimension(100, 100)
     background = highlightedCellColor
     //background = if (controller.available(row, column)) givenCellColor else cellColor
@@ -33,7 +30,6 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
     listenTo(controller)
     reactions += {
       case e: CellChanged => {
-        label.text = cellText(row, column)
         repaint
       }
       case MouseClicked(src, pt, mod, clicks, pops) => {

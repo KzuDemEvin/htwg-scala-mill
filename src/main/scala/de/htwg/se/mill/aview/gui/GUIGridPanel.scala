@@ -3,7 +3,7 @@ package de.htwg.se.mill.aview.gui
 import de.htwg.se.mill.controller.Controller
 import de.htwg.se.mill.model.{Cell, Color, Stone}
 
-import scala.swing.{Button, GridPanel}
+import scala.swing.{Button, Graphics2D, GridPanel}
 
 class GUIGridPanel(controller: Controller, allCellPanels: Array[Array[CellPanel]]) {
   def gridPanel: GridPanel = {
