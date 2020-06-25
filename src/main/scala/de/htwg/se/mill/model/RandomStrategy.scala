@@ -29,17 +29,21 @@ class RandomStrategy extends Strategy {
     while (!field.available(row, col))
     var color = Random.nextInt(2)
     if (color == 0) {
-      if (whiteCounter > maxStones) {
-        color = 1
-      }
-      whiteCounter += 1
-      field.set(row, col, Cell(filled = true, Stone("w+")))
+      if (whiteCounter < maxStones) {
+        whiteCounter += 1
+        field.set(row, col, Cell(filled = true, Stone("w+")))
+      } else if (blackCounter < maxStones){
+        blackCounter += 1
+        field.set(row, col, Cell(filled = true, Stone("b+")))
+      } else {field}
     } else {
-      if (blackCounter > maxStones) {
-        color = 0
+      if (blackCounter < maxStones) {
+        blackCounter += 1
+        field.set(row, col, Cell(filled = true, Stone("b+")))
+      } else if (whiteCounter < maxStones) {
+        whiteCounter += 1
+        field.set(row, col, Cell(filled = true, Stone("w+")))
+      } else {field}
       }
-      blackCounter += 1
-      field.set(row, col, Cell(filled = true, Stone("b+")))
     }
-  }
 }
