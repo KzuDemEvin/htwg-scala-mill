@@ -2,17 +2,17 @@ package de.htwg.se.mill.model
 
 
 case class Field(allCells: Matrix[Cell]) {
-  def this(size:Int) {
+  def this(size: Int) {
     this(new Matrix[Cell](size, Cell(false, Stone("n"))))
   }
 
-  val size:Int = allCells.size
+  val size: Int = allCells.size
 
-  def cell(row:Int, col:Int):Cell = allCells.cell(row, col)
+  def cell(row: Int, col: Int): Cell = allCells.cell(row, col)
 
-  def possiblePosition(row:Int, col:Int):Boolean = allCells.allowedCell(row, col)
+  def possiblePosition(row: Int, col: Int): Boolean = allCells.allowedCell(row, col)
 
-  def available(row:Int, col:Int):Boolean = if (possiblePosition(row, col) && !cell(row, col).isSet) true else false
+  def available(row: Int, col: Int): Boolean = if (possiblePosition(row, col) && !cell(row, col).isSet) true else false
 
   def set(row:Int, col:Int, c:Cell) : Field = {
     if (available(row, col)) {
@@ -20,7 +20,7 @@ case class Field(allCells: Matrix[Cell]) {
     } else {this}
   }
 
-  def placedStones():Int = {
+  def placedStones(): Int = {
     var placedStones = 0
     for (x <- this.allCells.allowedPosition) {
       if (!this.available(x._1, x._2)) {
@@ -29,6 +29,57 @@ case class Field(allCells: Matrix[Cell]) {
     }
     placedStones
   }
+
+  val millPositions = List(((0, 0), (0, 3), (0, 6)), //horizontal mills
+    ((1, 1), (1, 3), (1, 5)),
+    ((2, 2), (2, 3), (2, 4)),
+    ((3, 0), (3, 1), (3, 2)),
+    ((3, 4), (3, 5), (3, 6)),
+    ((4, 2), (4, 3), (4, 4)),
+    ((5, 1), (5, 3), (5, 5)),
+    ((6, 0), (6, 3), (6, 6)),
+    ((0, 0), (3, 0), (6, 0)), //vertical mills
+    ((1, 1), (3, 1), (5, 1)),
+    ((2, 2), (3, 2), (4, 2)),
+    ((0, 3), (1, 3), (2, 3)),
+    ((4, 3), (5, 3), (6, 3)),
+    ((2, 4), (3, 4), (4, 4)),
+    ((1, 5), (3, 5), (5, 5)),
+    ((0, 6), (3, 6), (6, 6)))
+
+  def checkMill():Int = {
+    var r = 0
+    for (x <- millPositions) {
+      val cell1 = cell(x._1._1, x._1._2)
+      val cell2 = cell(x._2._1, x._2._2)
+      val cell3 = cell(x._3._1, x._3._2)
+
+      if (checkMillSet(cell1, cell2, cell3)) {
+        if (checkMillBlack(cell1, cell2, cell3)) {
+          r = 1
+        }
+        if (checkMillWhite(cell1, cell2, cell3)) {
+          r = 2
+        }
+      }
+    }
+    r
+  }
+
+  private def checkMillSet(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
+    cell1.isSet && cell2.isSet && cell3.isSet
+  }
+
+  private def checkMillBlack(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
+    (cell1.getContent.whichColor == Color.black && cell2.getContent.whichColor == Color.black
+    && cell3.getContent.whichColor == Color.black)
+  }
+
+  private def checkMillWhite(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
+    (cell1.getContent.whichColor == Color.white && cell2.getContent.whichColor == Color.white
+      && cell3.getContent.whichColor == Color.white)
+  }
+
 
   override def toString: String = {
     var string = "Mill Gameboard:\n"

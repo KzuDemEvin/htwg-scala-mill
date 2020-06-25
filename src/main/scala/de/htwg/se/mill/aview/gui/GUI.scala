@@ -1,6 +1,6 @@
 package de.htwg.se.mill.aview.gui
 
-import de.htwg.se.mill.controller.{CandidatesChanged, CellChanged, Controller}
+import de.htwg.se.mill.controller.{CellChanged, Controller, StoneRemoved}
 
 import scala.swing.event.Key
 import scala.swing.{Action, BorderPanel, BoxPanel, Color, Dimension, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Orientation, Point, TextField}
@@ -30,6 +30,7 @@ class GUI(controller: Controller) extends MainFrame {
 
   reactions += {
     case event: CellChanged => updateField
+    case event: StoneRemoved => updateField
   }
 
   def updateField: Unit = {

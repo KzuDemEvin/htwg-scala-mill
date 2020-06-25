@@ -62,12 +62,21 @@ class Controller(var field:Field) extends Publisher {
     publish(new CellChanged)
   }
 
+  def checkMill():Unit = {
+    val m = field.checkMill()
+    m match {
+      case 1 => gameState = GameState.handle(BlackMillState())
+      case 2 => gameState = GameState.handle(WhiteMillState())
+      case _ =>
+    }
+  }
+
   def statusText:String = GameState.state
 
   def cell(row:Int, col:Int):Cell = field.cell(row, col)
   def isSet(row:Int, col:Int):Boolean = field.cell(row, col).isSet
   def available(row:Int, col:Int):Boolean = field.available(row, col)
   def possiblePosition(row:Int, col:Int):Boolean = field.possiblePosition(row, col)
-  def placedStones(): Int = field.placedStones()
+  def placedStones(): Int = field.palcedStones()
   def fieldsize:Int = field.size
 }

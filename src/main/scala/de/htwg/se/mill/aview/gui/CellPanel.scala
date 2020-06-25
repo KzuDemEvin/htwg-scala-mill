@@ -80,9 +80,10 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
     listenTo(controller)
     listenTo(setButton)
     reactions += {
-      case ButtonClicked(component) if component == setButton =>
+      case ButtonClicked(component) if component == setButton => {
         controller.set(row, column)
         repaint
+      }
       case e: CellChanged => {
         label.text = cellText(row, column)
         repaint
@@ -101,5 +102,4 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
     contents += cell
     repaint
   }
-
 }

@@ -32,6 +32,14 @@ case class RedoState() extends GameState {
   override def handle: String = "Redo"
 }
 
+case class WhiteMillState() extends GameState {
+  override def handle: String = "White Mill"
+}
+
+case class BlackMillState() extends GameState {
+  override def handle: String = "Black Mill"
+}
+
 object GameState {
   var state = NewState().handle
   def handle(e: GameState): String = {
@@ -43,6 +51,8 @@ object GameState {
       case RandomState() => state = RandomState().handle
       case UndoState() => state = UndoState().handle
       case RedoState() => state = RedoState().handle
+      case WhiteMillState() => state = WhiteMillState().handle
+      case BlackMillState() => state = BlackMillState().handle
     }
     state
   }
