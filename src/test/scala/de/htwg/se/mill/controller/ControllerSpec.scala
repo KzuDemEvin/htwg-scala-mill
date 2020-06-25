@@ -13,9 +13,16 @@ class ControllerSpec extends WordSpec with Matchers {
       val controller = new Controller(Field)
       val observer = new Observer {
         var updated: Boolean = false
+
         def isUpdated: Boolean = updated
-        override def update: Boolean = {updated = true; updated}
+
+        override def update: Boolean = {
+          updated = true;
+          updated
+        }
       }
+    }
+
 //      controller.add(observer)
 //      "notify its Observer after creation" in {
 //        controller.createEmptyField(7)
@@ -32,7 +39,7 @@ class ControllerSpec extends WordSpec with Matchers {
 //        observer.updated should be(true)
 //        controller.field.cell(0,0).content.whichColor should be (Color.white)
 //      }
-    }
+
   }
   "new" should {
     val field = new Field(7)
@@ -45,7 +52,7 @@ class ControllerSpec extends WordSpec with Matchers {
       controller.field.cell(0, 0).isSet should be(false)
     }
     "handle undo/redo of setting a cell correctly" in {
-      controller.set(0, 0, Cell(true, Stone("w+")))
+      controller.set(0, 0)
       controller.field.cell(0, 0).isSet should be(true)
       controller.field.cell(0, 0).getContent.whichColor should be(Color.white)
       controller.undo
