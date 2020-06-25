@@ -1,13 +1,10 @@
 package de.htwg.se.mill.aview.gui
 
-import java.awt.Dimension
+import de.htwg.se.mill.controller.{CandidatesChanged, CellChanged, Controller}
 
-import de.htwg.se.mill.controller.{CellChanged, Controller, StoneRemoved}
+import scala.swing.event.Key
+import scala.swing.{Action, BorderPanel, BoxPanel, Color, Dimension, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Orientation, Point, TextField}
 
-import scala.swing.event.{Event, Key}
-import scala.swing.{Action, BorderPanel, BoxPanel, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Orientation, TextField}
-
-class CellClicked(val row: Int, val column: Int) extends Event
 
 class GUI(controller: Controller) extends MainFrame {
   listenTo(controller)
@@ -17,7 +14,6 @@ class GUI(controller: Controller) extends MainFrame {
 
 
   menuBar = new GUIMenuBar(controller).menuBar
-
 
   val gridPanel = new GUIGridPanel(controller, cells).gridPanel
   val statusline = new TextField(controller.statusText, 20)
@@ -30,12 +26,11 @@ class GUI(controller: Controller) extends MainFrame {
 
   visible = true
   minimumSize = new Dimension(800, 800)
-  preferredSize = new Dimension(900, 900)
   updateField
 
   reactions += {
-    case event: CellChanged => updateField
-    case event: StoneRemoved => updateField
+    case event: CellChanged     => updateField
+    case event: CandidatesChanged => updateField
   }
 
   def updateField: Unit = {
