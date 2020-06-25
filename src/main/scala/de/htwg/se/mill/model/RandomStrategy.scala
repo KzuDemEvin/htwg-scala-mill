@@ -4,12 +4,18 @@ import scala.util.Random
 
 class RandomStrategy extends Strategy {
 
+  var whiteCounter = 0
+  var blackCounter = 0
+  val maxStones = 9
+
   def fill(_field: Field): Field = {
-    val num = 24
+    val num = 18
     var field = new Field(_field.size)
     for (i <- 0 until num) {
       field = placeRandomStone(field)
     }
+    println(whiteCounter)
+    println(blackCounter)
     field
   }
 
@@ -21,10 +27,18 @@ class RandomStrategy extends Strategy {
       col = Random.nextInt(field.size)
     }
     while (!field.available(row, col))
-    val color = Random.nextInt(2)
+    var color = Random.nextInt(2)
     if (color == 0) {
+      if (whiteCounter > maxStones) {
+        color = 1
+      }
+      whiteCounter += 1
       field.set(row, col, Cell(filled = true, Stone("w+")))
     } else {
+      if (blackCounter > maxStones) {
+        color = 0
+      }
+      blackCounter += 1
       field.set(row, col, Cell(filled = true, Stone("b+")))
     }
   }

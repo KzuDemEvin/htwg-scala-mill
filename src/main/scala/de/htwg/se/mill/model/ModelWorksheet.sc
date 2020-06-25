@@ -1,4 +1,4 @@
-import de.htwg.se.mill.model.{Cell, Color, Field, FieldCreator, Matrix, Stone}
+import de.htwg.se.mill.model.{Cell, Color, Field, Matrix, Stone}
 
 import scala.io.StdIn.readLine
 
@@ -7,7 +7,11 @@ import scala.io.StdIn.readLine
 
 val colorset = Color.values.toIndexedSeq
 val h = colorset.apply(0)
+val s = Color.black
+println(s)
 
+val field = new Field(7)
+field.toString
 
 //var string = ""
 //var a, b, x = 0
