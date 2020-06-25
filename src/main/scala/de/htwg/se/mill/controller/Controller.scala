@@ -8,7 +8,7 @@ import scala.swing.Publisher
 class Controller(var field:Field) extends Publisher {
 
   private val undoManager = new UndoManager
-  var gameState = GameState.handle(InProgessState())
+  var gameState = GameState.handle(NewState())
   var roundCounter = 0
 
 
@@ -38,6 +38,7 @@ class Controller(var field:Field) extends Publisher {
     publish(new CellChanged)
   }
 
+
   def undo: Unit = {
     undoManager.undoStep
     gameState = GameState.handle(UndoState())
@@ -57,4 +58,13 @@ class Controller(var field:Field) extends Publisher {
   def available(row:Int, col:Int):Boolean = field.available(row, col)
   def possiblePosition(row:Int, col:Int):Boolean = field.possiblePosition(row, col)
   def fieldsize:Int = field.size
+
+  def checkMill():Unit = {
+    val m = field.checkMill()
+    m match {
+      case 1 => gameState = GameState.handle(BlackMillState())
+      case 2 => gameState = GameState.handle(WhiteMillState())
+      case _ =>
+    }
+  }
 }
