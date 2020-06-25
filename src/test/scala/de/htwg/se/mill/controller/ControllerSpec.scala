@@ -16,22 +16,22 @@ class ControllerSpec extends WordSpec with Matchers {
         def isUpdated: Boolean = updated
         override def update: Boolean = {updated = true; updated}
       }
-      controller.add(observer)
-      "notify its Observer after creation" in {
-        controller.createEmptyField(7)
-        observer.updated should be(true)
-        controller.field.size should be(7)
-      }
-      "notify its Observer after random creation" in {
-        controller.createRandomField(7)
-        observer.updated should be(true)
-        controller.field.possiblePosition(0,0) should be(true)
-      }
-      "notify its Observer after setting a cell" in {
-        controller.set(0,0, Cell(true, Stone("w+")))
-        observer.updated should be(true)
-        controller.field.cell(0,0).content.whichColor should be (Color.white)
-      }
+//      controller.add(observer)
+//      "notify its Observer after creation" in {
+//        controller.createEmptyField(7)
+//        observer.updated should be(true)
+//        controller.field.size should be(7)
+//      }
+//      "notify its Observer after random creation" in {
+//        controller.createRandomField(7)
+//        observer.updated should be(true)
+//        controller.field.possiblePosition(0,0) should be(true)
+//      }
+//      "notify its Observer after setting a cell" in {
+//        controller.set(0,0, Cell(true, Stone("w+")))
+//        observer.updated should be(true)
+//        controller.field.cell(0,0).content.whichColor should be (Color.white)
+//      }
     }
   }
   "new" should {

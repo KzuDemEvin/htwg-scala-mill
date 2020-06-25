@@ -1,13 +1,15 @@
 package de.htwg.se.mill.controller
 
-import de.htwg.se.mill.model.{Cell, Field, RandomStrategy}
+import de.htwg.se.mill.model.{Cell, Field, RandomStrategy, Stone}
 import de.htwg.se.mill.util.{Observable, UndoManager}
+
 import scala.swing.Publisher
 
 class Controller(var field:Field) extends Publisher {
 
   private val undoManager = new UndoManager
   var gameState = GameState.handle(InProgessState())
+  var roundCounter = 0
 
 
   def createEmptyField(size: Int): Unit = {
@@ -25,8 +27,14 @@ class Controller(var field:Field) extends Publisher {
   def fieldToString: String = field.toString
 
   def set(row: Int, col: Int, c: Cell): Unit = {
-    undoManager.doStep(new SetCommand(row, col, c, this))
-    gameState = GameState.handle(SetState())
+    roundCounter += 1
+    if (roundCounter % 2 == 0) {
+      undoManager.doStep(new SetCommand(row, col, Cell(true, Stone("w+")), this))
+      gameState = GameState.handle(BlackTurnState())
+    } else {
+      undoManager.doStep(new SetCommand(row, col, Cell(true, Stone("b+")), this))
+      gameState = GameState.handle(WhiteTurnState())
+    }
     publish(new CellChanged)
   }
 
