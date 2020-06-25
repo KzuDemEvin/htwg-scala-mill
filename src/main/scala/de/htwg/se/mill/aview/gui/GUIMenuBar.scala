@@ -10,8 +10,8 @@ class GUIMenuBar(controller: Controller) extends MenuBar {
     val menuBar = new MenuBar {
       contents += new Menu("File") {
         mnemonic = Key.F
-        contents += new MenuItem(Action("New") { controller.createEmptyField(controller.fieldSize) })
-        contents += new MenuItem(Action("Random") { controller.createRandomField(controller.fieldSize) })
+        contents += new MenuItem(Action("New") { controller.createEmptyField(controller.fieldsize) })
+        contents += new MenuItem(Action("Random") { controller.createRandomField(controller.fieldsize) })
         contents += new MenuItem(Action("Quit") { System.exit(0) })
       }
       contents += new Menu("Edit") {
