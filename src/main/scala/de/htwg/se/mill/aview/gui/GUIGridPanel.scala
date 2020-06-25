@@ -7,10 +7,10 @@ import scala.swing.{Button, GridPanel}
 
 class GUIGridPanel(controller: Controller) {
   def gridPanel: GridPanel = {
-    val gridPanel = new GridPanel(controller.fieldSize, controller.fieldSize) {
+    val gridPanel = new GridPanel(controller.fieldsize, controller.fieldsize) {
       for {
-        row <- 0 until controller.fieldSize
-        column <- 0 until controller.fieldSize
+        row <- 0 until controller.fieldsize
+        column <- 0 until controller.fieldsize
       } {
         if (controller.possiblePosition(row, column)) {
           if (controller.cell(row, column).content.whichColor == Color.white) {
