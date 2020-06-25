@@ -15,17 +15,17 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
   def myCell = controller.cell(row, column)
 
   //def cellText(row: Int, col: Int) = if (controller.isSet(row, col)) "filled" + controller.cell(row, col).content.whichColor.toString else "leer"
-  def cellText(row: Int, col: Int) = "hallo"
+  def cellText(row: Int, col: Int) = "besetzt"
 
   val label =
     new Label {
       text = cellText(row, column)
-      font = new Font("Verdana", 1, 36)
+      font = new Font("Verdana", 1, 20)
     }
 
   val cell = new BoxPanel(Orientation.Vertical) {
     contents += label
-    preferredSize = new Dimension(50, 50)
+    preferredSize = new Dimension(100, 100)
     background = highlightedCellColor
     //background = if (controller.available(row, column)) givenCellColor else cellColor
     border = Swing.BeveledBorder(Swing.Raised)
@@ -42,18 +42,13 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
     }
   }
 
-//  def redraw = {
-//    contents.clear()
-//    if ((controller.isShowCandidates(row, column) || controller.showAllCandidates) && !controller.isSet(row, column)) {
-//      setBackground(candidates)
-//      contents += candidates
-//    } else {
-//      label.text = cellText(row, column)
-//      setBackground(cell)
-//      contents += cell
-//    }
-//    repaint
-//  }
+  def redraw:Unit = {
+    contents.clear()
+    label.text = cellText(row, column)
+      //setBackground(cell)
+    contents += cell
+    repaint
+  }
 
 //  def setBackground(p: Panel) = p.background = if (controller.isAvailable(row, column)) givenCellColor
 }
