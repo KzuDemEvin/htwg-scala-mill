@@ -52,9 +52,9 @@ class Controller(var field:Field) extends Publisher {
 
   def statusText:String = GameState.state
 
-  def cell(row:Int, col:Int) = field.cell(row, col)
+  def cell(row:Int, col:Int):Cell = field.cell(row, col)
   def isSet(row:Int, col:Int):Boolean = field.cell(row, col).isSet
-  def fieldSize:Int = field.size
-  def possiblePosition(row:Int, col:Int):Boolean = field.possiblePosition(row, col)
-  def isAvailable(row:Int, col:Int):Boolean = field.available(row, col)
+  def available(row:Int, col:Int):Boolean = field.available(row, col)
+  def fieldsize:Int = field.size
+
 }
