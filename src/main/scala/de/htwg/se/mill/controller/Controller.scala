@@ -57,5 +57,6 @@ class Controller(var field:Field) extends Publisher {
   def available(row:Int, col:Int):Boolean = field.available(row, col)
   def possiblePosition(row:Int, col:Int):Boolean = field.possiblePosition(row, col)
   def fieldsize:Int = field.size
+  def possiblePosition(row:Int, col:Int):Boolean = field.possiblePosition(row, col)
 
 }
