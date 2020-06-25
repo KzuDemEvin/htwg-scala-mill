@@ -6,7 +6,7 @@ class GameStateSpec extends WordSpec with Matchers {
   "A GameState" when {
     "should represent the game current sate. It" should {
       "be in progress" in {
-        val gameStateProgress = GameState.handle(InProgessState())
+        val gameStateProgress = GameState.handle(NewState())
         gameStateProgress should be("Game in progress")
       }
       "be finished" in {

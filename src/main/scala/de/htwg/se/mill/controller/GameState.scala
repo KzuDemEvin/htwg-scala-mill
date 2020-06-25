@@ -4,10 +4,6 @@ trait GameState {
   def handle:String
 }
 
-case class InProgessState() extends GameState {
-  override def handle: String = "Game in progress"
-}
-
 case class FinishedState() extends GameState {
   override def handle: String = "Game finished"
 }
@@ -24,8 +20,8 @@ case class NewState() extends GameState {
   override def handle: String = "New field"
 }
 
-case class SetState() extends GameState {
-  override def handle: String = "Set"
+case class RandomState() extends GameState {
+  override def handle: String = "New field filled with random stones"
 }
 
 case class UndoState() extends GameState {
@@ -36,23 +32,23 @@ case class RedoState() extends GameState {
   override def handle: String = "Redo"
 }
 
-case class BlackMillState() extends GameState {
-  override def handle: String = "Black Mill"
-}
-
 case class WhiteMillState() extends GameState {
   override def handle: String = "White Mill"
 }
 
+case class BlackMillState() extends GameState {
+  override def handle: String = "Black Mill"
+}
+
 object GameState {
-  var state = InProgessState().handle
+  var state = NewState().handle
   def handle(e: GameState): String = {
     e match {
-      case InProgessState() => state = InProgessState().handle
-      //case FinishedState() => state = FinishedState().handle
+      case FinishedState() => state = FinishedState().handle
       case WhiteTurnState() => state = WhiteTurnState().handle
       case BlackTurnState() => state = BlackTurnState().handle
       case NewState() => state = NewState().handle
+      case RandomState() => state = RandomState().handle
       case UndoState() => state = UndoState().handle
       case RedoState() => state = RedoState().handle
       case WhiteMillState() => state = WhiteMillState().handle

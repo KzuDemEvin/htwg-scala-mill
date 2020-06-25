@@ -1,7 +1,6 @@
 package de.htwg.se.mill.aview.gui
 
 import scala.swing._
-import javax.swing.table._
 
 import scala.swing.event._
 import de.htwg.se.mill.controller.Controller
@@ -10,14 +9,15 @@ import de.htwg.se.mill.model.Color
 
 class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel {
 
-  val givenCellColor = new Color(200, 200, 255)
   val cellColor = new Color(224, 224, 255)
-  val highlightedCellColor = new Color(192, 255, 192)
+  val unavailableColor = new Color(192, 255, 192)
+  //val unavailableColor = new Color(238, 238, 238) // backgroundcolor
   val whiteColor = new Color(255, 255, 255)
   val blackColor = new Color(0, 0, 0)
 
-  def myCell = controller.cell(row, column)
+  val sizeDim = new Dimension(100, 100)
 
+  def myCell = controller.cell(row, column)
 
   // 0 = white, 1 = black, 2 = available, 3 = notValid
   def cellType(row: Int, col: Int): Int = {
@@ -40,10 +40,10 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
 
   def cellText(row: Int, col: Int):String = {
     cellType(row, col) match {
-      case 0 => "w"
-      case 1 => "b"
-      case 2 => "o"
-      case 3 => "-"
+      case 0 => ""
+      case 1 => ""
+      case 2 => ""
+      case 3 => ""
     }
   }
 
@@ -52,7 +52,7 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
       case 0 => whiteColor
       case 1 => blackColor
       case 2 => cellColor
-      case 3 => highlightedCellColor
+      case 3 => unavailableColor
     }
   }
 
@@ -62,18 +62,20 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
       font = new Font("Verdana", 1, 20)
     }
 
-  val setButton = new Button("Set")
+  val setButton = new Button("Set") {
+//    minimumSize = sizeDim
+//    maximumSize = sizeDim
+//    preferredSize = sizeDim
+  }
 
   val cell = new BoxPanel(Orientation.Vertical) {
     contents += label
     if (cellType(row, column) != 3) {
       contents += setButton
     }
-    preferredSize = new Dimension(100, 100)
+    preferredSize = sizeDim
     background = cellBackground(row, column)
 
-    //background = if (controller.available(row, column)) givenCellColor else cellColor
-    //border = Swing.BeveledBorder(Swing.Raised)
     listenTo(mouse.clicks)
     listenTo(controller)
     listenTo(setButton)
@@ -96,6 +98,7 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
     contents.clear()
     label.text = cellText(row, column)
     cell.background = cellBackground(row, column)
+    //setButton.background = cellBackground(row, column)
     contents += cell
     repaint
   }
