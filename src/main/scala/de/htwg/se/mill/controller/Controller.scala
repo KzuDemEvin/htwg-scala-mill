@@ -48,8 +48,6 @@ class Controller(var field:Field) extends Publisher {
     publish(new CellChanged)
   }
 
-  def modeTwo(row: Int, col: Int): Unit
-
   def undo: Unit = {
     roundCounter -= 1
     undoManager.undoStep
