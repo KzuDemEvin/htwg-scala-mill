@@ -34,6 +34,10 @@ class GUI(controller: Controller) extends MainFrame {
   }
 
   def updateField: Unit = {
+    for {
+      row <-0 until controller.fieldsize
+      col <- 0 until controller.fieldsize
+    } cells(row)(col).redraw
     statusline.text = controller.statusText
     repaint
   }
