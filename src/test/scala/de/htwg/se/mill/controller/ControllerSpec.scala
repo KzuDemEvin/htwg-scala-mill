@@ -52,7 +52,7 @@ class ControllerSpec extends WordSpec with Matchers {
       controller.field.cell(0, 0).isSet should be(false)
     }
     "handle undo/redo of setting a cell correctly" in {
-      controller.set(0, 0, Cell(true, Stone("w+")))
+      controller.set(0, 0)
       controller.field.cell(0, 0).isSet should be(true)
       controller.field.cell(0, 0).getContent.whichColor should be(Color.white)
       controller.undo

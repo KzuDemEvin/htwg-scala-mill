@@ -25,9 +25,9 @@ class Tui(controller: Controller) extends Reactor {
         Success("valid command: " + input)
       case _ => input.toList.filter(p => p != ' ').filter(_.isDigit).map(p =>  p.toString.toInt) match {
         case row :: column :: value :: Nil => value match {
-          case 0 => controller.set(row, column, Cell(true, Stone("w+")))
+          case 0 => controller.set(row, column)
             Success("valid command: " + input)
-          case _ => controller.set(row, column, Cell(true, Stone("b+")))
+          case _ => controller.set(row, column)
             Success("valid command: " + input)
         }
         case _ =>
