@@ -1,9 +1,8 @@
 package de.htwg.se.mill.aview.gui
 
 import de.htwg.se.mill.controller.Controller
-import de.htwg.se.mill.model.{Cell, Color, Stone}
 
-import scala.swing.{Button, GridPanel}
+import scala.swing.{GridPanel}
 
 class GUIGridPanel(controller: Controller, allCellPanels: Array[Array[CellPanel]]) {
   def gridPanel: GridPanel = {
@@ -17,13 +16,11 @@ class GUIGridPanel(controller: Controller, allCellPanels: Array[Array[CellPanel]
           val cellPanel = new CellPanel(row, col, controller)
           allCellPanels(row)(col) = cellPanel
           contents += cellPanel
-          //contents += new Button("w")
           listenTo(cellPanel)
         } else {
           val cellPanel = new CellPanel(row, col, controller)
           allCellPanels(row)(col) = cellPanel
           contents += cellPanel
-          //contents += new Button("leer")
         }
       }
     }

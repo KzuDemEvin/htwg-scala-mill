@@ -29,8 +29,7 @@ class GUI(controller: Controller) extends MainFrame {
   updateField
 
   reactions += {
-    case event: CellChanged     => updateField
-    case event: CandidatesChanged => updateField
+    case event: CellChanged => updateField
   }
 
   def updateField: Unit = {
