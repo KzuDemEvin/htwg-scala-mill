@@ -39,14 +39,12 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
   }
 
   def cellText(row: Int, col: Int):String = {
-    var string = ""
     cellType(row, col) match {
-      case 0 => string = "w"
-      case 1 => string = "b"
-      case 2 => string = "o"
-      case 3 => string = "-"
+      case 0 => "w"
+      case 1 => "b"
+      case 2 => "o"
+      case 3 => "-"
     }
-    string
   }
 
   def cellBackground(row: Int, col: Int): Color = {
@@ -77,7 +75,7 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
     listenTo(mouse.clicks)
     listenTo(controller)
     reactions += {
-      case ButtonClicked(setbutton) => {controller.set(row, column)
+      case ButtonClicked(setButton) => {controller.set(row, column)
         repaint}
       case e: CellChanged => {
         label.text = cellText(row, column)
@@ -92,11 +90,11 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
   def redraw:Unit = {
     contents.clear()
     label.text = cellText(row, column)
-    label.background = cellBackground(row, column)
+    background = cellBackground(row, column)
       //setBackground(cell)
     contents += cell
     repaint
   }
-
+  //listenTo(setButton)
 //  def setBackground(p: Panel) = p.background = if (controller.isAvailable(row, column)) givenCellColor
 }
