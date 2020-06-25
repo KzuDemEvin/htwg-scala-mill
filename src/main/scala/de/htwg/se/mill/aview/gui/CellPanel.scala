@@ -17,7 +17,7 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
   def myCell = controller.cell(row, column)
 
   val button = new Button("Set") {
-    controller.set(row, column, Cell(true, Stone("")))
+    controller.set(row, column)
   }
 
   val cell = new BoxPanel(Orientation.Vertical) {
