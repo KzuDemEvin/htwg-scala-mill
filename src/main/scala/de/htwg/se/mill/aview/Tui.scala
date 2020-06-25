@@ -1,11 +1,10 @@
 package de.htwg.se.mill.aview
 
-import de.htwg.se.mill.controller.{Controller, GameState, InProgessState, WhiteTurnState}
+import de.htwg.se.mill.controller.{CellChanged, Controller, GameState, InProgessState, WhiteTurnState}
 import de.htwg.se.mill.model.{Cell, Stone}
 import de.htwg.se.mill.util.Observer
 
 import scala.swing.Reactor
-
 import scala.util.{Failure, Success, Try}
 
 
@@ -37,10 +36,18 @@ class Tui(controller: Controller) extends Reactor {
     }
   }
 
-  override def update: Boolean = {
-    println(controller.fieldToString)
-    println(GameState.state)
-    GameState.handle(InProgessState())
-    true
+  reactions += {
+    case event: CellChanged => printTui
   }
+
+  def printTui: Unit = {
+    println(controller.toString)
+    println(GameState.state)
+  }
+//  override def update: Boolean = {
+//    println(controller.fieldToString)
+//    println(GameState.state)
+//    GameState.handle(InProgessState())
+//    true
+//  }
 }
