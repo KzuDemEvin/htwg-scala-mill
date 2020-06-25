@@ -8,6 +8,7 @@ import scala.swing.{Button, GridPanel}
 class GUIGridPanel(controller: Controller, allCellPanels: Array[Array[CellPanel]]) {
   def gridPanel: GridPanel = {
     val gridPanel = new GridPanel(controller.fieldsize, controller.fieldsize) {
+
       for {
         row <- 0 until controller.fieldsize
         col <- 0 until controller.fieldsize
