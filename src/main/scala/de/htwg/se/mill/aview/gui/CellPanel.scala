@@ -28,7 +28,7 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
     preferredSize = new Dimension(100, 100)
     background = highlightedCellColor
     //background = if (controller.available(row, column)) givenCellColor else cellColor
-    border = Swing.BeveledBorder(Swing.Raised)
+    //border = Swing.BeveledBorder(Swing.Raised)
     listenTo(mouse.clicks)
     listenTo(controller)
     reactions += {
