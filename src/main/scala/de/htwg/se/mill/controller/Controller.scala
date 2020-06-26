@@ -65,8 +65,7 @@ class Controller(var field:Field) extends Publisher {
     }
     undoManager.undoStep
     gameState = GameState.handle(UndoState())
-    millState = MillState.handle(NoMillState())
-    //checkMill()
+    checkMill()
     publish(new CellChanged)
   }
 
@@ -76,7 +75,6 @@ class Controller(var field:Field) extends Publisher {
     }
     undoManager.redoStep
     gameState = GameState.handle(RedoState())
-    //checkMill(row, col)
     publish(new CellChanged)
   }
 

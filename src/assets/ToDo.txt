@@ -1,0 +1,5 @@
+Logik:
+
+Player-Verwaltung
+Player in unterschiedlichen Modes
+Mode-Verwaltung
