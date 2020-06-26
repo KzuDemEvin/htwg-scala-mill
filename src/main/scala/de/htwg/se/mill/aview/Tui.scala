@@ -25,6 +25,8 @@ class Tui(controller: Controller) extends Reactor {
         Success("valid command: " + input)
       case _ => input.toList.filter(p => p != ' ').filter(_.isDigit).map(p => p.toString.toInt) match {
         case row :: column :: Nil => controller.set(row, column)
+          //controller.checkMill(0)
+          println(controller.millState)
           Success("valid command: " + input)
       }
       case _ =>
