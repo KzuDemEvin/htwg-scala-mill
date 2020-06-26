@@ -4,15 +4,15 @@ trait RoundState {
   def handle:String
 }
 
-case class SetModeState() extends GameState {
+case class SetModeState() extends RoundState {
   override def handle: String = "Set Mode"
 }
 
-case class MoveModeState() extends GameState {
+case class MoveModeState() extends RoundState {
   override def handle: String = "Move Mode"
 }
 
-case class FlyModeState() extends GameState {
+case class FlyModeState() extends RoundState {
   override def handle: String = "FlyMode"
 }
 
