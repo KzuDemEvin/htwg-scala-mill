@@ -70,7 +70,12 @@ case class Field(allCells: Matrix[Cell]) {
     r
   }
 
-//  def moveStone(row: Int, col: Int): Field = {
+//  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
+//    for (x <- neighbours(rowOld, colOld)) {
+//      if (x._1 = rowNew && x._2 == colNew) {
+//
+//      }
+//    }
 //
 //  }
 

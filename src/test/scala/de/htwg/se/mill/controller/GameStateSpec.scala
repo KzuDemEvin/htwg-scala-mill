@@ -21,14 +21,14 @@ class GameStateSpec extends WordSpec with Matchers {
         val gameStateBlack = GameState.handle(BlackTurnState())
         gameStateBlack should be("Black's turn")
       }
-      "say its a whitemill" in {
-        val gameStateWhiteMill = GameState.handle(WhiteMillState())
-        gameStateWhiteMill should be("White Mill")
-      }
-      "say its a blackmill" in {
-        val gameStateBlackMill = GameState.handle(BlackMillState())
-        gameStateBlackMill should be("Black Mill")
-      }
+//      "say its a whitemill" in {
+//        val gameStateWhiteMill = GameState.handle(WhiteMillState())
+//        gameStateWhiteMill should be("White Mill")
+//      }
+//      "say its a blackmill" in {
+//        val gameStateBlackMill = GameState.handle(BlackMillState())
+//        gameStateBlackMill should be("Black Mill")
+//      }
     }
 
   }
