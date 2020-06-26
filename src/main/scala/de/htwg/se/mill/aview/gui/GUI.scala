@@ -16,22 +16,18 @@ class GUI(controller: Controller) extends MainFrame {
   menuBar = new GUIMenuBar(controller).menuBar
 
   val gridPanel = new GUIGridPanel(controller, cells).gridPanel
-  val statusline = new TextField(controller.statusText, 100) {
-    editable = false
-  }
-  val millline = new TextField(controller.millText, 100) {
-    editable = false
-  }
+  val statusline = new TextField(controller.statusText, 100) { editable = false }
+  val millline = new TextField(controller.millText, 100) { editable = false }
   val label = new Label {
     text = "Hallo"
   }
 
 
   contents = new BorderPanel {
-    //add(millline, BorderPanel.Position.North)
+    add(millline, BorderPanel.Position.North)
     add(gridPanel, BorderPanel.Position.Center)
     add(statusline, BorderPanel.Position.South)
-    add(label, BorderPanel.Position.North)
+    //add(label, BorderPanel.Position.North)
   }
 
   visible = true
@@ -44,7 +40,6 @@ class GUI(controller: Controller) extends MainFrame {
 
   reactions += {
     case event: CellChanged => updateField
-    case event: StoneRemoved => updateField
   }
 
   def updateField: Unit = {

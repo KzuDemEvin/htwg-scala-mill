@@ -18,6 +18,7 @@ class Controller(var field:Field) extends Publisher {
     roundCounter = 0
     field = new Field(size)
     gameState = GameState.handle(NewState())
+    millState = MillState.handle(NoMillState())
     publish(new CellChanged)
   }
 
@@ -42,9 +43,11 @@ class Controller(var field:Field) extends Publisher {
     roundCounter += 1
     if (roundCounter % 2 == 0) {
       undoManager.doStep(new SetCommand(row, col, Cell(true, Stone("w+")), this))
+      checkMill(row, col)
       gameState = GameState.handle(WhiteTurnState())
     } else {
       undoManager.doStep(new SetCommand(row, col, Cell(true, Stone("b+")), this))
+      checkMill(row, col)
       gameState = GameState.handle(BlackTurnState())
     }
     roundCounter = placedStones()
@@ -62,6 +65,8 @@ class Controller(var field:Field) extends Publisher {
     }
     undoManager.undoStep
     gameState = GameState.handle(UndoState())
+    millState = MillState.handle(NoMillState())
+    //checkMill()
     publish(new CellChanged)
   }
 
@@ -71,16 +76,18 @@ class Controller(var field:Field) extends Publisher {
     }
     undoManager.redoStep
     gameState = GameState.handle(RedoState())
+    //checkMill(row, col)
     publish(new CellChanged)
   }
 
-  def checkMill():Unit = {
-    val m = field.checkMill()
+  def checkMill(row:Int, col:Int):Unit = {
+    val m = field.checkMill(row, col)
     m match {
       case 1 => millState = MillState.handle(BlackMillState())
       case 2 => millState = MillState.handle(WhiteMillState())
-      case _ =>
+      case _ => millState = MillState.handle(NoMillState())
     }
+    publish(new CellChanged)
   }
 
   def statusText:String = GameState.state

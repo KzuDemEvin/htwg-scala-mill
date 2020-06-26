@@ -29,6 +29,8 @@ class Tui(controller: Controller) extends Reactor {
         case rowOld :: columnOld :: rowNew :: columnNew :: Nil => controller.moveStone(rowOld, columnOld, rowNew, columnNew)
           Success("valid command: " + input)
         case row :: column :: Nil => controller.set(row, column)
+          //controller.checkMill(0)
+          println(controller.millState)
           Success("valid command: " + input)
       }
       case _ =>
