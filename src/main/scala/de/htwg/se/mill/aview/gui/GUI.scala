@@ -31,7 +31,7 @@ class GUI(controller: Controller) extends MainFrame {
   }
 
   visible = true
-  minimumSize = new Dimension(800, 800)
+  minimumSize = new Dimension(700, 700)
   updateField
 
   reactions += {

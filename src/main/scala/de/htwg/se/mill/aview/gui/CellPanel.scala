@@ -15,7 +15,7 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
   val whiteColor = new Color(255, 255, 255)
   val blackColor = new Color(0, 0, 0)
 
-  val sizeDim = new Dimension(100, 100)
+  val sizeDim = new Dimension(800, 800)
 
   def myCell = controller.cell(row, column)
 
@@ -63,9 +63,9 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
     }
 
   val setButton = new Button("Set") {
-//    minimumSize = sizeDim
-//    maximumSize = sizeDim
-//    preferredSize = sizeDim
+    minimumSize = sizeDim
+    maximumSize = sizeDim
+    preferredSize = sizeDim
   }
 
   val cell = new BoxPanel(Orientation.Vertical) {
@@ -75,6 +75,7 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
     }
     preferredSize = sizeDim
     background = cellBackground(row, column)
+    //border = Swing.LineBorder(blackColor)
 
     listenTo(mouse.clicks)
     listenTo(controller)

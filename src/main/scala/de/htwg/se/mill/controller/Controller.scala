@@ -17,6 +17,7 @@ class Controller(var field:Field) extends Publisher {
   def createEmptyField(size: Int): Unit = {
     field = new Field(size)
     gameState = GameState.handle(NewState())
+    millState = MillState.handle(NoMillState())
     publish(new CellChanged)
   }
 
@@ -40,9 +41,11 @@ class Controller(var field:Field) extends Publisher {
     roundCounter += 1
     if (roundCounter % 2 == 0) {
       undoManager.doStep(new SetCommand(row, col, Cell(true, Stone("w+")), this))
+      this.checkMill()
       gameState = GameState.handle(WhiteTurnState())
     } else {
       undoManager.doStep(new SetCommand(row, col, Cell(true, Stone("b+")), this))
+      this.checkMill()
       gameState = GameState.handle(BlackTurnState())
     }
     roundCounter = placedStones()
@@ -55,6 +58,8 @@ class Controller(var field:Field) extends Publisher {
     }
     undoManager.undoStep
     gameState = GameState.handle(UndoState())
+    millState = MillState.handle(NoMillState())
+    checkMill()
     publish(new CellChanged)
   }
 
@@ -64,6 +69,7 @@ class Controller(var field:Field) extends Publisher {
     }
     undoManager.redoStep
     gameState = GameState.handle(RedoState())
+    checkMill()
     publish(new CellChanged)
   }
 
