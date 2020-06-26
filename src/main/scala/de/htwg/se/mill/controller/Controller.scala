@@ -9,6 +9,7 @@ class Controller(var field:Field) extends Publisher {
 
   private val undoManager = new UndoManager
   var gameState = GameState.handle(NewState())
+  var millState = MillState.handle(NoMillState())
   val firstStage = 18
   var roundCounter = 0
 
@@ -65,13 +66,14 @@ class Controller(var field:Field) extends Publisher {
   def checkMill():Unit = {
     val m = field.checkMill()
     m match {
-      case 1 => print("Mill black")
-      case 2 => print("Mill white")
+      case 1 => millState = MillState.handle(BlackMillState())
+      case 2 => millState = MillState.handle(WhiteMillState())
       case _ =>
     }
   }
 
   def statusText:String = GameState.state
+  def millText:String = MillState.state
 
   def cell(row:Int, col:Int):Cell = field.cell(row, col)
   def isSet(row:Int, col:Int):Boolean = field.cell(row, col).isSet
