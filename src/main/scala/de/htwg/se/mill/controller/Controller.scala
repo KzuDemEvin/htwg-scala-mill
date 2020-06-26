@@ -51,6 +51,7 @@ class Controller(var field:Field) extends Publisher {
       gameState = GameState.handle(BlackTurnState())
     }
     roundCounter = placedStones()
+    checkMill(row, col)
     publish(new CellChanged)
   }
 
@@ -65,8 +66,6 @@ class Controller(var field:Field) extends Publisher {
     }
     undoManager.undoStep
     gameState = GameState.handle(UndoState())
-    millState = MillState.handle(NoMillState())
-    //checkMill()
     publish(new CellChanged)
   }
 
@@ -76,7 +75,6 @@ class Controller(var field:Field) extends Publisher {
     }
     undoManager.redoStep
     gameState = GameState.handle(RedoState())
-    //checkMill(row, col)
     publish(new CellChanged)
   }
 
@@ -87,7 +85,6 @@ class Controller(var field:Field) extends Publisher {
       case 2 => millState = MillState.handle(WhiteMillState())
       case _ => millState = MillState.handle(NoMillState())
     }
-    publish(new CellChanged)
   }
 
   def statusText:String = GameState.state
