@@ -1,6 +1,6 @@
 package de.htwg.se.mill.aview
 
-import de.htwg.se.mill.controller.{CellChanged, Controller, GameState, InProgessState, WhiteTurnState}
+import de.htwg.se.mill.controller.{CellChanged, Controller, GameState, WhiteTurnState}
 import de.htwg.se.mill.model.{Cell, Stone}
 import de.htwg.se.mill.util.Observer
 
