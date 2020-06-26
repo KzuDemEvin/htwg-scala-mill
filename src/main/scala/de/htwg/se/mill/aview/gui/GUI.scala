@@ -22,17 +22,25 @@ class GUI(controller: Controller) extends MainFrame {
   val millline = new TextField(controller.millText, 100) {
     editable = false
   }
+  val label = new Label {
+    text = "Hallo"
+  }
 
 
   contents = new BorderPanel {
-    add(millline, BorderPanel.Position.North)
+    //add(millline, BorderPanel.Position.North)
     add(gridPanel, BorderPanel.Position.Center)
     add(statusline, BorderPanel.Position.South)
+    add(label, BorderPanel.Position.North)
   }
 
   visible = true
-  minimumSize = new Dimension(700, 700)
+
+  val sizeDim = new Dimension(740, 840)
+  size = sizeDim
+  centerOnScreen()
   updateField
+
 
   reactions += {
     case event: CellChanged => updateField

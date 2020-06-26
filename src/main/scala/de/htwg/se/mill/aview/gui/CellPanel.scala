@@ -1,11 +1,11 @@
 package de.htwg.se.mill.aview.gui
 
 import scala.swing._
-
 import scala.swing.event._
 import de.htwg.se.mill.controller.Controller
 import de.htwg.se.mill.controller.CellChanged
 import de.htwg.se.mill.model.Color
+import javax.swing.ImageIcon
 
 class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel {
 
@@ -15,7 +15,7 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
   val whiteColor = new Color(255, 255, 255)
   val blackColor = new Color(0, 0, 0)
 
-  val sizeDim = new Dimension(800, 800)
+  val sizeDim = new Dimension(100, 100)
 
   def myCell = controller.cell(row, column)
 
@@ -56,16 +56,27 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
     }
   }
 
+  def cellIcon(row: Int, col: Int): ImageIcon = {
+    cellType(row, col) match {
+      case 0 => new ImageIcon("C:\\Users\\Kevin\\Documents\\IdeaProjects\\htwg-scala-mill\\src\\assets\\media\\WhiteStone.png")
+      case 1 => new ImageIcon("C:\\Users\\Kevin\\Documents\\IdeaProjects\\htwg-scala-mill\\src\\assets\\media\\BlackStone2.png")
+      case 2 => new ImageIcon("C:\\Users\\Kevin\\Documents\\IdeaProjects\\htwg-scala-mill\\src\\assets\\media\\CellStone.png")
+      case 3 => new ImageIcon("C:\\Users\\Kevin\\Documents\\IdeaProjects\\htwg-scala-mill\\src\\assets\\media\\BlackStone.png")
+    }
+  }
+
   val label =
     new Label {
       text = cellText(row, column)
       font = new Font("Verdana", 1, 20)
     }
 
-  val setButton = new Button("Set") {
+  val setButton = new Button("Test") {
     minimumSize = sizeDim
     maximumSize = sizeDim
     preferredSize = sizeDim
+    //background = cellBackground(row, column)
+    icon = cellIcon(row, column)
   }
 
   val cell = new BoxPanel(Orientation.Vertical) {
@@ -75,7 +86,6 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
     }
     preferredSize = sizeDim
     background = cellBackground(row, column)
-    //border = Swing.LineBorder(blackColor)
 
     listenTo(mouse.clicks)
     listenTo(controller)
@@ -100,6 +110,7 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
     label.text = cellText(row, column)
     cell.background = cellBackground(row, column)
     //setButton.background = cellBackground(row, column)
+    setButton.icon = cellIcon(row, column)
     contents += cell
     repaint
   }
