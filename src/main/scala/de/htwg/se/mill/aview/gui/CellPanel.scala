@@ -58,10 +58,10 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
 
   def cellIcon(row: Int, col: Int): ImageIcon = {
     cellType(row, col) match {
-      case 0 => new ImageIcon("C:\\Users\\Kevin\\Documents\\IdeaProjects\\htwg-scala-mill\\src\\assets\\media\\WhiteStone.png")
-      case 1 => new ImageIcon("C:\\Users\\Kevin\\Documents\\IdeaProjects\\htwg-scala-mill\\src\\assets\\media\\BlackStone2.png")
-      case 2 => new ImageIcon("C:\\Users\\Kevin\\Documents\\IdeaProjects\\htwg-scala-mill\\src\\assets\\media\\CellStone.png")
-      case 3 => new ImageIcon("C:\\Users\\Kevin\\Documents\\IdeaProjects\\htwg-scala-mill\\src\\assets\\media\\BlackStone.png")
+      case 0 => new ImageIcon("src\\assets\\media\\WhiteStone.png")
+      case 1 => new ImageIcon("src\\assets\\media\\BlackStone2.png")
+      case 2 => new ImageIcon("src\\assets\\media\\CellStone.png")
+      case 3 => new ImageIcon("src\\assets\\media\\BlackStone.png")
     }
   }
 
