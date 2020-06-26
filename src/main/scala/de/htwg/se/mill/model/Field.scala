@@ -17,7 +17,6 @@ case class Field(allCells: Matrix[Cell]) {
   def set(row:Int, col:Int, c:Cell) : Field = {
     if (available(row, col)) {
       replace(row, col, c)
-      //checkMill2(row, col)
     } else {this}
   }
 
@@ -102,6 +101,18 @@ case class Field(allCells: Matrix[Cell]) {
                        (6,3) -> Set((6,0),(6,6),(5,3)),
                        (6,6) -> Set((6,3),(3,6)))
 
+  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
+    var field = this
+    for (x <- neighbours(rowOld, colOld)) {
+      if (x._1 == rowNew && x._2 == colNew && !cell(rowNew, colNew).isSet) {
+        val oldCell = cell(rowOld, colOld)
+        field = field.replace(rowOld, colOld, Cell(false, Stone("n")))
+        field = field.set(x._1, x._2, oldCell)
+      }
+    }
+    field
+  }
+
   def checkMill(row: Int, col: Int): Int = {
     var millYesNo = 0
     for (x <- millneighbours(row, col)) {
@@ -118,18 +129,6 @@ case class Field(allCells: Matrix[Cell]) {
       }
     }
     millYesNo
-  }
-
-  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
-    var field = this
-    for (x <- neighbours(rowOld, colOld)) {
-      if (x._1 == rowNew && x._2 == colNew && !cell(rowNew, colNew).isSet) {
-        val oldCell = cell(rowOld, colOld)
-        field = field.replace(rowOld, colOld, Cell(false, Stone("n")))
-        field = field.set(x._1, x._2, oldCell)
-      }
-    }
-    field
   }
 
   def checkMillSet(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
