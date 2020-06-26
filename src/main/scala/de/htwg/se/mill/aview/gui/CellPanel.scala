@@ -59,9 +59,9 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
   def cellIcon(row: Int, col: Int): ImageIcon = {
     cellType(row, col) match {
       case 0 => new ImageIcon("src\\assets\\media\\WhiteStone.png")
-      case 1 => new ImageIcon("src\\assets\\media\\BlackStone2.png")
+      case 1 => new ImageIcon("src\\assets\\media\\BlackStone.png")
       case 2 => new ImageIcon("src\\assets\\media\\CellStone.png")
-      case 3 => new ImageIcon("src\\assets\\media\\BlackStone.png")
+      case 3 => new ImageIcon("src\\assets\\media\\UnavailableCell.png")
     }
   }
 
@@ -71,11 +71,11 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
       font = new Font("Verdana", 1, 20)
     }
 
-  val setButton = new Button("Test") {
+  val setButton = new Button {
     minimumSize = sizeDim
     maximumSize = sizeDim
     preferredSize = sizeDim
-    //background = cellBackground(row, column)
+    //background = unavailableColor
     icon = cellIcon(row, column)
   }
 
@@ -109,7 +109,7 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
     contents.clear()
     label.text = cellText(row, column)
     cell.background = cellBackground(row, column)
-    //setButton.background = cellBackground(row, column)
+    //setButton.background = unavailableColor
     setButton.icon = cellIcon(row, column)
     contents += cell
     repaint

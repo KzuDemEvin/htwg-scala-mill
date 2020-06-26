@@ -14,6 +14,7 @@ var field = new Field(7)
 field = field.set(0,0, Cell(true, Stone("b+")))
 field = field.set(0,3, Cell(true, Stone("b+")))
 field = field.set(0,6, Cell(true, Stone("b+")))
+
 field.toString
 
 //var string = ""
@@ -36,10 +37,8 @@ field.toString
 //  printf("\n")
 //}
 
-val mill = field.checkMill()
-field = field.set(6,0, Cell(true, Stone("w+")))
-field = field.set(6,3, Cell(true, Stone("w+")))
-field = field.set(6,6, Cell(true, Stone("w+")))
+field = field.moveStone(0,0,3,0)
+field.toString
 
 
 
@@ -74,13 +73,6 @@ val mill = field.checkMill()
 //field3.cell(0)
 //field3.refill(Cell(true))
 //field3.replaceCell(2, Cell(false))
-
-
-field = field.set(0,0, Cell(true, Stone("b+")))
-field = field.set(0,3, Cell(true, Stone("b+")))
-field = field.set(0,6, Cell(true, Stone("b+")))
-
--4 % 2
 
 //3 dimensional
 //case class Matrix[T](allcells:Vector[Vector[Vector[T]]]) {
