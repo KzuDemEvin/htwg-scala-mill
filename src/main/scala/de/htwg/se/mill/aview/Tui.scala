@@ -23,7 +23,11 @@ class Tui(controller: Controller) extends Reactor {
         Success("valid command: " + input)
       case "redo" => controller.redo
         Success("valid command: " + input)
+      case "exit" =>
+        Success(input)
       case _ => input.toList.filter(p => p != ' ').filter(_.isDigit).map(p => p.toString.toInt) match {
+        case rowOld :: columnOld :: rowNew :: columnNew :: Nil => controller.moveStone(rowOld, columnOld, rowNew, columnNew)
+          Success("valid command: " + input)
         case row :: column :: Nil => controller.set(row, column)
           //controller.checkMill(0)
           println(controller.millState)

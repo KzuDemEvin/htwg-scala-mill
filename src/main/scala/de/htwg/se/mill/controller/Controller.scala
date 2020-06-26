@@ -15,6 +15,7 @@ class Controller(var field:Field) extends Publisher {
 
 
   def createEmptyField(size: Int): Unit = {
+    roundCounter = 0
     field = new Field(size)
     gameState = GameState.handle(NewState())
     millState = MillState.handle(NoMillState())
@@ -22,6 +23,7 @@ class Controller(var field:Field) extends Publisher {
   }
 
   def createRandomField(size: Int): Unit = {
+    roundCounter = 0
     field = (new RandomStrategy).createNewField(size)
     gameState = GameState.handle(RandomState())
     publish(new CellChanged)
@@ -49,6 +51,11 @@ class Controller(var field:Field) extends Publisher {
       gameState = GameState.handle(BlackTurnState())
     }
     roundCounter = placedStones()
+    publish(new CellChanged)
+  }
+
+  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Unit = {
+    field = field.moveStone(rowOld, colOld, rowNew, colNew)
     publish(new CellChanged)
   }
 

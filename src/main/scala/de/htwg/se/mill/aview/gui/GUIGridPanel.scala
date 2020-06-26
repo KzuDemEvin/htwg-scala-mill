@@ -1,6 +1,9 @@
 package de.htwg.se.mill.aview.gui
 
+import java.awt.image.BufferedImage
+
 import de.htwg.se.mill.controller.Controller
+import javax.swing.ImageIcon
 
 import scala.swing.{Frame, GridPanel, Label}
 
