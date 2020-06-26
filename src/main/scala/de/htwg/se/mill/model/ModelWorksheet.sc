@@ -1,4 +1,4 @@
-import de.htwg.se.mill.model.{Cell, Color, Field, Matrix, Stone}
+import de.htwg.se.mill.model.{Cell, Color, Field, Matrix, RandomStrategy, Stone}
 
 import scala.io.StdIn.readLine
 
@@ -10,7 +10,10 @@ val h = colorset.apply(0)
 val s = Color.black
 println(s)
 
-val field = new Field(7)
+var field = new Field(7)
+field = field.set(0,0, Cell(true, Stone("b+")))
+field = field.set(0,3, Cell(true, Stone("b+")))
+field = field.set(0,6, Cell(true, Stone("b+")))
 field.toString
 
 //var string = ""
@@ -33,23 +36,10 @@ field.toString
 //  printf("\n")
 //}
 
-val smallField = new Field(4)
-smallField.cell(0,0)
-
-
-
-
-val field1 = Field(new Matrix[Cell](Vector(Vector(Cell(true, Stone("w+")), Cell(true, Stone("b+"))),
-  Vector(Cell(true, Stone("w+")), Cell(true, Stone("w+"))))))
-field1.cell(0,0)
-field1.cell(0,1)
-field1.cell(1,0)
-field1.cell(1,1)
-
-
-var input = ""
-input += "random 7"
-input.split(" ")
+val mill = field.checkMill()
+field = field.set(6,0, Cell(true, Stone("w+")))
+field = field.set(6,3, Cell(true, Stone("w+")))
+field = field.set(6,6, Cell(true, Stone("w+")))
 
 
 
@@ -68,6 +58,7 @@ input.split(" ")
 
 
 
+val mill = field.checkMill()
 ////1 dimensional
 //case class FieldEasy[T](field:Vector[T]){
 //  def this(size:Int, filling:T) = this(Vector.tabulate(size){ _ => filling})
@@ -85,6 +76,9 @@ input.split(" ")
 //field3.replaceCell(2, Cell(false))
 
 
+field = field.set(0,0, Cell(true, Stone("b+")))
+field = field.set(0,3, Cell(true, Stone("b+")))
+field = field.set(0,6, Cell(true, Stone("b+")))
 
 //3 dimensional
 //case class Matrix[T](allcells:Vector[Vector[Vector[T]]]) {
@@ -101,3 +95,4 @@ input.split(" ")
 //val v = Vector.tabulate(3, 3, 3) { (x1, x2, x3) => (x1,x2,x3) }
 //val v2 = Vector.tabulate(2,2) { (x1,x2) => (x1,x2)}
 //val v3 = Vector(Vector.tabulate(2,2) { (x1, x2) => (x1,x2)})
+val mill = field.checkMill()

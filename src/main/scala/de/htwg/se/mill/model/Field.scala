@@ -71,6 +71,7 @@ case class Field(allCells: Matrix[Cell]) {
   }
 
   private def checkMillBlack(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
+    print("Test")
     (cell1.getContent.whichColor == Color.black && cell2.getContent.whichColor == Color.black
     && cell3.getContent.whichColor == Color.black)
   }

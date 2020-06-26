@@ -65,8 +65,8 @@ class Controller(var field:Field) extends Publisher {
   def checkMill():Unit = {
     val m = field.checkMill()
     m match {
-      case 1 => gameState = GameState.handle(BlackMillState())
-      case 2 => gameState = GameState.handle(WhiteMillState())
+      case 1 => print("Mill black")
+      case 2 => print("Mill white")
       case _ =>
     }
   }

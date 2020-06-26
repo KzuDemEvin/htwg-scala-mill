@@ -3,7 +3,7 @@ package de.htwg.se.mill.aview.gui
 import de.htwg.se.mill.controller.Controller
 
 import scala.swing.event.Key
-import scala.swing.{Action, Menu, MenuBar, MenuItem}
+import scala.swing.{Action, Menu, MenuBar, MenuItem, TextField}
 
 class GUIMenuBar(controller: Controller) extends MenuBar {
   def menuBar:MenuBar = {
