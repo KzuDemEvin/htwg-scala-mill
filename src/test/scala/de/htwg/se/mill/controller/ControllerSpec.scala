@@ -54,13 +54,23 @@ class ControllerSpec extends WordSpec with Matchers {
     "handle undo/redo of setting a cell correctly" in {
       controller.set(0, 0)
       controller.field.cell(0, 0).isSet should be(true)
-      controller.field.cell(0, 0).getContent.whichColor should be(Color.white)
+      controller.field.cell(0, 0).getContent.whichColor should be(Color.black)
       controller.undo
       controller.field.cell(0, 0).isSet should be(false)
       controller.field.cell(0, 0).getContent.whichColor should be(Color.noColor)
       controller.redo
       controller.field.cell(0, 0).isSet should be(true)
-      controller.field.cell(0, 0).getContent.whichColor should be(Color.white)
+      controller.field.cell(0, 0).getContent.whichColor should be(Color.black)
+      controller.statusText should be("Redo")
+    }
+    "should return valid values with its methods" in {
+      controller.cell(0, 0).getContent.whichColor should be (Color.black)
+      controller.isSet(0, 0) should be (true)
+      controller.isSet(0,3) should be (false)
+      controller.available(6, 6) should be (true)
+      controller.possiblePosition(0, 1) should be(false)
+      controller.placedStones() should be (1)
+      controller.fieldsize should be (7)
     }
   }
 }

@@ -1,7 +1,7 @@
 package de.htwg.se.mill
 
 import de.htwg.se.mill.aview.Tui
-import de.htwg.se.mill.aview.gui.{GUI, SwingGui}
+import de.htwg.se.mill.aview.gui.{GUI}
 import de.htwg.se.mill.controller.{CellChanged, Controller}
 import de.htwg.se.mill.model.Field
 

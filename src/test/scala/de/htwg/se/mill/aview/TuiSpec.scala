@@ -4,7 +4,7 @@ import de.htwg.se.mill.controller.Controller
 import de.htwg.se.mill.model.{Color, Field}
 import org.scalatest.{Matchers, WordSpec}
 
-class TuiSpec extends WordSpec with Matchers{
+class TuiSpec extends WordSpec with Matchers {
 
   "A Mill Tui" should {
     val controller = new Controller(new Field(7))
@@ -13,34 +13,35 @@ class TuiSpec extends WordSpec with Matchers{
       tui.execInput("new")
       controller.field.placedStones() should be(0)
     }
-    "place 24 random stones" in {
-      tui.execInput("random")
-      controller.field.placedStones() should be(24)
-    }
-    "set a white stone on input 'place 000'" in {
-      tui.execInput("place 000")
+    "set a black stone on input '00'" in {
+      tui.execInput("00")
       controller.field.available(0, 0) should be(false)
-      controller.field.cell(0, 0).content.whichColor should be(Color.white)
+      controller.cell(0, 0).content.whichColor should be(Color.black)
     }
-    "set a black stone on input 'place 031" in {
-      tui.execInput("place 031")
+    "set a white stone on input '03" in {
+      tui.execInput("03")
       controller.field.available(0, 3) should be(false)
-      controller.field.cell(0, 3).content.whichColor should be(Color.black)
+      controller.field.cell(0, 3).content.whichColor should be(Color.white)
     }
-    "set a white stone on input 'white'" in {
-      tui.execInput("place 000")
-      controller.field.cell(0,0).content.whichColor should be(Color.white)
+    "undo on input 'undo'" in {
+      tui.execInput("66")
+      tui.execInput("undo")
+      controller.cell(6, 6).isSet should be (false)
     }
     "redo on input 'redo'" in {
-      tui.execInput("place 000")
+      tui.execInput("00")
       tui.execInput("undo")
       tui.execInput("redo")
-      controller.field.cell(0,0).isSet should be(true)
+      controller.cell(0,0).isSet should be(true)
     }
-    "do nothing on bad input like'something'" in {
-      val old = controller.fieldToString
-      tui.execInput("something")
-      controller.fieldToString should be(old)
+    "place 18 random stones" in {
+      tui.execInput("random")
+      controller.field.placedStones() should be(18)
     }
+//    "do nothing on bad input like'something'" in {
+//      val old = controller.fieldToString
+//      tui.execInput("something")
+//      controller.fieldToString should be(old)
+//    }
   }
 }
