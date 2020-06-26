@@ -80,6 +80,8 @@ field = field.set(0,0, Cell(true, Stone("b+")))
 field = field.set(0,3, Cell(true, Stone("b+")))
 field = field.set(0,6, Cell(true, Stone("b+")))
 
+-4 % 2
+
 //3 dimensional
 //case class Matrix[T](allcells:Vector[Vector[Vector[T]]]) {
 //  def this(size:Int, filling:T) = this(Vector.tabulate(size, size, size) { (x1, x2, x3) => filling })

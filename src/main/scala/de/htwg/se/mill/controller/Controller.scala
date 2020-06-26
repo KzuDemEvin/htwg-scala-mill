@@ -49,14 +49,18 @@ class Controller(var field:Field) extends Publisher {
   }
 
   def undo: Unit = {
-    roundCounter -= 1
+    if (roundCounter > 0) {
+      roundCounter -= 1
+    }
     undoManager.undoStep
     gameState = GameState.handle(UndoState())
     publish(new CellChanged)
   }
 
   def redo: Unit = {
-    roundCounter += 1
+    if (roundCounter > 0) {
+      roundCounter += 1
+    }
     undoManager.redoStep
     gameState = GameState.handle(RedoState())
     publish(new CellChanged)

@@ -16,8 +16,12 @@ case class Field(allCells: Matrix[Cell]) {
 
   def set(row:Int, col:Int, c:Cell) : Field = {
     if (available(row, col)) {
-      copy(allCells.replaceCell(row, col, c))
+      replace(row, col, c)
     } else {this}
+  }
+
+  def replace(row:Int, col:Int, c:Cell) : Field = {
+    copy(allCells.replaceCell(row, col, c))
   }
 
   def placedStones(): Int = {
@@ -65,6 +69,10 @@ case class Field(allCells: Matrix[Cell]) {
     }
     r
   }
+
+//  def moveStone(row: Int, col: Int): Field = {
+//
+//  }
 
   val neighbours = Map((0,0) -> Set((0,3),(3,0)),
                        (0,3) -> Set((0,0),(0,6),(3,1)),
