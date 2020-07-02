@@ -1,6 +1,5 @@
 package de.htwg.se.mill.controller.controllerComponent
 
-import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.CommandChoice
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Cell
 
 import scala.swing.Publisher
@@ -27,7 +26,7 @@ trait ControllerInterface extends Publisher {
   def placedWhiteStones():Int
   def placedBlackStones():Int
   def modeChoice():Unit
-  def selectDriveCommand():CommandChoice.Value
+  def selectDriveCommand():ModeState
   def fieldsize:Int
 }
 

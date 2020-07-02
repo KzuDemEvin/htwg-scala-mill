@@ -59,13 +59,13 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     }
   }
 
-  def selectDriveCommand():CommandChoice.Value = {
+  def selectDriveCommand():ModeState = {
     roundCounter += 1
-    var cmd = CommandChoice.set
+    var cmd = ModeState.whichState(SetModeState().handle)
     if (roundCounter % 2 == 0) {
-      cmd = ModeState.whichDriveCommand(player1.mode)
+      cmd = ModeState.whichState(player1.mode)
     } else {
-      cmd = ModeState.whichDriveCommand(player2.mode)
+      cmd = ModeState.whichState(player2.mode)
     }
     cmd
   }

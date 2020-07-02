@@ -1,6 +1,5 @@
 package de.htwg.se.mill.model.playerComponent
 
-import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.CommandChoice
 import de.htwg.se.mill.controller.controllerComponent.{ModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Color
 

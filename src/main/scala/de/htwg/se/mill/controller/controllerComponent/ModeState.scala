@@ -1,30 +1,28 @@
 package de.htwg.se.mill.controller.controllerComponent
 
-import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.CommandChoice
-
 trait ModeState {
   def handle:String
-  def whichDriveCommand:CommandChoice.Value
+  def whichState:ModeState
 }
 
 case class SetModeState() extends ModeState {
   override def handle: String = "SetMode"
-  override def whichDriveCommand:CommandChoice.Value = CommandChoice.set
+  override def whichState:ModeState = SetModeState()
 }
 
 case class MoveModeState() extends ModeState {
   override def handle: String = "MoveMode"
-  override def whichDriveCommand:CommandChoice.Value = CommandChoice.move
+  override def whichState:ModeState = MoveModeState()
 }
 
 case class FlyModeState() extends ModeState {
   override def handle: String = "FlyMode"
-  override def whichDriveCommand:CommandChoice.Value = CommandChoice.fly
+  override def whichState:ModeState = FlyModeState()
 }
 
 object ModeState {
   var modeState = SetModeState().handle
-  var cmd = SetModeState().whichDriveCommand
+  var cmd = MoveModeState().whichState
 
   def handle(e:ModeState):String = {
     e match {
@@ -35,11 +33,11 @@ object ModeState {
     modeState
   }
 
-  def whichDriveCommand(s:String):CommandChoice.Value = {
+  def whichState(s:String):ModeState = {
     s match {
-      case "SetMode" => cmd = SetModeState().whichDriveCommand
-      case "MoveMode" => cmd = MoveModeState().whichDriveCommand
-      case "FlyMode" => cmd = FlyModeState().whichDriveCommand
+      case "SetMode" => cmd = SetModeState().whichState
+      case "MoveMode" => cmd = MoveModeState().whichState
+      case "FlyMode" => cmd = FlyModeState().whichState
     }
     cmd
   }

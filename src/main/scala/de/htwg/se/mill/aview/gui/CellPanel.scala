@@ -1,10 +1,8 @@
 package de.htwg.se.mill.aview.gui
 
-import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.CommandChoice
-
 import scala.swing._
 import scala.swing.event._
-import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface}
+import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, FlyModeState, MoveModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Color
 import javax.swing.ImageIcon
 
@@ -96,9 +94,9 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
         //controller.set(row, column)
         val whichCmd = controller.selectDriveCommand()
         whichCmd match {
-          case CommandChoice.set => controller.set(row, column)
-          //case CommandChoice.move => controller.moveStone(rowOld, colOld, rowNew, colNew)
-          //case CommandChoice.fly => controller.fly(rowOld, colOld, rowNew, colNew)
+          case SetModeState() => controller.set(row, column)
+          case MoveModeState() => controller.moveStone(rowOld, colOld, rowNew, colNew)
+          case FlyModeState() => controller.fly(rowOld, colOld, rowNew, colNew)
         }
         repaint
       }
