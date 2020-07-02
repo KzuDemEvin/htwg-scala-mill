@@ -16,8 +16,10 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   private val undoManager = new UndoManager
   var gameState = GameState.handle(NewState())
   var millState = MillState.handle(NoMillState())
+  var modeStatePlayer1 = ModeState.handle(SetModeState())
+  var modeStatePlayer2 = ModeState.handle(SetModeState())
   val injector = Guice.createInjector(new MillModule)
-  val firstStage = 18
+  val borderToMoveMode = 18
   var roundCounter = 0
 
 
@@ -40,9 +42,10 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   def fieldToString: String = field.toString
 
   def modeChoise(row: Int, col: Int): Unit = {
-    if (roundCounter <= firstStage) {
-      set(row, col)
-    } else {
+    if (roundCounter <= borderToMoveMode) {
+      modeStatePlayer1 = ModeState.handle(SetModeState())
+      modeStatePlayer2 = ModeState.handle(SetModeState())
+    } else if () {
 
     }
   }
@@ -56,13 +59,22 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       undoManager.doStep(new SetCommand(row, col, fieldBaseImpl.Cell(true, Stone("b+")), this))
       gameState = GameState.handle(BlackTurnState())
     }
-    roundCounter = placedStones()
+    //roundCounter = placedStones()
     checkMill(row, col)
     publish(new CellChanged)
   }
 
   def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Unit = {
-    field = field.moveStone(rowOld, colOld, rowNew, colNew)
+    roundCounter += 1
+    if (roundCounter % 2 == 0) {
+      undoManager.doStep(new MoveCommand(rowOld, colOld, rowNew, colNew, this))
+      gameState = GameState.handle(WhiteTurnState())
+    } else {
+      undoManager.doStep(new MoveCommand(rowOld, colOld, rowNew, colNew, this))
+      gameState = GameState.handle(BlackTurnState())
+    }
+    roundCounter = placedStones()
+    checkMill(rowNew, colNew)
     publish(new CellChanged)
   }
 
@@ -100,6 +112,6 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   def isSet(row:Int, col:Int):Boolean = field.cell(row, col).isSet
   def available(row:Int, col:Int):Boolean = field.available(row, col)
   def possiblePosition(row:Int, col:Int):Boolean = field.possiblePosition(row, col)
-  def placedStones(): Int = field.placedStones()
+  def placedStones(): (Int, Int) = field.placedStones()
   def fieldsize:Int = field.size
 }

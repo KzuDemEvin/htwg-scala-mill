@@ -27,14 +27,20 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
     copy(allCells.replaceCell(row, col, c))
   }
 
-  def placedStones(): Int = {
-    var placedStones = 0
+  def placedStones(): (Int, Int) = {
+    var placedStonesWhite = 0
+    var placedStonesBlack = 0
     for (x <- this.allCells.allowedPosition) {
       if (!this.available(x._1, x._2)) {
-        placedStones = placedStones + 1
+        val cell = this.cell(x._1, x._2)
+        if (cell.getContent.whichColor == Color.black) {
+          placedStonesBlack += 1
+        } else if (cell.getContent.whichColor == Color.white) {
+          placedStonesWhite += 1
+        }
       }
     }
-    placedStones
+    (placedStonesBlack, placedStonesWhite)
   }
 
   val millPositions = List(((0, 0), (0, 3), (0, 6)), //horizontal mills
