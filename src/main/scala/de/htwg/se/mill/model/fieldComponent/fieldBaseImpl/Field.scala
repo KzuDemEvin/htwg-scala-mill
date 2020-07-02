@@ -1,9 +1,12 @@
-package de.htwg.se.mill.model
+package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
+import com.google.inject.Inject
+import com.google.inject.name.Named
+import de.htwg.se.mill.model.fieldComponent.{FieldInterface, fieldBaseImpl}
 
-case class Field(allCells: Matrix[Cell]) {
-  def this(size: Int) {
-    this(new Matrix[Cell](size, Cell(false, Stone("n"))))
+case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
+  def this( @Named("DefaultSize") size: Int) {
+    this(new Matrix[Cell](size, fieldBaseImpl.Cell(false, Stone("n"))))
   }
 
   val size: Int = allCells.size
@@ -106,7 +109,7 @@ case class Field(allCells: Matrix[Cell]) {
     for (x <- neighbours(rowOld, colOld)) {
       if (x._1 == rowNew && x._2 == colNew && !cell(rowNew, colNew).isSet) {
         val oldCell = cell(rowOld, colOld)
-        field = field.replace(rowOld, colOld, Cell(false, Stone("n")))
+        field = field.replace(rowOld, colOld, fieldBaseImpl.Cell(false, Stone("n")))
         field = field.set(x._1, x._2, oldCell)
       }
     }
@@ -131,16 +134,16 @@ case class Field(allCells: Matrix[Cell]) {
     millYesNo
   }
 
-  def checkMillSet(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
+  private def checkMillSet(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
     cell1.isSet && cell2.isSet && cell3.isSet
   }
 
-  def checkMillBlack(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
+  private def checkMillBlack(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
     (cell1.getContent.whichColor == Color.black && cell2.getContent.whichColor == Color.black
     && cell3.getContent.whichColor == Color.black)
   }
 
-  def checkMillWhite(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
+  private def checkMillWhite(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
     (cell1.getContent.whichColor == Color.white && cell2.getContent.whichColor == Color.white
       && cell3.getContent.whichColor == Color.white)
   }

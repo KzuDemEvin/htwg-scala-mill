@@ -1,4 +1,4 @@
-package de.htwg.se.mill.model
+package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
 case class Matrix[T](allRows: Vector[Vector[T]]) {
   def this(size: Int, filling: T) = this(Vector.tabulate(size, size) { (x1, x2) => filling })

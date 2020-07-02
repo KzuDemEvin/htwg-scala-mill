@@ -1,5 +1,6 @@
 package de.htwg.se.mill.controller
 
+import de.htwg.se.mill.controller.controllerComponent.{BlackTurnState, FinishedState, GameState, NewState, WhiteTurnState}
 import org.scalatest.{Matchers, WordSpec}
 
 class GameStateSpec extends WordSpec with Matchers {

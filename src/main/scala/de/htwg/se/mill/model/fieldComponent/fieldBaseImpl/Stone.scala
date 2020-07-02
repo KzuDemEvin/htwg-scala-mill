@@ -1,4 +1,4 @@
-package de.htwg.se.mill.model
+package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
 trait Stone {
   def isSet: Boolean

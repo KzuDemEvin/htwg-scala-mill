@@ -1,30 +1,38 @@
-package de.htwg.se.mill.controller
+package de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl
 
-import de.htwg.se.mill.model.{Cell, Field, RandomStrategy, Stone}
-import de.htwg.se.mill.util.{Observable, UndoManager}
+import com.google.inject.name.Names
+import com.google.inject.{Guice, Inject}
+import net.codingwell.scalaguice.InjectorExtensions._
+import de.htwg.se.mill.MillModule
+import de.htwg.se.mill.controller.controllerComponent._
+import de.htwg.se.mill.model.fieldComponent.{FieldInterface, fieldBaseImpl}
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Cell, Field, RandomStrategy, Stone}
+import de.htwg.se.mill.util.UndoManager
 
 import scala.swing.Publisher
 
-class Controller(var field:Field) extends Publisher {
+class Controller @Inject() (var field: FieldInterface) extends ControllerInterface with Publisher {
 
   private val undoManager = new UndoManager
   var gameState = GameState.handle(NewState())
   var millState = MillState.handle(NoMillState())
+  val injector = Guice.createInjector(new MillModule)
   val firstStage = 18
   var roundCounter = 0
 
 
   def createEmptyField(size: Int): Unit = {
     roundCounter = 0
-    field = new Field(size)
+
+    field = injector.instance[FieldInterface](Names.named("normal"))
     gameState = GameState.handle(NewState())
     millState = MillState.handle(NoMillState())
     publish(new CellChanged)
   }
 
   def createRandomField(size: Int): Unit = {
-    roundCounter = 0
-    field = (new RandomStrategy).createNewField(size)
+    roundCounter = 18
+    field = injector.instance[FieldInterface](Names.named("random"))
     gameState = GameState.handle(RandomState())
     publish(new CellChanged)
   }
@@ -46,7 +54,7 @@ class Controller(var field:Field) extends Publisher {
       checkMill(row, col)
       gameState = GameState.handle(WhiteTurnState())
     } else {
-      undoManager.doStep(new SetCommand(row, col, Cell(true, Stone("b+")), this))
+      undoManager.doStep(new SetCommand(row, col, fieldBaseImpl.Cell(true, Stone("b+")), this))
       checkMill(row, col)
       gameState = GameState.handle(BlackTurnState())
     }

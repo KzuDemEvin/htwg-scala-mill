@@ -1,7 +1,9 @@
 package de.htwg.se.mill.aview
 
-import de.htwg.se.mill.controller.{CellChanged, Controller, GameState, WhiteTurnState}
-import de.htwg.se.mill.model.{Cell, Stone}
+import de.htwg.se.mill.controller.controllerComponent.{CellChanged, GameState}
+import de.htwg.se.mill.controller.WhiteTurnState
+import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Stone
 import de.htwg.se.mill.util.Observer
 
 import scala.swing.Reactor

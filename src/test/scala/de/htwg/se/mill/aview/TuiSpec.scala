@@ -1,7 +1,7 @@
 package de.htwg.se.mill.aview
 
-import de.htwg.se.mill.controller.Controller
-import de.htwg.se.mill.model.{Color, Field}
+import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Color, Field}
 import org.scalatest.{Matchers, WordSpec}
 
 class TuiSpec extends WordSpec with Matchers {
