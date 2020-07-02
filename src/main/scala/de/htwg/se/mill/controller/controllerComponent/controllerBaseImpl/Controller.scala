@@ -39,14 +39,6 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
 
   def fieldToString: String = field.toString
 
-  def modeChoise(row: Int, col: Int): Unit = {
-    if (roundCounter <= firstStage) {
-      set(row, col)
-    } else {
-
-    }
-  }
-
   def set(row: Int, col: Int): Unit = {
     roundCounter += 1
     if (roundCounter % 2 == 0) {
