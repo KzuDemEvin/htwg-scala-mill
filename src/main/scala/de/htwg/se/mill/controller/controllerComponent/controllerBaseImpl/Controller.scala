@@ -7,6 +7,7 @@ import de.htwg.se.mill.MillModule
 import de.htwg.se.mill.controller.controllerComponent._
 import de.htwg.se.mill.model.fieldComponent.{FieldInterface, fieldBaseImpl}
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Cell, Field, RandomStrategy, Stone}
+import de.htwg.se.mill.model.playerComponent.Player
 import de.htwg.se.mill.util.UndoManager
 
 import scala.swing.Publisher
@@ -16,8 +17,8 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   private val undoManager = new UndoManager
   var gameState = GameState.handle(NewState())
   var millState = MillState.handle(NoMillState())
-  var modeStatePlayer1 = ModeState.handle(SetModeState())
-  var modeStatePlayer2 = ModeState.handle(SetModeState())
+  var player1 = Player("Kevin")
+  var player2 = Player("Manuel")
   val injector = Guice.createInjector(new MillModule)
   val borderToMoveMode = 18
   var roundCounter = 0
@@ -41,17 +42,37 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
 
   def fieldToString: String = field.toString
 
-  def modeChoise(row: Int, col: Int): Unit = {
+  def modeChoice(): Unit = {
     if (roundCounter <= borderToMoveMode) {
-      modeStatePlayer1 = ModeState.handle(SetModeState())
-      modeStatePlayer2 = ModeState.handle(SetModeState())
-    } else if () {
-
+      player1.mode = ModeState.handle(SetModeState())
+      player2.mode = ModeState.handle(SetModeState())
+    } else if (placedBlackStones() == 3 || placedWhiteStones() == 3) {
+      if (placedWhiteStones() == 3) {
+        player1.mode = ModeState.handle(FlyModeState())
+      }
+      if (placedBlackStones() == 3) {
+        player2.mode = ModeState.handle(FlyModeState())
+      }
+    } else {
+      player1.mode = ModeState.handle(MoveModeState())
+      player2.mode = ModeState.handle(MoveModeState())
     }
+  }
+
+  def selectDriveCommand():CommandChoice.Value = {
+    roundCounter += 1
+    var cmd = CommandChoice.set
+    if (roundCounter % 2 == 0) {
+      cmd = ModeState.whichDriveCommand(player1.mode)
+    } else {
+      cmd = ModeState.whichDriveCommand(player2.mode)
+    }
+    cmd
   }
 
   def set(row: Int, col: Int): Unit = {
     roundCounter += 1
+    print(roundCounter)
     if (roundCounter % 2 == 0) {
       undoManager.doStep(new SetCommand(row, col, Cell(true, Stone("w+")), this))
       gameState = GameState.handle(WhiteTurnState())
@@ -59,8 +80,10 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       undoManager.doStep(new SetCommand(row, col, fieldBaseImpl.Cell(true, Stone("b+")), this))
       gameState = GameState.handle(BlackTurnState())
     }
-    //roundCounter = placedStones()
+    roundCounter = placedStones()
+    println(roundCounter)
     checkMill(row, col)
+    modeChoice()
     publish(new CellChanged)
   }
 
@@ -73,7 +96,19 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       undoManager.doStep(new MoveCommand(rowOld, colOld, rowNew, colNew, this))
       gameState = GameState.handle(BlackTurnState())
     }
-    roundCounter = placedStones()
+    checkMill(rowNew, colNew)
+    publish(new CellChanged)
+  }
+
+  def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Unit = {
+    roundCounter += 1
+    if (roundCounter % 2 == 0) {
+      undoManager.doStep(new FlyCommand(rowOld, colOld, rowNew, colNew, this))
+      gameState = GameState.handle(WhiteTurnState())
+    } else {
+      undoManager.doStep(new FlyCommand(rowOld, colOld, rowNew, colNew, this))
+      gameState = GameState.handle(BlackTurnState())
+    }
     checkMill(rowNew, colNew)
     publish(new CellChanged)
   }
@@ -112,6 +147,8 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   def isSet(row:Int, col:Int):Boolean = field.cell(row, col).isSet
   def available(row:Int, col:Int):Boolean = field.available(row, col)
   def possiblePosition(row:Int, col:Int):Boolean = field.possiblePosition(row, col)
-  def placedStones(): (Int, Int) = field.placedStones()
+  def placedStones():Int = field.placedStones()
+  def placedWhiteStones():Int = field.placedWhiteStones()
+  def placedBlackStones():Int = field.placedBlackStones()
   def fieldsize:Int = field.size
 }

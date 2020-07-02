@@ -27,6 +27,26 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
     copy(allCells.replaceCell(row, col, c))
   }
 
+  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
+    var field = this
+    for (x <- neighbours(rowOld, colOld)) {
+      if (x._1 == rowNew && x._2 == colNew && !cell(rowNew, colNew).isSet) {
+        val oldCell = cell(rowOld, colOld)
+        field = replace(rowOld, colOld, Cell(false, Stone("n")))
+        field = set(x._1, x._2, oldCell)
+      }
+    }
+    field
+  }
+
+  def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Field = {
+    var field = this
+    val oldCell = cell(rowOld, colOld)
+    field = set(rowNew, colNew, oldCell)
+    field = replace(rowOld, colOld, Cell(false, Stone("n")))
+    field
+  }
+
   // (Whitestones, Blackstones)
   private def placedStonesCounter(): (Int, Int) = {
     var whiteStones = 0
@@ -122,17 +142,7 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
                        (6,3) -> Set((6,0),(6,6),(5,3)),
                        (6,6) -> Set((6,3),(3,6)))
 
-  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
-    var field = this
-    for (x <- neighbours(rowOld, colOld)) {
-      if (x._1 == rowNew && x._2 == colNew && !cell(rowNew, colNew).isSet) {
-        val oldCell = cell(rowOld, colOld)
-        field = field.replace(rowOld, colOld, fieldBaseImpl.Cell(false, Stone("n")))
-        field = field.set(x._1, x._2, oldCell)
-      }
-    }
-    field
-  }
+
 
   def checkMill(row: Int, col: Int): Int = {
     var millYesNo = 0

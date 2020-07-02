@@ -1,5 +1,7 @@
 package de.htwg.se.mill.aview.gui
 
+import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.CommandChoice
+
 import scala.swing._
 import scala.swing.event._
 import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface}
@@ -91,7 +93,13 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
     listenTo(setButton)
     reactions += {
       case ButtonClicked(component) if component == setButton => {
-        controller.set(row, column)
+        //controller.set(row, column)
+        val whichCmd = controller.selectDriveCommand()
+        whichCmd match {
+          case CommandChoice.set => controller.set(row, column)
+          //case CommandChoice.move => controller.moveStone(rowOld, colOld, rowNew, colNew)
+          //case CommandChoice.fly => controller.fly(rowOld, colOld, rowNew, colNew)
+        }
         repaint
       }
       case e: CellChanged => {

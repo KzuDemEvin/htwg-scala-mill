@@ -10,8 +10,11 @@ trait FieldInterface {
   def available(row: Int, col: Int): Boolean
   def set(row:Int, col:Int, c:Cell) : Field
   def replace(row:Int, col:Int, c:Cell) : Field
-  def placedStones(): (Int, Int)
   def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field
+  def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Field
+  def placedStones(): Int
+  def placedWhiteStones():Int
+  def placedBlackStones():Int
   def checkMill(row: Int, col: Int): Int
 
   def createNewGrid:FieldInterface
