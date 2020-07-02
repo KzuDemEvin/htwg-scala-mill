@@ -1,11 +1,11 @@
 package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
 import com.google.inject.Inject
-import com.google.inject.name.Named
 import de.htwg.se.mill.model.fieldComponent.{FieldInterface, fieldBaseImpl}
 
 case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
-  def this( @Named("DefaultSize") size: Int) {
+
+  def this(size: Int) {
     this(new Matrix[Cell](size, fieldBaseImpl.Cell(false, Stone("n"))))
   }
 
@@ -147,6 +147,8 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
     (cell1.getContent.whichColor == Color.white && cell2.getContent.whichColor == Color.white
       && cell3.getContent.whichColor == Color.white)
   }
+
+  override def createNewGrid: FieldInterface = new Field(size)
 
 
   override def toString: String = {

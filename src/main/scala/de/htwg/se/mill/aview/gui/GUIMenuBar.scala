@@ -1,12 +1,13 @@
 package de.htwg.se.mill.aview.gui
 
 
+import de.htwg.se.mill.controller.controllerComponent.ControllerInterface
 import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
 
 import scala.swing.event.Key
 import scala.swing.{Action, Menu, MenuBar, MenuItem, TextField}
 
-class GUIMenuBar(controller: Controller) extends MenuBar {
+class GUIMenuBar(controller: ControllerInterface) extends MenuBar {
   def menuBar:MenuBar = {
     val menuBar = new MenuBar {
       contents += new Menu("File") {

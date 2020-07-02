@@ -1,14 +1,14 @@
 package de.htwg.se.mill.aview.gui
 
-import de.htwg.se.mill.controller.controllerComponent.CellChanged
-import de.htwg.se.mill.controller.StoneRemoved
+import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, MillState}
+import de.htwg.se.mill.controller
 import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
 
 import scala.swing.event.Key
 import scala.swing.{Action, BorderPanel, BoxPanel, Color, Dimension, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Orientation, Point, TextField}
 
 
-class GUI(controller: Controller) extends MainFrame {
+class GUI(controller: ControllerInterface) extends MainFrame {
   listenTo(controller)
 
   title = "Mill"
@@ -46,7 +46,7 @@ class GUI(controller: Controller) extends MainFrame {
       col <- 0 until controller.fieldsize
     } cells(row)(col).redraw
     statusline.text = controller.statusText
-    millline.text = controller.millState
+    millline.text = controller.millText
     repaint
   }
 

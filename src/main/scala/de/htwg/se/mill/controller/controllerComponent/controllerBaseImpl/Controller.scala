@@ -51,11 +51,9 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     roundCounter += 1
     if (roundCounter % 2 == 0) {
       undoManager.doStep(new SetCommand(row, col, Cell(true, Stone("w+")), this))
-      checkMill(row, col)
       gameState = GameState.handle(WhiteTurnState())
     } else {
       undoManager.doStep(new SetCommand(row, col, fieldBaseImpl.Cell(true, Stone("b+")), this))
-      checkMill(row, col)
       gameState = GameState.handle(BlackTurnState())
     }
     roundCounter = placedStones()

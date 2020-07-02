@@ -2,12 +2,12 @@ package de.htwg.se.mill.aview.gui
 
 import scala.swing._
 import scala.swing.event._
-import de.htwg.se.mill.controller.controllerComponent.CellChanged
+import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface}
 import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Color
 import javax.swing.ImageIcon
 
-class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel {
+class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends FlowPanel {
 
   val cellColor = new Color(224, 224, 255)
   val unavailableColor = new Color(192, 255, 192)
