@@ -28,13 +28,31 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
   }
 
   def placedStones(): Int = {
-    var placedStones = 0
+    placedWhiteStones() + placedBlackStones()
+  }
+
+  def placedWhiteStones(): Int = {
+    var whiteStones = 0
     for (x <- this.allCells.allowedPosition) {
       if (!this.available(x._1, x._2)) {
-        placedStones = placedStones + 1
+        if(this.cell(x._1,x._2).getContent.whichColor.equals(Color.white)) {
+          whiteStones += 1
+        }
       }
     }
-    placedStones
+    whiteStones
+  }
+
+  def placedBlackStones(): Int = {
+    var blackStones = 0
+    for (x <- this.allCells.allowedPosition) {
+      if (!this.available(x._1, x._2)) {
+        if(this.cell(x._1,x._2).getContent.whichColor.equals(Color.black)) {
+          blackStones += 1
+        }
+      }
+    }
+    blackStones
   }
 
   val millPositions = List(((0, 0), (0, 3), (0, 6)), //horizontal mills
