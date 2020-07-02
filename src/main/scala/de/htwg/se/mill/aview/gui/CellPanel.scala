@@ -95,8 +95,8 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
         val whichCmd = controller.selectDriveCommand()
         whichCmd match {
           case SetModeState() => controller.set(row, column)
-          case MoveModeState() => controller.moveStone(rowOld, colOld, rowNew, colNew)
-          case FlyModeState() => controller.fly(rowOld, colOld, rowNew, colNew)
+          //case MoveModeState() => controller.moveStone(rowOld, colOld, rowNew, colNew)
+          //case FlyModeState() => controller.fly(rowOld, colOld, rowNew, colNew)
         }
         repaint
       }

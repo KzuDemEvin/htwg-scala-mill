@@ -72,16 +72,16 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
 
   def set(row: Int, col: Int): Unit = {
     roundCounter += 1
-    print(roundCounter)
+    //println("before" + roundCounter)
     if (roundCounter % 2 == 0) {
-      undoManager.doStep(new SetCommand(row, col, Cell(true, Stone("w+")), this))
-      gameState = GameState.handle(WhiteTurnState())
-    } else {
       undoManager.doStep(new SetCommand(row, col, fieldBaseImpl.Cell(true, Stone("b+")), this))
       gameState = GameState.handle(BlackTurnState())
+    } else {
+      undoManager.doStep(new SetCommand(row, col, Cell(true, Stone("w+")), this))
+      gameState = GameState.handle(WhiteTurnState())
     }
-    roundCounter = placedStones()
-    println(roundCounter)
+    //roundCounter = placedStones()
+    //println("after" + roundCounter)
     checkMill(row, col)
     modeChoice()
     publish(new CellChanged)
@@ -91,10 +91,10 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     roundCounter += 1
     if (roundCounter % 2 == 0) {
       undoManager.doStep(new MoveCommand(rowOld, colOld, rowNew, colNew, this))
-      gameState = GameState.handle(WhiteTurnState())
+      gameState = GameState.handle(BlackTurnState())
     } else {
       undoManager.doStep(new MoveCommand(rowOld, colOld, rowNew, colNew, this))
-      gameState = GameState.handle(BlackTurnState())
+      gameState = GameState.handle(WhiteTurnState())
     }
     checkMill(rowNew, colNew)
     publish(new CellChanged)
@@ -104,10 +104,10 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     roundCounter += 1
     if (roundCounter % 2 == 0) {
       undoManager.doStep(new FlyCommand(rowOld, colOld, rowNew, colNew, this))
-      gameState = GameState.handle(WhiteTurnState())
+      gameState = GameState.handle(BlackTurnState())
     } else {
       undoManager.doStep(new FlyCommand(rowOld, colOld, rowNew, colNew, this))
-      gameState = GameState.handle(BlackTurnState())
+      gameState = GameState.handle(WhiteTurnState())
     }
     checkMill(rowNew, colNew)
     publish(new CellChanged)
