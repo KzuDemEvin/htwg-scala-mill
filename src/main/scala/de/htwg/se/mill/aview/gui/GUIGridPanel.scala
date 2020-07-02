@@ -2,12 +2,13 @@ package de.htwg.se.mill.aview.gui
 
 import java.awt.image.BufferedImage
 
+import de.htwg.se.mill.controller.controllerComponent.ControllerInterface
 import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
 import javax.swing.ImageIcon
 
 import scala.swing.{Frame, GridPanel, Label}
 
-class GUIGridPanel(controller: Controller, allCellPanels: Array[Array[CellPanel]]) {
+class GUIGridPanel(controller: ControllerInterface, allCellPanels: Array[Array[CellPanel]]) {
   def gridPanel: GridPanel = {
     val gridPanel = new GridPanel(controller.fieldsize, controller.fieldsize) {
 

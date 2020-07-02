@@ -13,6 +13,8 @@ trait FieldInterface {
   def placedStones(): Int
   def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field
   def checkMill(row: Int, col: Int): Int
+
+  def createNewGrid:FieldInterface
 }
 
 trait CellInterface {

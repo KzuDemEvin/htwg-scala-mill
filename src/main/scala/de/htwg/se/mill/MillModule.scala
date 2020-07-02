@@ -5,8 +5,9 @@ import com.google.inject.AbstractModule
 import com.google.inject.name.Names
 import net.codingwell.scalaguice.ScalaModule
 import de.htwg.se.mill.controller.controllerComponent._
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Field, RandomStrategy}
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.RandomStrategy
 import de.htwg.se.mill.model.fieldComponent.FieldInterface
+import de.htwg.se.mill.model.fieldComponent.fieldAdvancedImpl.Field
 
 
 class MillModule extends AbstractModule with ScalaModule {

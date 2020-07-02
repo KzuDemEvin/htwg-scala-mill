@@ -1,8 +1,9 @@
 package de.htwg.se.mill
 
+import com.google.inject.Guice
 import de.htwg.se.mill.aview.Tui
 import de.htwg.se.mill.aview.gui.GUI
-import de.htwg.se.mill.controller.controllerComponent.CellChanged
+import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface}
 import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
 
@@ -10,9 +11,11 @@ import scala.io.StdIn.readLine
 
 object Mill {
   val defaultsize = 7
-  val controller = new Controller(new Field(defaultsize))
+  val injector = Guice.createInjector(new MillModule)
+  val controller = injector.getInstance(classOf[ControllerInterface])
   val tui = new Tui(controller)
   val gui = new GUI(controller)
+  controller.createEmptyField(defaultsize)
   controller.publish(new CellChanged)
 
   def main(args: Array[String]): Unit = {
