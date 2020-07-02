@@ -1,11 +1,7 @@
 package de.htwg.se.mill.aview.gui
 
-import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, MillState}
-import de.htwg.se.mill.controller
-import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
-
-import scala.swing.event.Key
-import scala.swing.{Action, BorderPanel, BoxPanel, Color, Dimension, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Orientation, Point, TextField}
+import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface}
+import scala.swing.{BorderPanel, Dimension, MainFrame, TextField}
 
 
 class GUI(controller: ControllerInterface) extends MainFrame {

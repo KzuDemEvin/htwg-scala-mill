@@ -3,7 +3,6 @@ package de.htwg.se.mill.aview.gui
 import scala.swing._
 import scala.swing.event._
 import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface}
-import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Color
 import javax.swing.ImageIcon
 

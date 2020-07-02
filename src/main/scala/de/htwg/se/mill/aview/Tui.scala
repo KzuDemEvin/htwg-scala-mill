@@ -1,10 +1,6 @@
 package de.htwg.se.mill.aview
 
 import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, GameState}
-import de.htwg.se.mill.controller
-import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Stone
-import de.htwg.se.mill.util.Observer
 
 import scala.swing.Reactor
 import scala.util.{Failure, Success, Try}

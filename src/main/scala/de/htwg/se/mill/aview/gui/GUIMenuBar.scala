@@ -2,7 +2,6 @@ package de.htwg.se.mill.aview.gui
 
 
 import de.htwg.se.mill.controller.controllerComponent.ControllerInterface
-import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
 
 import scala.swing.event.Key
 import scala.swing.{Action, Menu, MenuBar, MenuItem, TextField}

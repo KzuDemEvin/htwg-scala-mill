@@ -6,7 +6,7 @@ import net.codingwell.scalaguice.InjectorExtensions._
 import de.htwg.se.mill.MillModule
 import de.htwg.se.mill.controller.controllerComponent._
 import de.htwg.se.mill.model.fieldComponent.{FieldInterface, fieldBaseImpl}
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Cell, Field, RandomStrategy, Stone}
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Cell, Stone}
 import de.htwg.se.mill.util.UndoManager
 
 import scala.swing.Publisher
