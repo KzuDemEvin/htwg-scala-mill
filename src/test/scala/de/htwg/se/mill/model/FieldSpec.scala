@@ -2,6 +2,8 @@
 
 package de.htwg.se.mill.model
 
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Cell, Color, Field, Stone}
 import org.scalatest.{Matchers, WordSpec}
 
 class FieldSpec extends WordSpec with Matchers {
@@ -31,8 +33,8 @@ class FieldSpec extends WordSpec with Matchers {
         normalField.cell(0, 0).getContent.whichColor should be(Color.noColor)
       }
       "should return a string which looks like the gameboard" in {
-        var blackwhiteField = normalField.set(0, 0, Cell(true, Stone("w+")))
-        blackwhiteField = blackwhiteField.set(1, 1, Cell(true, Stone("b+")))
+        var blackwhiteField = normalField.set(0, 0, fieldBaseImpl.Cell(true, Stone("w+")))
+        blackwhiteField = blackwhiteField.set(1, 1, fieldBaseImpl.Cell(true, Stone("b+")))
         blackwhiteField.toString should be("Mill Gameboard:\n w  -  -  o  -  -  o \n -  b  -  o  -  o  - \n -  -  o  o  o  -  - \n o  o  o  -  o  o  o \n -  -  o  o  o  -  - \n -  o  -  o  -  o  - \n o  -  -  o  -  -  o \n")
       }
     }

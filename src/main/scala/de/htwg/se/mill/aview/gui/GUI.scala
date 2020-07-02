@@ -1,6 +1,8 @@
 package de.htwg.se.mill.aview.gui
 
-import de.htwg.se.mill.controller.{CellChanged, Controller, StoneRemoved}
+import de.htwg.se.mill.controller.controllerComponent.CellChanged
+import de.htwg.se.mill.controller.StoneRemoved
+import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
 
 import scala.swing.event.Key
 import scala.swing.{Action, BorderPanel, BoxPanel, Color, Dimension, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Orientation, Point, TextField}

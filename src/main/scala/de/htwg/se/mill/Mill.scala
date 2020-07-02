@@ -1,9 +1,10 @@
 package de.htwg.se.mill
 
 import de.htwg.se.mill.aview.Tui
-import de.htwg.se.mill.aview.gui.{GUI}
-import de.htwg.se.mill.controller.{CellChanged, Controller}
-import de.htwg.se.mill.model.Field
+import de.htwg.se.mill.aview.gui.GUI
+import de.htwg.se.mill.controller.controllerComponent.CellChanged
+import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
 
 import scala.io.StdIn.readLine
 
