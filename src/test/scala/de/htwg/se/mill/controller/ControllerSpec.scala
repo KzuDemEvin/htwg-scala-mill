@@ -73,5 +73,24 @@ class ControllerSpec extends WordSpec with Matchers {
       controller.placedStones() should be (1)
       controller.fieldsize should be (7)
     }
+    "move a stone" in {
+      controller.set(6,6)
+      controller.moveStone(6,6,6,3)
+    }
+    "should handle a no mill correct" in {
+      controller.set(2,2)
+      controller.millText should be("No Mill")
+    }
+    "should handle a black mill correct" in {
+      controller.set(2,4)
+      controller.set(3,2)
+      controller.set(3,4)
+      controller.set(4,2)
+      controller.millText should be("Black Mill")
+    }
+    "should handle a white mill correct" in {
+      controller.set(4,4)
+      controller.millText should be("White Mill")
+    }
   }
 }

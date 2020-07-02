@@ -4,8 +4,6 @@ import com.google.inject.Guice
 import de.htwg.se.mill.aview.Tui
 import de.htwg.se.mill.aview.gui.GUI
 import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface}
-import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
 
 import scala.io.StdIn.readLine
 
