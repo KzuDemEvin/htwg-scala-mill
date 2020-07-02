@@ -21,7 +21,7 @@ trait ControllerInterface extends Publisher {
   def isSet(row:Int, col:Int):Boolean
   def available(row:Int, col:Int):Boolean
   def possiblePosition(row:Int, col:Int):Boolean
-  def placedStones(): Int
+  def placedStones(): (Int, Int)
   def fieldsize:Int
 
 }
