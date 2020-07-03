@@ -21,6 +21,10 @@ class Tui(controller: ControllerInterface) extends Reactor {
         Success("valid command: " + input)
       case "redo" => controller.redo
         Success("valid command: " + input)
+      case "save" => controller.save
+        Success("valid command: " + input)
+      case "load" => controller.load
+        Success("valid command: " + input)
       case "exit" =>
         Success(input)
       case _ => input.toList.filter(p => p != ' ').filter(_.isDigit).map(p => p.toString.toInt) match {

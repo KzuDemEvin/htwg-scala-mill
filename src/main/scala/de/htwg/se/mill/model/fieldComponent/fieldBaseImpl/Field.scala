@@ -11,6 +11,10 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
 
   val size: Int = allCells.size
 
+  var savedRoundCounter = 0
+  def setRoundCounter(counter: Int): Unit = savedRoundCounter = counter
+  def getRoundCounter(): Int = savedRoundCounter
+
   def cell(row: Int, col: Int): Cell = allCells.cell(row, col)
 
   def possiblePosition(row: Int, col: Int): Boolean = allCells.allowedCell(row, col)

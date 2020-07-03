@@ -7,6 +7,7 @@ import de.htwg.se.mill.MillModule
 import de.htwg.se.mill.controller.controllerComponent._
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Color
 import de.htwg.se.mill.model.fieldComponent.{Cell, FieldInterface}
+import de.htwg.se.mill.model.fileIoComponent.FileIOInterface
 import de.htwg.se.mill.model.playerComponent.Player
 import de.htwg.se.mill.util.UndoManager
 
@@ -19,6 +20,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   var player1 = Player("Kevin")
   var player2 = Player("Manuel")
   val injector = Guice.createInjector(new MillModule)
+  val fileIo = injector.instance[FileIOInterface]
   val borderToMoveMode = 18
   var roundCounter = 0
 
@@ -160,6 +162,18 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   def removeStone(row: Int, col: Int): Unit = {
     field.removeStone(row, col)
     print(cell(row, col).getContent.whichColor)
+  }
+
+  def save: Unit = {
+    field.setRoundCounter(roundCounter)
+    fileIo.save(field)
+    publish(new CellChanged)
+  }
+
+  def load: Unit = {
+    field = fileIo.load
+    roundCounter = field.getRoundCounter()
+    publish(new CellChanged)
   }
 
   def statusText:String = GameState.state
