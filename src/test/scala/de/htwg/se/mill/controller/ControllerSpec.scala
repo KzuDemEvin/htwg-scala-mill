@@ -55,17 +55,17 @@ class ControllerSpec extends WordSpec with Matchers {
     "handle undo/redo of setting a cell correctly" in {
       controller.set(0, 0)
       controller.field.cell(0, 0).isSet should be(true)
-      controller.field.cell(0, 0).getContent.whichColor should be(Color.black)
+      controller.field.cell(0, 0).getContent.whichColor should be(Color.white)
       controller.undo
       controller.field.cell(0, 0).isSet should be(false)
       controller.field.cell(0, 0).getContent.whichColor should be(Color.noColor)
       controller.redo
       controller.field.cell(0, 0).isSet should be(true)
-      controller.field.cell(0, 0).getContent.whichColor should be(Color.black)
+      controller.field.cell(0, 0).getContent.whichColor should be(Color.white)
       controller.statusText should be("Redo")
     }
     "should return valid values with its methods" in {
-      controller.cell(0, 0).getContent.whichColor should be (Color.black)
+      controller.cell(0, 0).getContent.whichColor should be (Color.white)
       controller.isSet(0, 0) should be (true)
       controller.isSet(0,3) should be (false)
       controller.available(6, 6) should be (true)
@@ -81,16 +81,16 @@ class ControllerSpec extends WordSpec with Matchers {
       controller.set(2,2)
       controller.millText should be("No Mill")
     }
-    "should handle a black mill correct" in {
+    "should handle a white mill correct" in {
       controller.set(2,4)
       controller.set(3,2)
       controller.set(3,4)
       controller.set(4,2)
-      controller.millText should be("Black Mill")
-    }
-    "should handle a white mill correct" in {
-      controller.set(4,4)
       controller.millText should be("White Mill")
+    }
+    "should handle a black mill correct" in {
+      controller.set(4,4)
+      controller.millText should be("Black Mill")
     }
   }
 }

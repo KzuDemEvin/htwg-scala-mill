@@ -19,27 +19,27 @@ class CellPanelSpec extends WordSpec with Matchers {
         availableCellPanel.myCell.isSet should be(false)
       }
     }
-    "placed a black stone within it" should {
+    "placed a white stone within it" should {
       controller.set(0, 3)
       val blackCellPanel = new CellPanel(0, 3, controller)
       "have the cellType 'available'" in {
-        blackCellPanel.cellType(0, 3) should be (1)
+        blackCellPanel.cellType(0, 3) should be (0)
       }
       "have the cellBackground 'cellColor'" in {
-        blackCellPanel.cellBackground(0, 3) should be (blackCellPanel.blackColor)
+        blackCellPanel.cellBackground(0, 3) should be (blackCellPanel.whiteColor)
       }
       "have a cell isSet set to false" in {
         blackCellPanel.myCell.isSet should be(true)
       }
     }
-    "placed a white stone within it" should {
+    "placed a black stone within it" should {
       controller.set(0, 6)
       val whiteCellPanel = new CellPanel(0, 6, controller)
       "have the cellType 'available'" in {
-        whiteCellPanel.cellType(0, 6) should be (0)
+        whiteCellPanel.cellType(0, 6) should be (1)
       }
       "have the cellBackground 'cellColor'" in {
-        whiteCellPanel.cellBackground(0, 6) should be (whiteCellPanel.whiteColor)
+        whiteCellPanel.cellBackground(0, 6) should be (whiteCellPanel.blackColor)
       }
       "have a cell isSet set to false" in {
         whiteCellPanel.myCell.isSet should be(true)
