@@ -17,7 +17,7 @@ trait ControllerInterface extends Publisher {
   def removeStone(row:Int, col:Int):Unit
   def undo: Unit
   def redo: Unit
-  def checkMill(row:Int, col:Int):Unit
+  def checkMill(row:Int, col:Int):String
   def save: Unit
   def load: Unit
   def statusText:String
