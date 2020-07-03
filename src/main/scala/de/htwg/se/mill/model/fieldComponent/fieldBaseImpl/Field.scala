@@ -1,9 +1,12 @@
-package de.htwg.se.mill.model
+package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
+import com.google.inject.Inject
+import de.htwg.se.mill.model.fieldComponent.{FieldInterface, fieldBaseImpl}
 
-case class Field(allCells: Matrix[Cell]) {
+case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
+
   def this(size: Int) {
-    this(new Matrix[Cell](size, Cell(false, Stone("n"))))
+    this(new Matrix[Cell](size, fieldBaseImpl.Cell(false, Stone("n"))))
   }
 
   val size: Int = allCells.size
@@ -17,7 +20,6 @@ case class Field(allCells: Matrix[Cell]) {
   def set(row:Int, col:Int, c:Cell) : Field = {
     if (available(row, col)) {
       replace(row, col, c)
-      //checkMill2(row, col)
     } else {this}
   }
 
@@ -25,14 +27,52 @@ case class Field(allCells: Matrix[Cell]) {
     copy(allCells.replaceCell(row, col, c))
   }
 
-  def placedStones(): Int = {
-    var placedStones = 0
-    for (x <- this.allCells.allowedPosition) {
-      if (!this.available(x._1, x._2)) {
-        placedStones = placedStones + 1
+  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
+    var field = this
+    for (x <- neighbours(rowOld, colOld)) {
+      if (x._1 == rowNew && x._2 == colNew && !cell(rowNew, colNew).isSet) {
+        val oldCell = cell(rowOld, colOld)
+        field = replace(rowOld, colOld, Cell(false, Stone("n")))
+        field = set(x._1, x._2, oldCell)
       }
     }
-    placedStones
+    field
+  }
+
+  def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Field = {
+    var field = this
+    val oldCell = cell(rowOld, colOld)
+    field = set(rowNew, colNew, oldCell)
+    field = replace(rowOld, colOld, Cell(false, Stone("n")))
+    field
+  }
+
+  // (Whitestones, Blackstones)
+  private def placedStonesCounter(): (Int, Int) = {
+    var whiteStones = 0
+    var blackStones = 0
+    for (x <- this.allCells.allowedPosition) {
+      if (!this.available(x._1, x._2)) {
+        if (this.cell(x._1, x._2).getContent.whichColor.equals(Color.white)) {
+          whiteStones += 1
+        } else if (this.cell(x._1, x._2).getContent.whichColor.equals(Color.black)) {
+          blackStones += 1
+        }
+      }
+    }
+    (whiteStones, blackStones)
+  }
+
+  def placedStones(): Int = {
+    placedStonesCounter()._1 + placedStonesCounter()._2
+  }
+
+  def placedWhiteStones(): Int = {
+    placedStonesCounter()._1
+  }
+
+  def placedBlackStones(): Int = {
+    placedStonesCounter()._2
   }
 
   val millPositions = List(((0, 0), (0, 3), (0, 6)), //horizontal mills
@@ -102,6 +142,8 @@ case class Field(allCells: Matrix[Cell]) {
                        (6,3) -> Set((6,0),(6,6),(5,3)),
                        (6,6) -> Set((6,3),(3,6)))
 
+
+
   def checkMill(row: Int, col: Int): Int = {
     var millYesNo = 0
     for (x <- millneighbours(row, col)) {
@@ -120,31 +162,21 @@ case class Field(allCells: Matrix[Cell]) {
     millYesNo
   }
 
-  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
-    var field = this
-    for (x <- neighbours(rowOld, colOld)) {
-      if (x._1 == rowNew && x._2 == colNew && !cell(rowNew, colNew).isSet) {
-        val oldCell = cell(rowOld, colOld)
-        field = field.replace(rowOld, colOld, Cell(false, Stone("n")))
-        field = field.set(x._1, x._2, oldCell)
-      }
-    }
-    field
-  }
-
-  def checkMillSet(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
+  private def checkMillSet(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
     cell1.isSet && cell2.isSet && cell3.isSet
   }
 
-  def checkMillBlack(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
+  private def checkMillBlack(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
     (cell1.getContent.whichColor == Color.black && cell2.getContent.whichColor == Color.black
     && cell3.getContent.whichColor == Color.black)
   }
 
-  def checkMillWhite(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
+  private def checkMillWhite(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
     (cell1.getContent.whichColor == Color.white && cell2.getContent.whichColor == Color.white
       && cell3.getContent.whichColor == Color.white)
   }
+
+  override def createNewField: FieldInterface = new Field(size)
 
 
   override def toString: String = {

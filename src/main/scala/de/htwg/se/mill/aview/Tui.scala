@@ -1,14 +1,12 @@
 package de.htwg.se.mill.aview
 
-import de.htwg.se.mill.controller.{CellChanged, Controller, GameState, WhiteTurnState}
-import de.htwg.se.mill.model.{Cell, Stone}
-import de.htwg.se.mill.util.Observer
+import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, GameState}
 
 import scala.swing.Reactor
 import scala.util.{Failure, Success, Try}
 
 
-class Tui(controller: Controller) extends Reactor {
+class Tui(controller: ControllerInterface) extends Reactor {
 
   listenTo(controller)
   val size = 7
@@ -29,8 +27,7 @@ class Tui(controller: Controller) extends Reactor {
         case rowOld :: columnOld :: rowNew :: columnNew :: Nil => controller.moveStone(rowOld, columnOld, rowNew, columnNew)
           Success("valid command: " + input)
         case row :: column :: Nil => controller.set(row, column)
-          //controller.checkMill(0)
-          println(controller.millState)
+          println(controller.millText)
           Success("valid command: " + input)
       }
       case _ =>

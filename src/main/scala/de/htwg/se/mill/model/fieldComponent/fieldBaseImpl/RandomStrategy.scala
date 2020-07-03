@@ -1,4 +1,6 @@
-package de.htwg.se.mill.model
+package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
+
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
 import scala.util.Random
 
@@ -14,8 +16,6 @@ class RandomStrategy extends Strategy {
     for (i <- 0 until num) {
       field = placeRandomStone(field)
     }
-    println(whiteCounter)
-    println(blackCounter)
     field
   }
 
@@ -34,15 +34,15 @@ class RandomStrategy extends Strategy {
         field.set(row, col, Cell(filled = true, Stone("w+")))
       } else if (blackCounter < maxStones){
         blackCounter += 1
-        field.set(row, col, Cell(filled = true, Stone("b+")))
+        field.set(row, col, fieldBaseImpl.Cell(filled = true, Stone("b+")))
       } else {field}
     } else {
       if (blackCounter < maxStones) {
         blackCounter += 1
-        field.set(row, col, Cell(filled = true, Stone("b+")))
+        field.set(row, col, fieldBaseImpl.Cell(filled = true, Stone("b+")))
       } else if (whiteCounter < maxStones) {
         whiteCounter += 1
-        field.set(row, col, Cell(filled = true, Stone("w+")))
+        field.set(row, col, fieldBaseImpl.Cell(filled = true, Stone("w+")))
       } else {field}
       }
     }

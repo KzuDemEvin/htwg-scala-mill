@@ -1,4 +1,4 @@
-package de.htwg.se.mill.controller
+package de.htwg.se.mill.controller.controllerComponent
 
 trait GameState {
   def handle:String

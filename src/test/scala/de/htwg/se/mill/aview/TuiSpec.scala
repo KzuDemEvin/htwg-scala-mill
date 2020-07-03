@@ -1,7 +1,7 @@
 package de.htwg.se.mill.aview
 
-import de.htwg.se.mill.controller.Controller
-import de.htwg.se.mill.model.{Color, Field}
+import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Color, Field}
 import org.scalatest.{Matchers, WordSpec}
 
 class TuiSpec extends WordSpec with Matchers {
@@ -22,6 +22,11 @@ class TuiSpec extends WordSpec with Matchers {
       tui.execInput("03")
       controller.field.available(0, 3) should be(false)
       controller.field.cell(0, 3).content.whichColor should be(Color.white)
+    }
+    "move a white stone from '03' to '13'" in {
+      tui.execInput("0313")
+      controller.field.available(1, 3) should be(false)
+      controller.field.cell(1, 3).content.whichColor should be(Color.white)
     }
     "undo on input 'undo'" in {
       tui.execInput("66")

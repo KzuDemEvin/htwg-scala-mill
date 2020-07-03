@@ -2,18 +2,18 @@ package de.htwg.se.mill.aview.gui
 
 import scala.swing._
 import scala.swing.event._
-import de.htwg.se.mill.controller.Controller
-import de.htwg.se.mill.controller.CellChanged
-import de.htwg.se.mill.model.Color
+import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, FlyModeState, MoveModeState, SetModeState}
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Color
 import javax.swing.ImageIcon
 
-class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel {
+class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends FlowPanel {
 
   val cellColor = new Color(224, 224, 255)
   val unavailableColor = new Color(192, 255, 192)
   //val unavailableColor = new Color(238, 238, 238) // backgroundcolor
   val whiteColor = new Color(255, 255, 255)
   val blackColor = new Color(0, 0, 0)
+  val transparentColor = new Color(0, 0, 0, 0)
 
   val sizeDim = new Dimension(100, 100)
 
@@ -92,7 +92,13 @@ class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel
     listenTo(setButton)
     reactions += {
       case ButtonClicked(component) if component == setButton => {
-        controller.set(row, column)
+        //controller.set(row, column)
+        val whichCmd = controller.selectDriveCommand()
+        whichCmd match {
+          case SetModeState() => controller.set(row, column)
+          //case MoveModeState() => controller.moveStone(rowOld, colOld, rowNew, colNew)
+          //case FlyModeState() => controller.fly(rowOld, colOld, rowNew, colNew)
+        }
         repaint
       }
       case e: CellChanged => {

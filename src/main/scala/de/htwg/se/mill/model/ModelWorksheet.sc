@@ -1,4 +1,5 @@
-import de.htwg.se.mill.model.{Cell, Color, Field, Matrix, RandomStrategy, Stone}
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Cell, Color, Field, Matrix, Stone}
 
 import scala.io.StdIn.readLine
 
@@ -12,8 +13,8 @@ println(s)
 
 var field = new Field(7)
 field = field.set(0,0, Cell(true, Stone("b+")))
-field = field.set(0,3, Cell(true, Stone("b+")))
-field = field.set(0,6, Cell(true, Stone("b+")))
+field = field.set(0,3, fieldBaseImpl.Cell(true, Stone("b+")))
+field = field.set(0,6, fieldBaseImpl.Cell(true, Stone("b+")))
 
 field.toString
 

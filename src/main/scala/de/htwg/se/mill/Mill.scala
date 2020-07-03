@@ -1,18 +1,19 @@
 package de.htwg.se.mill
 
+import com.google.inject.Guice
 import de.htwg.se.mill.aview.Tui
-import de.htwg.se.mill.aview.gui.{GUI}
-import de.htwg.se.mill.controller.{CellChanged, Controller}
-import de.htwg.se.mill.model.Field
+import de.htwg.se.mill.aview.gui.GUI
+import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface}
 
 import scala.io.StdIn.readLine
 
 object Mill {
   val defaultsize = 7
-  val controller = new Controller(new Field(defaultsize))
+  val injector = Guice.createInjector(new MillModule)
+  val controller = injector.getInstance(classOf[ControllerInterface])
   val tui = new Tui(controller)
   val gui = new GUI(controller)
-  controller.publish(new CellChanged)
+  controller.createEmptyField(defaultsize)
 
   def main(args: Array[String]): Unit = {
     var input:String = ""
