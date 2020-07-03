@@ -43,7 +43,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   def fieldToString: String = field.toString
 
   def modeChoice(): Unit = {
-    if (roundCounter <= borderToMoveMode) {
+    if (roundCounter < borderToMoveMode) {
       player1.mode = ModeState.handle(SetModeState())
       player2.mode = ModeState.handle(SetModeState())
     } else if (placedBlackStones() == 3 || placedWhiteStones() == 3) {
@@ -82,7 +82,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       gameState = GameState.handle(WhiteTurnState())
     }
     //roundCounter = placedStones()
-    //println("after" + roundCounter)
+    println("after" + roundCounter)
     checkMill(row, col)
     modeChoice()
     publish(new CellChanged)
@@ -98,6 +98,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       gameState = GameState.handle(WhiteTurnState())
     }
     checkMill(rowNew, colNew)
+    modeChoice()
     publish(new CellChanged)
   }
 
@@ -111,6 +112,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       gameState = GameState.handle(WhiteTurnState())
     }
     checkMill(rowNew, colNew)
+    modeChoice()
     publish(new CellChanged)
   }
 
