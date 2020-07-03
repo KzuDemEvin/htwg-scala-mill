@@ -92,10 +92,11 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
     listenTo(setButton)
     reactions += {
       case ButtonClicked(component) if component == setButton => {
-        //controller.set(row, column)
+
         val whichCmd = controller.selectDriveCommand()
         whichCmd match {
           case SetModeState() => controller.set(row, column)
+          case MoveModeState() => println("no move / fly yet")
           //case MoveModeState() => controller.moveStone(rowOld, colOld, rowNew, colNew)
           //case FlyModeState() => controller.fly(rowOld, colOld, rowNew, colNew)
         }
