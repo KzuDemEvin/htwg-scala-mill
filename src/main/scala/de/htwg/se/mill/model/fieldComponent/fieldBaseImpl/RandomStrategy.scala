@@ -16,8 +16,6 @@ class RandomStrategy extends Strategy {
     for (i <- 0 until num) {
       field = placeRandomStone(field)
     }
-    println(whiteCounter)
-    println(blackCounter)
     field
   }
 

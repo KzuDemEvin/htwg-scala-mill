@@ -13,6 +13,7 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
   //val unavailableColor = new Color(238, 238, 238) // backgroundcolor
   val whiteColor = new Color(255, 255, 255)
   val blackColor = new Color(0, 0, 0)
+  val transparentColor = new Color(0, 0, 0, 0)
 
   val sizeDim = new Dimension(100, 100)
 

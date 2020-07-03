@@ -14,7 +14,6 @@ object Mill {
   val tui = new Tui(controller)
   val gui = new GUI(controller)
   controller.createEmptyField(defaultsize)
-  controller.publish(new CellChanged)
 
   def main(args: Array[String]): Unit = {
     var input:String = ""

@@ -17,7 +17,7 @@ trait FieldInterface {
   def placedBlackStones():Int
   def checkMill(row: Int, col: Int): Int
 
-  def createNewGrid:FieldInterface
+  def createNewField:FieldInterface
 }
 
 trait CellInterface {

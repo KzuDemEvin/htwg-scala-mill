@@ -176,7 +176,7 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
       && cell3.getContent.whichColor == Color.white)
   }
 
-  override def createNewGrid: FieldInterface = new Field(size)
+  override def createNewField: FieldInterface = new Field(size)
 
 
   override def toString: String = {
