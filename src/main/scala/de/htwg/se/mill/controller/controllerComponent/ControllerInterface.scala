@@ -14,9 +14,10 @@ trait ControllerInterface extends Publisher {
   def set(row: Int, col: Int): Unit
   def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Unit
   def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Unit
+  def removeStone(row:Int, col:Int):Unit
   def undo: Unit
   def redo: Unit
-  def checkMill(row:Int, col:Int):Unit
+  def checkMill(row:Int, col:Int):String
   def statusText:String
   def millText:String
   def cell(row:Int, col:Int):Cell

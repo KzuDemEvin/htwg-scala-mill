@@ -95,8 +95,40 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
         val whichCmd = controller.selectDriveCommand()
         whichCmd match {
           case SetModeState() => controller.set(row, column)
-          //case MoveModeState() => controller.moveStone(rowOld, colOld, rowNew, colNew)
-          //case FlyModeState() => controller.fly(rowOld, colOld, rowNew, colNew)
+          case MoveModeState() => controller.moveCounter += 1
+            if (controller.moveCounter == 2) {
+              controller.moveStone(controller.tmpCell._1, controller.tmpCell._2, row, column)
+              controller.moveCounter = 0
+            } else {
+              controller.tmpCell = (row, column)
+            }
+//            if (controller.moveCounter == 2) {
+//              println("inside 2")
+//              controller.moveStone(controller.tmpCell._1, controller.tmpCell._2, row, column)
+//              val m = controller.checkMill(controller.tmpCell._1, controller.tmpCell._2)
+//              println(m)
+//              m match {
+//                case "White Mill" => controller.moveCounter += 1
+//                  println("white mill")
+//                case "Black Mill" => controller.moveCounter += 1
+//                  println("black mill")
+//                case "No Mill" => controller.moveCounter = 0
+//                  println("no mill")
+//              }
+//            } else if (controller.moveCounter == 4){
+//              println("inside 4")
+//              //controller.removeStone(row, column)
+//              controller.moveCounter = 0
+//            } else {
+//              controller.tmpCell = (row, column)
+//            }
+          case FlyModeState() => controller.flyCounter += 1
+            if (controller.flyCounter == 2) {
+              controller.fly(controller.tmpCell._1, controller.tmpCell._2, row, column)
+              controller.flyCounter = 0
+            } else {
+              controller.tmpCell = (row, column)
+            }
         }
         repaint
       }

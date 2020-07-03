@@ -5,6 +5,7 @@ import com.google.inject.{Guice, Inject}
 import net.codingwell.scalaguice.InjectorExtensions._
 import de.htwg.se.mill.MillModule
 import de.htwg.se.mill.controller.controllerComponent._
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Color
 import de.htwg.se.mill.model.fieldComponent.{Cell, FieldInterface}
 import de.htwg.se.mill.model.playerComponent.Player
 import de.htwg.se.mill.util.UndoManager
@@ -12,7 +13,6 @@ import de.htwg.se.mill.util.UndoManager
 import scala.swing.Publisher
 
 class Controller @Inject() (var field: FieldInterface) extends ControllerInterface with Publisher {
-
   private val undoManager = new UndoManager
   var gameState = GameState.handle(NewState())
   var millState = MillState.handle(NoMillState())
@@ -59,7 +59,6 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   }
 
   def selectDriveCommand():ModeState = {
-    //roundCounter += 1
     var cmd = ModeState.whichState(SetModeState().handle)
     if (roundCounter % 2 == 0) {
       cmd = ModeState.whichState(player1.mode)
@@ -71,7 +70,6 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
 
   def set(row: Int, col: Int): Unit = {
     roundCounter += 1
-    //println("before" + roundCounter)
     if (roundCounter % 2 == 0) {
       undoManager.doStep(new SetCommand(row, col, Cell("cb"), this))
       gameState = GameState.handle(BlackTurnState())
@@ -79,8 +77,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       undoManager.doStep(new SetCommand(row, col, Cell("cw"), this))
       gameState = GameState.handle(WhiteTurnState())
     }
-    //roundCounter = placedStones()
-    println("after" + roundCounter)
+    print("roundcounter danach " + roundCounter + "\n")
     checkMill(row, col)
     modeChoice()
     publish(new CellChanged)
@@ -89,13 +86,22 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Unit = {
     roundCounter += 1
     if (roundCounter % 2 == 0) {
-      undoManager.doStep(new MoveCommand(rowOld, colOld, rowNew, colNew, this))
-      gameState = GameState.handle(BlackTurnState())
+      if (cell(rowOld, colOld).getContent.whichColor != Color.black) {
+        roundCounter -= 1
+      } else {
+        undoManager.doStep(new MoveCommand(rowOld, colOld, rowNew, colNew, this))
+        gameState = GameState.handle(WhiteTurnState())
+      }
     } else {
-      undoManager.doStep(new MoveCommand(rowOld, colOld, rowNew, colNew, this))
-      gameState = GameState.handle(WhiteTurnState())
+      if (cell(rowOld, colOld).getContent.whichColor != Color.white) {
+        roundCounter -= 1
+      } else {
+        undoManager.doStep(new MoveCommand(rowOld, colOld, rowNew, colNew, this))
+        gameState = GameState.handle(BlackTurnState())
+      }
     }
     checkMill(rowNew, colNew)
+    print("roundcounter danach " + roundCounter + "\n")
     modeChoice()
     publish(new CellChanged)
   }
@@ -103,11 +109,20 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Unit = {
     roundCounter += 1
     if (roundCounter % 2 == 0) {
-      undoManager.doStep(new FlyCommand(rowOld, colOld, rowNew, colNew, this))
-      gameState = GameState.handle(BlackTurnState())
+      if (roundCounter % 2 == 0) {
+        if (cell(rowOld, colOld).getContent.whichColor != Color.black) {
+          roundCounter -= 1
+        }
+          undoManager.doStep(new FlyCommand(rowOld, colOld, rowNew, colNew, this))
+          gameState = GameState.handle(BlackTurnState())
+        }
     } else {
-      undoManager.doStep(new FlyCommand(rowOld, colOld, rowNew, colNew, this))
-      gameState = GameState.handle(WhiteTurnState())
+      if (cell(rowOld, colOld).getContent.whichColor != Color.white) {
+        roundCounter -= 1
+      } else {
+        undoManager.doStep(new FlyCommand(rowOld, colOld, rowNew, colNew, this))
+        gameState = GameState.handle(WhiteTurnState())
+      }
     }
     checkMill(rowNew, colNew)
     modeChoice()
@@ -132,13 +147,18 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     publish(new CellChanged)
   }
 
-  def checkMill(row:Int, col:Int):Unit = {
+  def checkMill(row:Int, col:Int):String = {
     val m = field.checkMill(row, col)
     m match {
       case 1 => millState = MillState.handle(BlackMillState())
       case 2 => millState = MillState.handle(WhiteMillState())
       case _ => millState = MillState.handle(NoMillState())
     }
+    millState
+  }
+
+  def removeStone(row: Int, col: Int): Unit = {
+    field.removeStone(row, col)
   }
 
   def statusText:String = GameState.state
