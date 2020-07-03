@@ -1,7 +1,7 @@
 package de.htwg.se.mill.aview.gui
 
 import de.htwg.se.mill.controller.controllerComponent.ControllerInterface
-import scala.swing.{GridPanel, Label}
+import scala.swing.{GridPanel}
 
 class GUIGridPanel(controller: ControllerInterface, allCellPanels: Array[Array[CellPanel]]) {
   def gridPanel: GridPanel = {
@@ -26,12 +26,5 @@ class GUIGridPanel(controller: ControllerInterface, allCellPanels: Array[Array[C
       hGap_=(0)
     }
     gridPanel
-  }
-
-  def toLabel: Label = {
-    val label = new Label{
-      gridPanel
-    }
-    label
   }
 }
