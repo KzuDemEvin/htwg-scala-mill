@@ -1,7 +1,6 @@
 package de.htwg.se.mill.controller.controllerComponent
 
-import de.htwg.se.mill.model.fieldComponent.CellInterface
-
+import de.htwg.se.mill.model.fieldComponent.Cell
 import scala.swing.Publisher
 
 trait ControllerInterface extends Publisher {
@@ -18,7 +17,7 @@ trait ControllerInterface extends Publisher {
   def checkMill(row:Int, col:Int):Unit
   def statusText:String
   def millText:String
-  def cell(row:Int, col:Int):CellInterface
+  def cell(row:Int, col:Int):Cell
   def isSet(row:Int, col:Int):Boolean
   def available(row:Int, col:Int):Boolean
   def possiblePosition(row:Int, col:Int):Boolean

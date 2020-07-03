@@ -1,11 +1,9 @@
 package de.htwg.se.mill.model.fieldComponent
 
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Cell, Field, Stone}
-
 trait FieldInterface {
   def size: Int
 
-  def cell(row: Int, col: Int): CellInterface
+  def cell(row: Int, col: Int): Cell
   def possiblePosition(row: Int, col: Int): Boolean
   def available(row: Int, col: Int): Boolean
   def set(row:Int, col:Int, c:Cell) : FieldInterface
@@ -18,12 +16,4 @@ trait FieldInterface {
   def checkMill(row: Int, col: Int): Int
 
   def createNewField:FieldInterface
-}
-
-trait CellInterface {
-  def filled: Boolean
-  def content: Stone
-
-  def isSet: Boolean
-  def getContent: Stone
 }
