@@ -5,13 +5,13 @@ import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Cell, Field, Stone}
 trait FieldInterface {
   def size: Int
 
-  def cell(row: Int, col: Int): Cell
+  def cell(row: Int, col: Int): CellInterface
   def possiblePosition(row: Int, col: Int): Boolean
   def available(row: Int, col: Int): Boolean
-  def set(row:Int, col:Int, c:Cell) : Field
-  def replace(row:Int, col:Int, c:Cell) : Field
-  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field
-  def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Field
+  def set(row:Int, col:Int, c:Cell) : FieldInterface
+  def replace(row:Int, col:Int, c:Cell) : FieldInterface
+  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): FieldInterface
+  def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):FieldInterface
   def placedStones(): Int
   def placedWhiteStones():Int
   def placedBlackStones():Int
