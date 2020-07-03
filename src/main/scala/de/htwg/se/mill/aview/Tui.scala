@@ -1,11 +1,10 @@
 package de.htwg.se.mill.aview
 
-import de.htwg.se.mill.controller.{Controller, GameState, InProgessState, WhiteTurnState}
+import de.htwg.se.mill.controller.{CellChanged, Controller, GameState, WhiteTurnState}
 import de.htwg.se.mill.model.{Cell, Stone}
 import de.htwg.se.mill.util.Observer
 
 import scala.swing.Reactor
-
 import scala.util.{Failure, Success, Try}
 
 
@@ -24,23 +23,33 @@ class Tui(controller: Controller) extends Reactor {
         Success("valid command: " + input)
       case "redo" => controller.redo
         Success("valid command: " + input)
-      case _ => input.toList.filter(p => p != ' ').filter(_.isDigit).map(p =>  p.toString.toInt) match {
-        case row :: column :: value :: Nil => value match {
-          case 0 => controller.set(row, column, Cell(true, Stone("w+")))
-            Success("valid command: " + input)
-          case _ => controller.set(row, column, Cell(true, Stone("b+")))
-            Success("valid command: " + input)
-        }
-        case _ =>
-          Failure(new IllegalArgumentException("Wrong input: " + input))
+      case "exit" =>
+        Success(input)
+      case _ => input.toList.filter(p => p != ' ').filter(_.isDigit).map(p => p.toString.toInt) match {
+        case rowOld :: columnOld :: rowNew :: columnNew :: Nil => controller.moveStone(rowOld, columnOld, rowNew, columnNew)
+          Success("valid command: " + input)
+        case row :: column :: Nil => controller.set(row, column)
+          //controller.checkMill(0)
+          println(controller.millState)
+          Success("valid command: " + input)
       }
+      case _ =>
+        Failure(new IllegalArgumentException("Wrong input: " + input))
     }
   }
 
-  override def update: Boolean = {
+  reactions += {
+    case event: CellChanged => printTui
+  }
+
+  def printTui: Unit = {
     println(controller.fieldToString)
     println(GameState.state)
-    GameState.handle(InProgessState())
-    true
   }
+//  override def update: Boolean = {
+//    println(controller.fieldToString)
+//    println(GameState.state)
+//    GameState.handle(InProgessState())
+//    true
+//  }
 }

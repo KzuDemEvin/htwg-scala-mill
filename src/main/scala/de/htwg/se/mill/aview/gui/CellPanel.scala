@@ -1,90 +1,117 @@
 package de.htwg.se.mill.aview.gui
 
 import scala.swing._
-import javax.swing.table._
 import scala.swing.event._
 import de.htwg.se.mill.controller.Controller
 import de.htwg.se.mill.controller.CellChanged
+import de.htwg.se.mill.model.Color
+import javax.swing.ImageIcon
 
 class CellPanel(row: Int, column: Int, controller: Controller) extends FlowPanel {
 
-  val givenCellColor = new Color(200, 200, 255)
   val cellColor = new Color(224, 224, 255)
-  val highlightedCellColor = new Color(192, 255, 192)
+  val unavailableColor = new Color(192, 255, 192)
+  //val unavailableColor = new Color(238, 238, 238) // backgroundcolor
+  val whiteColor = new Color(255, 255, 255)
+  val blackColor = new Color(0, 0, 0)
 
-  def myCell = controller.field.cell(row, column)
+  val sizeDim = new Dimension(100, 100)
 
-  def cellText(row: Int, col: Int) = if (controller.isSet(row, column)) " " + controller.cell(row, column).value.toString else " "
+  def myCell = controller.cell(row, column)
+
+  // 0 = white, 1 = black, 2 = available, 3 = notValid
+  def cellType(row: Int, col: Int): Int = {
+    var cellType = 0
+    if (controller.possiblePosition(row, col)) {
+      if (controller.isSet(row, col)) {
+        if (controller.cell(row, col).getContent.whichColor == Color.white) {
+          cellType = 0
+        } else {
+          cellType = 1
+        }
+      } else {
+        cellType = 2
+      }
+    } else {
+      cellType = 3
+    }
+    cellType
+  }
+
+  def cellText(row: Int, col: Int):String = {
+    cellType(row, col) match {
+      case 0 => ""
+      case 1 => ""
+      case 2 => ""
+      case 3 => ""
+    }
+  }
+
+  def cellBackground(row: Int, col: Int): Color = {
+    cellType(row, col) match {
+      case 0 => whiteColor
+      case 1 => blackColor
+      case 2 => cellColor
+      case 3 => unavailableColor
+    }
+  }
+
+  def cellIcon(row: Int, col: Int): ImageIcon = {
+    cellType(row, col) match {
+      case 0 => new ImageIcon("src\\assets\\media\\WhiteStone.png")
+      case 1 => new ImageIcon("src\\assets\\media\\BlackStone.png")
+      case 2 => new ImageIcon("src\\assets\\media\\CellStone.png")
+      case 3 => new ImageIcon("src\\assets\\media\\UnavailableCell.png")
+    }
+  }
 
   val label =
     new Label {
       text = cellText(row, column)
-      font = new Font("Verdana", 1, 36)
+      font = new Font("Verdana", 1, 20)
     }
+
+  val setButton = new Button {
+    minimumSize = sizeDim
+    maximumSize = sizeDim
+    preferredSize = sizeDim
+    //background = unavailableColor
+    icon = cellIcon(row, column)
+  }
 
   val cell = new BoxPanel(Orientation.Vertical) {
     contents += label
-    preferredSize = new Dimension(51, 51)
-    background = if (controller.isGiven(row, column)) givenCellColor else cellColor
-    border = Swing.BeveledBorder(Swing.Raised)
+    if (cellType(row, column) != 3) {
+      contents += setButton
+    }
+    preferredSize = sizeDim
+    background = cellBackground(row, column)
+
     listenTo(mouse.clicks)
     listenTo(controller)
+    listenTo(setButton)
     reactions += {
+      case ButtonClicked(component) if component == setButton => {
+        controller.set(row, column)
+        repaint
+      }
       case e: CellChanged => {
         label.text = cellText(row, column)
         repaint
       }
       case MouseClicked(src, pt, mod, clicks, pops) => {
-        controller.showCandidates(row, column)
         repaint
       }
     }
   }
 
-  val candidatelist = (1 to controller.gridSize).map {
-    (value =>
-      new Label {
-        text = if (controller.available(row, column).contains(value)) value.toString else " "
-        preferredSize = new Dimension(17, 17)
-        font = new Font("Verdana", 1, 9)
-        background = cellColor
-        border = Swing.BeveledBorder(Swing.Raised)
-        listenTo(mouse.clicks)
-        listenTo(controller)
-        reactions += {
-          case e: CellChanged => {
-            text = if (controller.available(row, column).contains(value)) value.toString else " "
-            repaint
-          }
-          case MouseClicked(src, pt, mod, clicks, pops) => {
-            controller.set(row, column, value)
-            text = if (controller.available(row, column).contains(value)) value.toString else " "
-            repaint
-          }
-        }
-      })
-  }
-  val candidates = new GridPanel(controller.blockSize, controller.blockSize) {
-    setBackground(this)
-    contents ++= candidatelist
-  }
-  contents += candidates
-
-  def redraw = {
+  def redraw:Unit = {
     contents.clear()
-    if ((controller.isShowCandidates(row, column) || controller.showAllCandidates) && !controller.isSet(row, column)) {
-      setBackground(candidates)
-      contents += candidates
-    } else {
-      label.text = cellText(row, column)
-      setBackground(cell)
-      contents += cell
-    }
+    label.text = cellText(row, column)
+    cell.background = cellBackground(row, column)
+    //setButton.background = unavailableColor
+    setButton.icon = cellIcon(row, column)
+    contents += cell
     repaint
   }
-
-  def setBackground(p: Panel) = p.background = if (controller.isGiven(row, column)) givenCellColor
-  else if (controller.isHighlighted(row, column)) highlightedCellColor
-  else cellColor
-
 }

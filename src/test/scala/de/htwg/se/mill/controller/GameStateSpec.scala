@@ -6,8 +6,8 @@ class GameStateSpec extends WordSpec with Matchers {
   "A GameState" when {
     "should represent the game current sate. It" should {
       "be in progress" in {
-        val gameStateProgress = GameState.handle(InProgessState())
-        gameStateProgress should be("Game in progress")
+        val gameStateProgress = GameState.handle(NewState())
+        gameStateProgress should be("New field")
       }
       "be finished" in {
         val gameStateFinished = GameState.handle(FinishedState())
@@ -21,6 +21,14 @@ class GameStateSpec extends WordSpec with Matchers {
         val gameStateBlack = GameState.handle(BlackTurnState())
         gameStateBlack should be("Black's turn")
       }
+//      "say its a whitemill" in {
+//        val gameStateWhiteMill = GameState.handle(WhiteMillState())
+//        gameStateWhiteMill should be("White Mill")
+//      }
+//      "say its a blackmill" in {
+//        val gameStateBlackMill = GameState.handle(BlackMillState())
+//        gameStateBlackMill should be("Black Mill")
+//      }
     }
 
   }

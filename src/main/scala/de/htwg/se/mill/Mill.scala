@@ -1,7 +1,7 @@
 package de.htwg.se.mill
 
 import de.htwg.se.mill.aview.Tui
-import de.htwg.se.mill.aview.gui.SwingGui
+import de.htwg.se.mill.aview.gui.{GUI}
 import de.htwg.se.mill.controller.{CellChanged, Controller}
 import de.htwg.se.mill.model.Field
 
@@ -11,7 +11,7 @@ object Mill {
   val defaultsize = 7
   val controller = new Controller(new Field(defaultsize))
   val tui = new Tui(controller)
-  val gui = new SwingGui(controller)
+  val gui = new GUI(controller)
   controller.publish(new CellChanged)
 
   def main(args: Array[String]): Unit = {
