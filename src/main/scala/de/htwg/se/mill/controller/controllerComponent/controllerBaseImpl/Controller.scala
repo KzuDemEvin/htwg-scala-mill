@@ -22,7 +22,6 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   val borderToMoveMode = 18
   var roundCounter = 0
 
-
   def createEmptyField(size: Int): Unit = {
     roundCounter = 0
 

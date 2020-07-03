@@ -96,9 +96,21 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
         val whichCmd = controller.selectDriveCommand()
         whichCmd match {
           case SetModeState() => controller.set(row, column)
-          case MoveModeState() => println("no move / fly yet")
-          //case MoveModeState() => controller.moveStone(rowOld, colOld, rowNew, colNew)
-          //case FlyModeState() => controller.fly(rowOld, colOld, rowNew, colNew)
+          case MoveModeState() => controller.moveCounter += 1
+            if (controller.moveCounter == 2) {
+              //controller.set(row, column)
+              controller.moveStone(controller.tmpCell._1, controller.tmpCell._2, row, column)
+              controller.moveCounter = 0
+            } else {
+              controller.tmpCell = (row, column)
+            }
+          case FlyModeState() => controller.flyCounter += 1
+            if (controller.flyCounter == 2) {
+              controller.fly(controller.tmpCell._1, controller.tmpCell._2, row, column)
+              controller.moveCounter = 0
+            } else {
+              controller.tmpCell = (row, column)
+            }
         }
         repaint
       }

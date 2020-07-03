@@ -49,6 +49,10 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
     field
   }
 
+  def removeStone(row:Int, col:Int):FieldInterface = {
+    replace(row, col, Cell("ce"))
+  }
+
   // (Whitestones, Blackstones)
   private def placedStonesCounter(): (Int, Int) = {
     var whiteStones = 0

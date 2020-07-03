@@ -5,19 +5,22 @@ trait Cell {
   def getContent: Stone
 }
 
-private class WhiteStoneCell(filled: Boolean, content: Stone)  extends Cell {
+private class WhiteStoneCell(filled: Boolean, content: Stone) extends Cell {
   override def isSet: Boolean = filled
   override def getContent: Stone = content
+  override def toString: String = "White Stone"
 }
 
-private class BlackStoneCell(filled: Boolean, content: Stone)  extends Cell {
+private class BlackStoneCell(filled: Boolean, content: Stone) extends Cell {
   override def isSet: Boolean = filled
   override def getContent: Stone = content
+  override def toString: String = "Black Stone"
 }
 
 private class EmptyCell(filled: Boolean, content: Stone) extends Cell {
   override def isSet: Boolean = filled
   override def getContent: Stone = content
+  override def toString: String = "No Stone"
 }
 
 object Cell {
