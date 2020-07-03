@@ -12,6 +12,7 @@ trait FieldInterface {
   def replace(row:Int, col:Int, c:Cell) : FieldInterface
   def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): FieldInterface
   def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):FieldInterface
+  def removeStone(row:Int, col:Int):FieldInterface
   def placedStones(): Int
   def placedWhiteStones():Int
   def placedBlackStones():Int

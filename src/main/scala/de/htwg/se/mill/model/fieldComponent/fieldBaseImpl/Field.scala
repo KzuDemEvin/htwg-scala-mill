@@ -33,29 +33,28 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
     copy(allCells.replaceCell(row, col, c))
   }
 
-  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): FieldInterface = {
+  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
     var field = this
     for (x <- neighbours(rowOld, colOld)) {
       if (x._1 == rowNew && x._2 == colNew && !cell(rowNew, colNew).isSet) {
         val oldCell = cell(rowOld, colOld)
         field = field.replace(rowOld, colOld, Cell("ce"))
         field = field.set(x._1, x._2, oldCell)
-        println(field.cell(rowOld, colOld).getContent.whichColor)
-        println(field.cell(rowNew, colNew).getContent.whichColor)
       }
     }
     field
   }
 
-  def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): FieldInterface = {
+  def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
     var field = this
     val oldCell = cell(rowOld, colOld)
-    field = set(rowNew, colNew, oldCell)
-    field = replace(rowOld, colOld, Cell("ce"))
+    field = field.set(rowNew, colNew, oldCell)
+    field = field.set(rowOld, colOld, Cell("ce"))
     field
   }
 
-  def removeStone(row:Int, col:Int):FieldInterface = {
+  def removeStone(row:Int, col:Int):Field = {
+    //set(row, col, Cell("ce"))
     replace(row, col, Cell("ce"))
   }
 
@@ -131,7 +130,7 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
 
   val neighbours = Map((0, 0) -> Set((0, 3), (3, 0)),
     (0, 3) -> Set((0, 0), (0, 6), (1, 3)),
-    (0, 6) -> Set((0, 3), (6, 3)),
+    (0, 6) -> Set((0, 3), (3, 6)),
     (1, 1) -> Set((1, 3), (3, 1)),
     (1, 3) -> Set((1, 1), (1, 5), (0, 3), (2, 3)),
     (1, 5) -> Set((1, 3), (3, 5)),
@@ -145,7 +144,7 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
     (3, 5) -> Set((3, 4), (3, 6), (1, 5), (5, 5)),
     (3, 6) -> Set((0, 6), (6, 6), (3, 5)),
     (4, 2) -> Set((3, 2), (4, 3)),
-    (4, 3) -> Set((4, 2), (4, 4), (3, 5)),
+    (4, 3) -> Set((4, 2), (4, 4), (5, 3)),
     (4, 4) -> Set((4, 3), (3, 4)),
     (5, 1) -> Set((3, 1), (5, 3)),
     (5, 3) -> Set((5, 1), (5, 5), (4, 3), (6, 3)),
