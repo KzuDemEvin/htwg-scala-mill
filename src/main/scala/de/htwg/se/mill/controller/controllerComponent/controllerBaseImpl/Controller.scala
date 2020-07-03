@@ -74,7 +74,6 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     roundCounter += 1
     //println("before" + roundCounter)
     if (roundCounter % 2 == 0) {
-      val c = classOf[CellInterface]
       undoManager.doStep(new SetCommand(row, col, fieldBaseImpl.Cell(true, Stone("b+")), this))
       gameState = GameState.handle(BlackTurnState())
     } else {

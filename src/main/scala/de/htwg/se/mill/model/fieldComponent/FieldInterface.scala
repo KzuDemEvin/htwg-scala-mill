@@ -1,6 +1,6 @@
 package de.htwg.se.mill.model.fieldComponent
 
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Cell, Field, Stone}
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Cell, Stone}
 
 trait FieldInterface {
   def size: Int
