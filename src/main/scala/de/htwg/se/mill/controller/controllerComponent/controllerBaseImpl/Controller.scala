@@ -22,7 +22,6 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   val borderToMoveMode = 18
   var roundCounter = 0
 
-
   def createEmptyField(size: Int): Unit = {
     roundCounter = 0
 
@@ -81,7 +80,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       gameState = GameState.handle(WhiteTurnState())
     }
     //roundCounter = placedStones()
-    //println("after" + roundCounter)
+    println("after" + roundCounter)
     checkMill(row, col)
     modeChoice()
     publish(new CellChanged)
@@ -97,6 +96,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       gameState = GameState.handle(WhiteTurnState())
     }
     checkMill(rowNew, colNew)
+    modeChoice()
     publish(new CellChanged)
   }
 
@@ -110,6 +110,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       gameState = GameState.handle(WhiteTurnState())
     }
     checkMill(rowNew, colNew)
+    modeChoice()
     publish(new CellChanged)
   }
 
