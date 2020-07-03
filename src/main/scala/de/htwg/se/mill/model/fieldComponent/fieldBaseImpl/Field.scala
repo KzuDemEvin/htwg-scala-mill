@@ -29,29 +29,28 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
     copy(allCells.replaceCell(row, col, c))
   }
 
-  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): FieldInterface = {
+  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
     var field = this
     for (x <- neighbours(rowOld, colOld)) {
       if (x._1 == rowNew && x._2 == colNew && !cell(rowNew, colNew).isSet) {
         val oldCell = cell(rowOld, colOld)
         field = field.replace(rowOld, colOld, Cell("ce"))
         field = field.set(x._1, x._2, oldCell)
-        println(field.cell(rowOld, colOld).getContent.whichColor)
-        println(field.cell(rowNew, colNew).getContent.whichColor)
       }
     }
     field
   }
 
-  def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): FieldInterface = {
+  def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
     var field = this
     val oldCell = cell(rowOld, colOld)
-    field = set(rowNew, colNew, oldCell)
-    field = replace(rowOld, colOld, Cell("ce"))
+    field = field.set(rowNew, colNew, oldCell)
+    field = field.set(rowOld, colOld, Cell("ce"))
     field
   }
 
-  def removeStone(row:Int, col:Int):FieldInterface = {
+  def removeStone(row:Int, col:Int):Field = {
+    //set(row, col, Cell("ce"))
     replace(row, col, Cell("ce"))
   }
 

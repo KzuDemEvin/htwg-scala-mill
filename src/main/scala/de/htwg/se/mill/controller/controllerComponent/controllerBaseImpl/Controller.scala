@@ -24,8 +24,8 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
 
   def createEmptyField(size: Int): Unit = {
     roundCounter = 0
-
     field = injector.instance[FieldInterface](Names.named("normal"))
+    modeChoice()
     gameState = GameState.handle(NewState())
     millState = MillState.handle(NoMillState())
     publish(new CellChanged)
@@ -34,8 +34,8 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   def createRandomField(size: Int): Unit = {
     roundCounter = 18
     field = injector.instance[FieldInterface](Names.named("random"))
-    gameState = GameState.handle(RandomState())
     modeChoice()
+    gameState = GameState.handle(RandomState())
     publish(new CellChanged)
   }
 
@@ -100,7 +100,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
         gameState = GameState.handle(BlackTurnState())
       }
     }
-    checkMill(rowNew, colNew)
+    //checkMill(rowNew, colNew)
     print("roundcounter danach " + roundCounter + "\n")
     modeChoice()
     publish(new CellChanged)
@@ -159,6 +159,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
 
   def removeStone(row: Int, col: Int): Unit = {
     field.removeStone(row, col)
+    print(cell(row, col).getContent.whichColor)
   }
 
   def statusText:String = GameState.state

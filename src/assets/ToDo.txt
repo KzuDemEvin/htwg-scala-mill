@@ -3,3 +3,5 @@ Logik:
 Player-Verwaltung
 Player in unterschiedlichen Modes
 Mode-Verwaltung
+
+nach laden kann man noch ein stein mehr setzen

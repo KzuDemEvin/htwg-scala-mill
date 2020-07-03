@@ -3,6 +3,7 @@ package de.htwg.se.mill.aview.gui
 import scala.swing._
 import scala.swing.event._
 import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, FlyModeState, MoveModeState, SetModeState}
+import de.htwg.se.mill.model.fieldComponent.Cell
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Color
 import javax.swing.ImageIcon
 
@@ -95,33 +96,26 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
         val whichCmd = controller.selectDriveCommand()
         whichCmd match {
           case SetModeState() => controller.set(row, column)
+            controller.moveCounter = 0
+            controller.flyCounter = 0
           case MoveModeState() => controller.moveCounter += 1
+            println("movecounter" + controller.moveCounter)
             if (controller.moveCounter == 2) {
               controller.moveStone(controller.tmpCell._1, controller.tmpCell._2, row, column)
+              val m = controller.checkMill(row, column)
+              println(m)
+              m match {
+                case "White Mill" => controller.moveCounter += 1
+                case "Black Mill" => controller.moveCounter += 1
+                case "No Mill" => controller.moveCounter = 0
+              }
+            } else if (controller.moveCounter == 4) {
+              println("remove stone now")
+              controller.removeStone(row, column)
               controller.moveCounter = 0
             } else {
               controller.tmpCell = (row, column)
             }
-//            if (controller.moveCounter == 2) {
-//              println("inside 2")
-//              controller.moveStone(controller.tmpCell._1, controller.tmpCell._2, row, column)
-//              val m = controller.checkMill(controller.tmpCell._1, controller.tmpCell._2)
-//              println(m)
-//              m match {
-//                case "White Mill" => controller.moveCounter += 1
-//                  println("white mill")
-//                case "Black Mill" => controller.moveCounter += 1
-//                  println("black mill")
-//                case "No Mill" => controller.moveCounter = 0
-//                  println("no mill")
-//              }
-//            } else if (controller.moveCounter == 4){
-//              println("inside 4")
-//              //controller.removeStone(row, column)
-//              controller.moveCounter = 0
-//            } else {
-//              controller.tmpCell = (row, column)
-//            }
           case FlyModeState() => controller.flyCounter += 1
             if (controller.flyCounter == 2) {
               controller.fly(controller.tmpCell._1, controller.tmpCell._2, row, column)
