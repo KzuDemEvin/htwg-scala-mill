@@ -1,6 +1,6 @@
 package de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl
 
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
+import de.htwg.se.mill.model.fieldComponent.{fieldBaseImpl}
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Cell, Stone}
 import de.htwg.se.mill.util.Command
 

@@ -17,17 +17,19 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
 
   def available(row: Int, col: Int): Boolean = if (possiblePosition(row, col) && !cell(row, col).isSet) true else false
 
-  def set(row:Int, col:Int, c:Cell) : Field = {
+  def set(row: Int, col: Int, c: Cell): Field = {
     if (available(row, col)) {
       replace(row, col, c)
-    } else {this}
+    } else {
+      this
+    }
   }
 
-  def replace(row:Int, col:Int, c:Cell) : Field = {
+  def replace(row: Int, col: Int, c: Cell): Field = {
     copy(allCells.replaceCell(row, col, c))
   }
 
-  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
+  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): FieldInterface = {
     var field = this
     for (x <- neighbours(rowOld, colOld)) {
       if (x._1 == rowNew && x._2 == colNew && !cell(rowNew, colNew).isSet) {
@@ -39,7 +41,7 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
     field
   }
 
-  def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Field = {
+  def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): FieldInterface = {
     var field = this
     val oldCell = cell(rowOld, colOld)
     field = set(rowNew, colNew, oldCell)
@@ -76,72 +78,71 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
   }
 
   val millPositions = List(((0, 0), (0, 3), (0, 6)), //horizontal mills
-                           ((1, 1), (1, 3), (1, 5)),
-                           ((2, 2), (2, 3), (2, 4)),
-                           ((3, 0), (3, 1), (3, 2)),
-                           ((3, 4), (3, 5), (3, 6)),
-                           ((4, 2), (4, 3), (4, 4)),
-                           ((5, 1), (5, 3), (5, 5)),
-                           ((6, 0), (6, 3), (6, 6)),
-                           ((0, 0), (3, 0), (6, 0)), //vertical mills
-                           ((1, 1), (3, 1), (5, 1)),
-                           ((2, 2), (3, 2), (4, 2)),
-                           ((0, 3), (1, 3), (2, 3)),
-                           ((4, 3), (5, 3), (6, 3)),
-                           ((2, 4), (3, 4), (4, 4)),
-                           ((1, 5), (3, 5), (5, 5)),
-                           ((0, 6), (3, 6), (6, 6)))
+    ((1, 1), (1, 3), (1, 5)),
+    ((2, 2), (2, 3), (2, 4)),
+    ((3, 0), (3, 1), (3, 2)),
+    ((3, 4), (3, 5), (3, 6)),
+    ((4, 2), (4, 3), (4, 4)),
+    ((5, 1), (5, 3), (5, 5)),
+    ((6, 0), (6, 3), (6, 6)),
+    ((0, 0), (3, 0), (6, 0)), //vertical mills
+    ((1, 1), (3, 1), (5, 1)),
+    ((2, 2), (3, 2), (4, 2)),
+    ((0, 3), (1, 3), (2, 3)),
+    ((4, 3), (5, 3), (6, 3)),
+    ((2, 4), (3, 4), (4, 4)),
+    ((1, 5), (3, 5), (5, 5)),
+    ((0, 6), (3, 6), (6, 6)))
 
-  val millneighbours = Map((0,0) -> Set(((0,3),(0,6)), ((3,0),(6,0))),
-                           (0,3) -> Set(((0,0),(0,6)), ((1,3),(2,3))),
-                           (0,6) -> Set(((0,0),(0,3)), ((3,6),(6,6))),
-                           (1,1) -> Set(((1,3),(1,5)), ((3,1),(5,1))),
-                           (1,3) -> Set(((1,1),(1,5)), ((0,3),(2,3))),
-                           (1,5) -> Set(((1,1),(1,3)), ((3,5),(5,5))),
-                           (2,2) -> Set(((2,3),(2,4)), ((3,2),(4,2))),
-                           (2,3) -> Set(((2,2),(2,4)), ((0,3),(1,3))),
-                           (2,4) -> Set(((2,2),(2,3)), ((3,4),(4,4))),
-                           (3,0) -> Set(((3,1),(3,2)), ((0,0),(6,0))),
-                           (3,1) -> Set(((3,0),(3,2)), ((1,1),(5,1))),
-                           (3,2) -> Set(((3,0),(3,1)), ((2,2),(4,2))),
-                           (3,4) -> Set(((3,5),(3,6)), ((2,4),(4,4))),
-                           (3,5) -> Set(((3,4),(3,6)), ((1,5),(5,5))),
-                           (3,6) -> Set(((3,4),(3,5)), ((0,6),(6,6))),
-                           (4,2) -> Set(((4,3),(4,4)), ((2,2),(3,2))),
-                           (4,3) -> Set(((4,2),(4,4)), ((5,3),(6,3))),
-                           (4,4) -> Set(((4,2),(4,3)), ((2,4),(3,4))),
-                           (5,1) -> Set(((5,3),(5,5)), ((1,1),(3,1))),
-                           (5,3) -> Set(((5,1),(5,5)), ((4,3),(6,3))),
-                           (5,5) -> Set(((5,1),(5,3)), ((1,5),(3,5))),
-                           (6,0) -> Set(((6,3),(6,6)), ((0,0),(3,0))),
-                           (6,3) -> Set(((6,1),(6,6)), ((4,3),(5,3))),
-                           (6,6) -> Set(((6,0),(6,3)), ((0,6),(3,6))))
+  val millneighbours = Map((0, 0) -> Set(((0, 3), (0, 6)), ((3, 0), (6, 0))),
+    (0, 3) -> Set(((0, 0), (0, 6)), ((1, 3), (2, 3))),
+    (0, 6) -> Set(((0, 0), (0, 3)), ((3, 6), (6, 6))),
+    (1, 1) -> Set(((1, 3), (1, 5)), ((3, 1), (5, 1))),
+    (1, 3) -> Set(((1, 1), (1, 5)), ((0, 3), (2, 3))),
+    (1, 5) -> Set(((1, 1), (1, 3)), ((3, 5), (5, 5))),
+    (2, 2) -> Set(((2, 3), (2, 4)), ((3, 2), (4, 2))),
+    (2, 3) -> Set(((2, 2), (2, 4)), ((0, 3), (1, 3))),
+    (2, 4) -> Set(((2, 2), (2, 3)), ((3, 4), (4, 4))),
+    (3, 0) -> Set(((3, 1), (3, 2)), ((0, 0), (6, 0))),
+    (3, 1) -> Set(((3, 0), (3, 2)), ((1, 1), (5, 1))),
+    (3, 2) -> Set(((3, 0), (3, 1)), ((2, 2), (4, 2))),
+    (3, 4) -> Set(((3, 5), (3, 6)), ((2, 4), (4, 4))),
+    (3, 5) -> Set(((3, 4), (3, 6)), ((1, 5), (5, 5))),
+    (3, 6) -> Set(((3, 4), (3, 5)), ((0, 6), (6, 6))),
+    (4, 2) -> Set(((4, 3), (4, 4)), ((2, 2), (3, 2))),
+    (4, 3) -> Set(((4, 2), (4, 4)), ((5, 3), (6, 3))),
+    (4, 4) -> Set(((4, 2), (4, 3)), ((2, 4), (3, 4))),
+    (5, 1) -> Set(((5, 3), (5, 5)), ((1, 1), (3, 1))),
+    (5, 3) -> Set(((5, 1), (5, 5)), ((4, 3), (6, 3))),
+    (5, 5) -> Set(((5, 1), (5, 3)), ((1, 5), (3, 5))),
+    (6, 0) -> Set(((6, 3), (6, 6)), ((0, 0), (3, 0))),
+    (6, 3) -> Set(((6, 1), (6, 6)), ((4, 3), (5, 3))),
+    (6, 6) -> Set(((6, 0), (6, 3)), ((0, 6), (3, 6))))
 
-  val neighbours = Map((0,0) -> Set((0,3),(3,0)),
-                       (0,3) -> Set((0,0),(0,6),(1,3)),
-                       (0,6) -> Set((0,3),(6,3)),
-                       (1,1) -> Set((1,3),(3,1)),
-                       (1,3) -> Set((1,1),(1,5),(0,3),(2,3)),
-                       (1,5) -> Set((1,3),(3,5)),
-                       (2,2) -> Set((3,2),(2,3)),
-                       (2,3) -> Set((2,2),(2,4),(1,3)),
-                       (2,4) -> Set((2,3),(3,4)),
-                       (3,0) -> Set((0,0),(6,0),(3,1)),
-                       (3,1) -> Set((3,0),(3,2),(1,1),(5,1)),
-                       (3,2) -> Set((2,2),(4,2),(3,1)),
-                       (3,4) -> Set((2,4),(4,4),(3,5)),
-                       (3,5) -> Set((3,4),(3,6),(1,5),(5,5)),
-                       (3,6) -> Set((0,6),(6,6),(3,5)),
-                       (4,2) -> Set((3,2),(4,3)),
-                       (4,3) -> Set((4,2),(4,4),(3,5)),
-                       (4,4) -> Set((4,3),(3,4)),
-                       (5,1) -> Set((3,1),(5,3)),
-                       (5,3) -> Set((5,1),(5,5),(4,3),(6,3)),
-                       (5,5) -> Set((5,3),(3,5)),
-                       (6,0) -> Set((3,0),(6,3)),
-                       (6,3) -> Set((6,0),(6,6),(5,3)),
-                       (6,6) -> Set((6,3),(3,6)))
-
+  val neighbours = Map((0, 0) -> Set((0, 3), (3, 0)),
+    (0, 3) -> Set((0, 0), (0, 6), (1, 3)),
+    (0, 6) -> Set((0, 3), (6, 3)),
+    (1, 1) -> Set((1, 3), (3, 1)),
+    (1, 3) -> Set((1, 1), (1, 5), (0, 3), (2, 3)),
+    (1, 5) -> Set((1, 3), (3, 5)),
+    (2, 2) -> Set((3, 2), (2, 3)),
+    (2, 3) -> Set((2, 2), (2, 4), (1, 3)),
+    (2, 4) -> Set((2, 3), (3, 4)),
+    (3, 0) -> Set((0, 0), (6, 0), (3, 1)),
+    (3, 1) -> Set((3, 0), (3, 2), (1, 1), (5, 1)),
+    (3, 2) -> Set((2, 2), (4, 2), (3, 1)),
+    (3, 4) -> Set((2, 4), (4, 4), (3, 5)),
+    (3, 5) -> Set((3, 4), (3, 6), (1, 5), (5, 5)),
+    (3, 6) -> Set((0, 6), (6, 6), (3, 5)),
+    (4, 2) -> Set((3, 2), (4, 3)),
+    (4, 3) -> Set((4, 2), (4, 4), (3, 5)),
+    (4, 4) -> Set((4, 3), (3, 4)),
+    (5, 1) -> Set((3, 1), (5, 3)),
+    (5, 3) -> Set((5, 1), (5, 5), (4, 3), (6, 3)),
+    (5, 5) -> Set((5, 3), (3, 5)),
+    (6, 0) -> Set((3, 0), (6, 3)),
+    (6, 3) -> Set((6, 0), (6, 6), (5, 3)),
+    (6, 6) -> Set((6, 3), (3, 6)))
 
 
   def checkMill(row: Int, col: Int): Int = {
@@ -162,16 +163,16 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
     millYesNo
   }
 
-  private def checkMillSet(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
+  private def checkMillSet(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = {
     cell1.isSet && cell2.isSet && cell3.isSet
   }
 
-  private def checkMillBlack(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
+  private def checkMillBlack(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = {
     (cell1.getContent.whichColor == Color.black && cell2.getContent.whichColor == Color.black
-    && cell3.getContent.whichColor == Color.black)
+      && cell3.getContent.whichColor == Color.black)
   }
 
-  private def checkMillWhite(cell1:Cell, cell2:Cell, cell3:Cell):Boolean = {
+  private def checkMillWhite(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = {
     (cell1.getContent.whichColor == Color.white && cell2.getContent.whichColor == Color.white
       && cell3.getContent.whichColor == Color.white)
   }
@@ -192,7 +193,7 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
           counter = counter + 1
           if (this.cell(a, b).content.whichColor == Color.white) {
             string += " w "
-          } else if (this.cell(a, b). content.whichColor == Color.black) {
+          } else if (this.cell(a, b).content.whichColor == Color.black) {
             string += " b "
           } else {
             string += " o "
