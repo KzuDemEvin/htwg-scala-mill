@@ -1,7 +1,7 @@
 package de.htwg.se.mill.controller
 
 import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Color, Field, Stone}
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Color, Field}
 import de.htwg.se.mill.util.Observer
 
 import scala.language.reflectiveCalls

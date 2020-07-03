@@ -5,8 +5,7 @@ import com.google.inject.{Guice, Inject}
 import net.codingwell.scalaguice.InjectorExtensions._
 import de.htwg.se.mill.MillModule
 import de.htwg.se.mill.controller.controllerComponent._
-import de.htwg.se.mill.model.fieldComponent.{CellInterface, FieldInterface, fieldBaseImpl}
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Field, RandomStrategy, Stone}
+import de.htwg.se.mill.model.fieldComponent.{Cell, FieldInterface}
 import de.htwg.se.mill.model.playerComponent.Player
 import de.htwg.se.mill.util.UndoManager
 
@@ -37,13 +36,14 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     roundCounter = 18
     field = injector.instance[FieldInterface](Names.named("random"))
     gameState = GameState.handle(RandomState())
+    modeChoice()
     publish(new CellChanged)
   }
 
   def fieldToString: String = field.toString
 
   def modeChoice(): Unit = {
-    if (roundCounter <= borderToMoveMode) {
+    if (roundCounter < borderToMoveMode) {
       player1.mode = ModeState.handle(SetModeState())
       player2.mode = ModeState.handle(SetModeState())
     } else if (placedBlackStones() == 3 || placedWhiteStones() == 3) {
@@ -74,10 +74,10 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     roundCounter += 1
     //println("before" + roundCounter)
     if (roundCounter % 2 == 0) {
-      undoManager.doStep(new SetCommand(row, col, fieldBaseImpl.Cell(true, Stone("b+")), this))
+      undoManager.doStep(new SetCommand(row, col, Cell("cb"), this))
       gameState = GameState.handle(BlackTurnState())
     } else {
-      undoManager.doStep(new SetCommand(row, col, fieldBaseImpl.Cell(true, Stone("w+")), this))
+      undoManager.doStep(new SetCommand(row, col, Cell("cw"), this))
       gameState = GameState.handle(WhiteTurnState())
     }
     //roundCounter = placedStones()
@@ -143,7 +143,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   def statusText:String = GameState.state
   def millText:String = MillState.state
 
-  def cell(row:Int, col:Int):CellInterface = field.cell(row, col)
+  def cell(row:Int, col:Int):Cell = field.cell(row, col)
   def isSet(row:Int, col:Int):Boolean = field.cell(row, col).isSet
   def available(row:Int, col:Int):Boolean = field.available(row, col)
   def possiblePosition(row:Int, col:Int):Boolean = field.possiblePosition(row, col)

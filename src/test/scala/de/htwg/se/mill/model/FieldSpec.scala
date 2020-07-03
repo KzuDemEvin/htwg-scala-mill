@@ -2,8 +2,8 @@
 
 package de.htwg.se.mill.model
 
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Cell, Color, Field, Stone}
+import de.htwg.se.mill.model.fieldComponent.{Cell, Stone, fieldBaseImpl}
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Color, Field}
 import org.scalatest.{Matchers, WordSpec}
 
 class FieldSpec extends WordSpec with Matchers {
@@ -28,13 +28,13 @@ class FieldSpec extends WordSpec with Matchers {
         normalField.available(0, 0) should be(true)
       }
       "allow to set individual Cells and remain immutable" in {
-        val changedField = normalField.set(0, 0, Cell(true, Stone("w+")))
+        val changedField = normalField.set(0, 0, Cell("cw"))
         changedField.cell(0, 0).getContent.whichColor should be(Color.white)
         normalField.cell(0, 0).getContent.whichColor should be(Color.noColor)
       }
       "should return a string which looks like the gameboard" in {
-        var blackwhiteField = normalField.set(0, 0, fieldBaseImpl.Cell(true, Stone("w+")))
-        blackwhiteField = blackwhiteField.set(1, 1, fieldBaseImpl.Cell(true, Stone("b+")))
+        var blackwhiteField = normalField.set(0, 0, Cell("cw"))
+        blackwhiteField = blackwhiteField.set(1, 1, Cell("cb"))
         blackwhiteField.toString should be("Mill Gameboard:\n w  -  -  o  -  -  o \n -  b  -  o  -  o  - \n -  -  o  o  o  -  - \n o  o  o  -  o  o  o \n -  -  o  o  o  -  - \n -  o  -  o  -  o  - \n o  -  -  o  -  -  o \n")
       }
     }

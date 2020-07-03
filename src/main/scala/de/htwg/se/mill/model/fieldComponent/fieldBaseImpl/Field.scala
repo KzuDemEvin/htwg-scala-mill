@@ -1,12 +1,12 @@
 package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
 import com.google.inject.Inject
-import de.htwg.se.mill.model.fieldComponent.{FieldInterface, fieldBaseImpl}
+import de.htwg.se.mill.model.fieldComponent.{Cell, FieldInterface}
 
 case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
 
   def this(size: Int) {
-    this(new Matrix[Cell](size, fieldBaseImpl.Cell(false, Stone("n"))))
+    this(new Matrix[Cell](size, Cell("ce")))
   }
 
   val size: Int = allCells.size
@@ -34,7 +34,7 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
     for (x <- neighbours(rowOld, colOld)) {
       if (x._1 == rowNew && x._2 == colNew && !cell(rowNew, colNew).isSet) {
         val oldCell = cell(rowOld, colOld)
-        field = replace(rowOld, colOld, Cell(false, Stone("n")))
+        field = replace(rowOld, colOld, Cell("ce"))
         field = set(x._1, x._2, oldCell)
       }
     }
@@ -45,7 +45,7 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
     var field = this
     val oldCell = cell(rowOld, colOld)
     field = set(rowNew, colNew, oldCell)
-    field = replace(rowOld, colOld, Cell(false, Stone("n")))
+    field = replace(rowOld, colOld, Cell("ce"))
     field
   }
 
@@ -191,9 +191,9 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
         }
         if (possiblePosition(a, b)) {
           counter = counter + 1
-          if (this.cell(a, b).content.whichColor == Color.white) {
+          if (this.cell(a, b).getContent.whichColor.equals(Color.white)) {
             string += " w "
-          } else if (this.cell(a, b).content.whichColor == Color.black) {
+          } else if (this.cell(a, b).getContent.whichColor.equals(Color.black)) {
             string += " b "
           } else {
             string += " o "

@@ -1,6 +1,7 @@
 package de.htwg.se.mill.model
 
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Color, Stone}
+import de.htwg.se.mill.model.fieldComponent.Stone
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Color
 import org.scalatest.{Matchers, WordSpec}
 
 class StoneSpec extends WordSpec with Matchers {

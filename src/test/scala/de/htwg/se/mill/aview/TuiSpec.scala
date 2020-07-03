@@ -16,17 +16,17 @@ class TuiSpec extends WordSpec with Matchers {
     "set a black stone on input '00'" in {
       tui.execInput("00")
       controller.field.available(0, 0) should be(false)
-      controller.cell(0, 0).content.whichColor should be(Color.white)
+      controller.cell(0, 0).getContent.whichColor should be(Color.white)
     }
     "set a white stone on input '03" in {
       tui.execInput("03")
       controller.field.available(0, 3) should be(false)
-      controller.field.cell(0, 3).content.whichColor should be(Color.black)
+      controller.field.cell(0, 3).getContent.whichColor should be(Color.black)
     }
     "move a white stone from '03' to '13'" in {
       tui.execInput("0313")
       controller.field.available(1, 3) should be(false)
-      controller.field.cell(1, 3).content.whichColor should be(Color.black)
+      controller.field.cell(1, 3).getContent.whichColor should be(Color.black)
     }
     "undo on input 'undo'" in {
       tui.execInput("66")
