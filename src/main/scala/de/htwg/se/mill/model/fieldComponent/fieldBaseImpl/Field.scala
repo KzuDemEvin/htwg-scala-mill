@@ -34,8 +34,10 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
     for (x <- neighbours(rowOld, colOld)) {
       if (x._1 == rowNew && x._2 == colNew && !cell(rowNew, colNew).isSet) {
         val oldCell = cell(rowOld, colOld)
-        field = replace(rowOld, colOld, Cell("ce"))
-        field = set(x._1, x._2, oldCell)
+        field = field.replace(rowOld, colOld, Cell("ce"))
+        field = field.set(x._1, x._2, oldCell)
+        println(field.cell(rowOld, colOld).getContent.whichColor)
+        println(field.cell(rowNew, colNew).getContent.whichColor)
       }
     }
     field
