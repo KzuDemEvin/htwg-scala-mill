@@ -1,7 +1,9 @@
 Logik:
 
-Player-Verwaltung
-Player in unterschiedlichen Modes
-Mode-Verwaltung
+Player-Verwaltung --> evtl interface
+Player in unterschiedlichen Modes  -> ja
+Mode-Verwaltung -> ja
 
-nach laden kann man noch ein stein mehr setzen
+nach laden kann man noch ein stein mehr setzen --> kevin
+
+remove methode geht nicth --> aktualisiert nicht
