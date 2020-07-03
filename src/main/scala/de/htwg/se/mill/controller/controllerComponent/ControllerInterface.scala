@@ -17,6 +17,8 @@ trait ControllerInterface extends Publisher {
   def undo: Unit
   def redo: Unit
   def checkMill(row:Int, col:Int):Unit
+  def save: Unit
+  def load: Unit
   def statusText:String
   def millText:String
   def cell(row:Int, col:Int):Cell

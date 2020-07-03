@@ -6,6 +6,7 @@ import net.codingwell.scalaguice.InjectorExtensions._
 import de.htwg.se.mill.MillModule
 import de.htwg.se.mill.controller.controllerComponent._
 import de.htwg.se.mill.model.fieldComponent.{Cell, FieldInterface}
+import de.htwg.se.mill.model.fileIoComponent.FileIOInterface
 import de.htwg.se.mill.model.playerComponent.Player
 import de.htwg.se.mill.util.UndoManager
 
@@ -19,6 +20,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   var player1 = Player("Kevin")
   var player2 = Player("Manuel")
   val injector = Guice.createInjector(new MillModule)
+  val fileIo = injector.instance[FileIOInterface]
   val borderToMoveMode = 18
   var roundCounter = 0
 
@@ -139,6 +141,18 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       case 2 => millState = MillState.handle(WhiteMillState())
       case _ => millState = MillState.handle(NoMillState())
     }
+  }
+
+  def save: Unit = {
+    field.setRoundCounter(roundCounter)
+    fileIo.save(field)
+    publish(new CellChanged)
+  }
+
+  def load: Unit = {
+    field = fileIo.load
+    roundCounter = field.getRoundCounter()
+    publish(new CellChanged)
   }
 
   def statusText:String = GameState.state

@@ -3,6 +3,8 @@ package de.htwg.se.mill.model.fieldComponent
 trait FieldInterface {
   def size: Int
 
+  def setRoundCounter(counter: Int): Unit
+  def getRoundCounter(): Int
   def cell(row: Int, col: Int): Cell
   def possiblePosition(row: Int, col: Int): Boolean
   def available(row: Int, col: Int): Boolean
