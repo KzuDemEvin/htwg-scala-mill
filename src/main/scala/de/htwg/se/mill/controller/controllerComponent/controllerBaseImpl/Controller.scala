@@ -70,7 +70,9 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   }
 
   def set(row: Int, col: Int): Unit = {
-    roundCounter += 1
+    if (field.available(row, col)) {
+      roundCounter += 1
+    }
     if (roundCounter % 2 == 0) {
       undoManager.doStep(new SetCommand(row, col, Cell("cb"), this))
       gameState = GameState.handle(BlackTurnState())
