@@ -28,6 +28,7 @@ class FileIO extends FileIOInterface {
         case "noColor" => field = field.set(row, col, Cell("ce"))
       }
     }
+    field.setRoundCounter(roundCounter)
     field
   }
 
