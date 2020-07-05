@@ -14,8 +14,7 @@ class FileIO extends FileIOInterface {
   override def load: FieldInterface = {
     var field: FieldInterface = null
     val file = scala.xml.XML.loadFile("field.xml")
-    val sizeAttr = (file \\ "field" \ "@roundCounter")
-    val size = sizeAttr.text.toInt
+    val roundCounter = (file \\ "field" \ "@roundCounter").text.toInt
     val injector = Guice.createInjector(new MillModule)
     field = injector.instance[FieldInterface](Names.named("normal"))
     val cellNodes = (file \\ "cell")
@@ -24,17 +23,17 @@ class FileIO extends FileIOInterface {
       val col: Int = (cell \ "@col").text.toInt
       val content: String = cell.text.trim
       content match {
-        case "White Stone" => field = field.set(row, col, Cell("cw"))
-        case "Black Stone" => field = field.set(row, col, Cell("cb"))
-        case "No Stone" => field = field.set(row, col, Cell("ce"))
+        case "white" => field = field.set(row, col, Cell("cw"))
+        case "black" => field = field.set(row, col, Cell("cb"))
+        case "noColor" => field = field.set(row, col, Cell("ce"))
       }
     }
     field
   }
 
-  override def save(field: FieldInterface): Unit = saveString(field)
+  def save(field: FieldInterface): Unit = saveString(field)
 
-  def saveXML (field: FieldInterface): Unit = {
+  def saveXML(field: FieldInterface): Unit = {
     scala.xml.XML.save("field.xml", fieldToXml(field))
   }
 
@@ -50,15 +49,15 @@ class FileIO extends FileIOInterface {
   def fieldToXml(field: FieldInterface): Node = {
     <field roundCounter={ field.getRoundCounter().toString }>
       {
-        for {
-          row <- 0 until field.size
-          col <- 0 until field.size
-        } yield cellToXml(field, row, col)
+      for {
+        row <- 0 until field.size
+        col <- 0 until field.size
+      } yield cellToXml(field, row, col)
       }
     </field>
   }
 
-  def cellToXml(field: FieldInterface, row: Int, col: Int): Unit = {
+  def cellToXml(field: FieldInterface, row: Int, col: Int): Node = {
     <cell row={ row.toString } col={ col.toString }>
       { field.cell(row, col).getContent.whichColor }
     </cell>
