@@ -71,7 +71,9 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   }
 
   def set(row: Int, col: Int): Unit = {
-    roundCounter += 1
+    if (field.available(row, col)) {
+      roundCounter += 1
+    }
     if (roundCounter % 2 == 0) {
       undoManager.doStep(new SetCommand(row, col, Cell("cb"), this))
       gameState = GameState.handle(BlackTurnState())
@@ -79,8 +81,10 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       undoManager.doStep(new SetCommand(row, col, Cell("cw"), this))
       gameState = GameState.handle(WhiteTurnState())
     }
-    print("roundcounter danach " + roundCounter + "\n")
-    checkMill(row, col)
+    val m = checkMill(row, col)
+    if (!m.equals(MillState.handle(NoMillState()))) {
+      roundCounter -= 1
+    }
     modeChoice()
     publish(new CellChanged)
   }
@@ -103,7 +107,6 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       }
     }
     //checkMill(rowNew, colNew)
-    print("roundcounter danach " + roundCounter + "\n")
     modeChoice()
     publish(new CellChanged)
   }

@@ -99,7 +99,6 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
             controller.moveCounter = 0
             controller.flyCounter = 0
           case MoveModeState() => controller.moveCounter += 1
-            println("movecounter" + controller.moveCounter)
             if (controller.moveCounter == 2) {
               controller.moveStone(controller.tmpCell._1, controller.tmpCell._2, row, column)
               val m = controller.checkMill(row, column)
