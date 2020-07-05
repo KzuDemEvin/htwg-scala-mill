@@ -80,10 +80,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       undoManager.doStep(new SetCommand(row, col, Cell("cw"), this))
       gameState = GameState.handle(WhiteTurnState())
     }
-    val m = checkMill(row, col)
-    if (!m.equals(MillState.handle(NoMillState()))) {
-      roundCounter -= 1
-    }
+    checkMill(row, col)
     modeChoice()
     publish(new CellChanged)
   }

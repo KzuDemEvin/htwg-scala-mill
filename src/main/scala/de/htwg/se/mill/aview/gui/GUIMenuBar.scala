@@ -9,11 +9,16 @@ import scala.swing.{Action, Menu, MenuBar, MenuItem}
 class GUIMenuBar(controller: ControllerInterface) extends MenuBar {
   def menuBar:MenuBar = {
     val menuBar = new MenuBar {
-      contents += new Menu("File") {
-        mnemonic = Key.F
+      contents += new Menu("Options") {
+        mnemonic = Key.O
         contents += new MenuItem(Action("New") { controller.createEmptyField(controller.fieldsize) })
         contents += new MenuItem(Action("Random") { controller.createRandomField(controller.fieldsize) })
         contents += new MenuItem(Action("Quit") { System.exit(0) })
+      }
+      contents += new Menu("File") {
+        mnemonic = Key.F
+        contents += new MenuItem(Action("Save") {controller.save})
+        contents += new MenuItem(Action("Load") {controller.load})
       }
       contents += new Menu("Edit") {
         mnemonic = Key.E
