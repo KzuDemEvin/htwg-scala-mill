@@ -54,8 +54,9 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
   }
 
   def removeStone(row:Int, col:Int):Field = {
-    //set(row, col, Cell("ce"))
-    replace(row, col, Cell("ce"))
+    var field = this
+    field = field.replace(row, col, Cell("ce"))
+    field
   }
 
   // (Whitestones, Blackstones)
