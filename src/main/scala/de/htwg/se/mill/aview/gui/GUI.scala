@@ -15,8 +15,8 @@ class GUI(controller: ControllerInterface) extends MainFrame {
 
   val gridPanel = new GUIGridPanel(controller, cells).gridPanel
   val statusline = new TextField(controller.statusText, 100) { editable = false }
-  val millline = new TextField(controller.millText, 96) { editable = false }
-  val roundCounter = new TextField(controller.roundCounter.toString, 4) { editable = false}
+  val millline = new TextField(controller.millText, 94) { editable = false }
+  val roundCounter = new TextField(controller.roundCounter.toString, 6) { editable = false}
 
    val topBar = new BorderPanel {
     add(millline, BorderPanel.Position.West)
@@ -25,6 +25,8 @@ class GUI(controller: ControllerInterface) extends MainFrame {
 
 
   contents = new BorderPanel {
+    //add(millline, BorderPanel.Position.North)
+    //add(roundCounter, BorderPanel.Position.East)
     add(topBar, BorderPanel.Position.North)
     add(gridPanel, BorderPanel.Position.Center)
     add(statusline, BorderPanel.Position.South)
