@@ -81,10 +81,6 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       gameState = GameState.handle(WhiteTurnState())
     }
     print("roundcounter danach " + roundCounter + "\n")
-    val m = checkMill(row, col)
-    if (!m.equals(MillState.handle(NoMillState()))) {
-      roundCounter -= 1
-    }
     modeChoice()
     publish(new CellChanged)
   }
@@ -164,10 +160,29 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     millState
   }
 
-  def removeStone(row: Int, col: Int): Unit = {
-    field = field.removeStone(row, col)
-    roundCounter -= 1
-    publish(new CellChanged)
+  def removeStone(row: Int, col: Int): Boolean = {
+    if (roundCounter % 2 == 0) {
+      if (cell(row, col).getContent.whichColor == Color.white) {
+        val r = field.removeStone(row, col)
+        field = r._1
+        publish(new CellChanged)
+        r._2
+      } else {
+        false
+      }
+    } else if (roundCounter % 2 == 1) {
+      if (cell(row, col).getContent.whichColor == Color.black) {
+        val r = field.removeStone(row, col)
+        field = r._1
+        publish(new CellChanged)
+        r._2
+      } else {
+        false
+      }
+    } else {
+      publish(new CellChanged)
+      false
+    }
   }
 
   def save: Unit = {
