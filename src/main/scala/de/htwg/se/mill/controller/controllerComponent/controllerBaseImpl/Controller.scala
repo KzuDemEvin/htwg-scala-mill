@@ -80,7 +80,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       undoManager.doStep(new SetCommand(row, col, Cell("cw"), this))
       gameState = GameState.handle(WhiteTurnState())
     }
-    checkMill(row, col)
+    print("roundcounter danach " + roundCounter + "\n")
     modeChoice()
     publish(new CellChanged)
   }
@@ -103,6 +103,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       }
     }
     //checkMill(rowNew, colNew)
+    print("roundcounter danach " + roundCounter + "\n")
     modeChoice()
     publish(new CellChanged)
   }
@@ -155,12 +156,33 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       case 2 => millState = MillState.handle(WhiteMillState())
       case _ => millState = MillState.handle(NoMillState())
     }
+    println(millState)
     millState
   }
 
-  def removeStone(row: Int, col: Int): Unit = {
-    field = field.removeStone(row, col)
-    publish(new CellChanged)
+  def removeStone(row: Int, col: Int): Boolean = {
+    if (roundCounter % 2 == 0) {
+      if (cell(row, col).getContent.whichColor == Color.white) {
+        val r = field.removeStone(row, col)
+        field = r._1
+        publish(new CellChanged)
+        r._2
+      } else {
+        false
+      }
+    } else if (roundCounter % 2 == 1) {
+      if (cell(row, col).getContent.whichColor == Color.black) {
+        val r = field.removeStone(row, col)
+        field = r._1
+        publish(new CellChanged)
+        r._2
+      } else {
+        false
+      }
+    } else {
+      publish(new CellChanged)
+      false
+    }
   }
 
   def save: Unit = {

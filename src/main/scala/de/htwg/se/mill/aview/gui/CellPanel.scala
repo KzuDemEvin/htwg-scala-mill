@@ -96,9 +96,12 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
         val whichCmd = controller.selectDriveCommand()
         whichCmd match {
           case SetModeState() =>
-            if (controller.setCounter == 1) {
-              controller.removeStone(row, column)
-              controller.setCounter = 0
+            if (controller.setCounter >= 1) {
+              if (controller.removeStone(row, column)) {
+                controller.setCounter = 0
+              } else {
+                controller.setCounter += 1
+              }
             } else {
               controller.set(row, column)
               val m = controller.checkMill(row, column)

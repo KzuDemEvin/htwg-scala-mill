@@ -53,10 +53,14 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
     field
   }
 
-  def removeStone(row:Int, col:Int):Field = {
+  def removeStone(row:Int, col:Int):(Field, Boolean) = {
     var field = this
-    field = field.replace(row, col, Cell("ce"))
-    field
+    if (checkMill(row, col) == 0) {
+      field = field.replace(row, col, Cell("ce"))
+      (field, true)
+    } else {
+      (field, false)
+    }
   }
 
   // (Whitestones, Blackstones)
