@@ -22,7 +22,6 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   val injector = Guice.createInjector(new MillModule)
   val fileIo = injector.instance[FileIOInterface]
   val borderToMoveMode = 18
-  var roundCounter = 0
 
   def createEmptyField(size: Int): Unit = {
     roundCounter = 0

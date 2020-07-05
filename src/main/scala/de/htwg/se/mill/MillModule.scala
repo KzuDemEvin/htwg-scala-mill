@@ -23,7 +23,7 @@ class MillModule extends AbstractModule with ScalaModule {
     bind[FieldInterface].annotatedWithName("normal").toInstance(new Field(defaultSize))
     bind[FieldInterface].annotatedWithName("random").toInstance((new RandomStrategy).createNewField(defaultSize))
 
-    bind[FileIOInterface].to[fileIoJsonImpl.FileIO]
+    bind[FileIOInterface].to[fileIoXmlImpl.FileIO]
   }
 
 }

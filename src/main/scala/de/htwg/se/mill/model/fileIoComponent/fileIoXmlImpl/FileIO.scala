@@ -14,7 +14,7 @@ class FileIO extends FileIOInterface {
   override def load: FieldInterface = {
     var field: FieldInterface = null
     val file = scala.xml.XML.loadFile("field.xml")
-    val sizeAttr = (file \\ "field" \ "@size")
+    val sizeAttr = (file \\ "field" \ "@roundCounter")
     val size = sizeAttr.text.toInt
     val injector = Guice.createInjector(new MillModule)
     field = injector.instance[FieldInterface](Names.named("normal"))
@@ -38,29 +38,29 @@ class FileIO extends FileIOInterface {
     scala.xml.XML.save("field.xml", fieldToXml(field))
   }
 
-  def saveString(grid: FieldInterface): Unit = {
+  def saveString(field: FieldInterface): Unit = {
     import java.io._
-    val pw = new PrintWriter(new File("grid.xml"))
+    val pw = new PrintWriter(new File("field.xml"))
     val prettyPrinter = new PrettyPrinter(120, 4)
-    val xml = prettyPrinter.format(fieldToXml(grid))
+    val xml = prettyPrinter.format(fieldToXml(field))
     pw.write(xml)
     pw.close
   }
 
   def fieldToXml(field: FieldInterface): Node = {
-    <field size={ field.size.toString }>
+    <field roundCounter={ field.getRoundCounter().toString }>
       {
-      for {
-        row <- 0 until field.size
-        col <- 0 until field.size
-      } yield cellToXml(field, row, col)
+        for {
+          row <- 0 until field.size
+          col <- 0 until field.size
+        } yield cellToXml(field, row, col)
       }
     </field>
   }
 
   def cellToXml(field: FieldInterface, row: Int, col: Int): Unit = {
     <cell row={ row.toString } col={ col.toString }>
-      { field.cell(row, col).toString }
+      { field.cell(row, col).getContent.whichColor }
     </cell>
   }
 
