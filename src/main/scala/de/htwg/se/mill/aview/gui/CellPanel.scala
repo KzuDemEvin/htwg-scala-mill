@@ -95,22 +95,29 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
       case ButtonClicked(component) if component == setButton => {
         val whichCmd = controller.selectDriveCommand()
         whichCmd match {
-          case SetModeState() => controller.set(row, column)
-            controller.moveCounter = 0
-            controller.flyCounter = 0
+          case SetModeState() =>
+            if (controller.setCounter == 1) {
+              controller.removeStone(row, column)
+              controller.setCounter = 0
+            } else {
+              controller.set(row, column)
+              val m = controller.checkMill(row, column)
+              m match {
+                case "White Mill" => controller.setCounter += 1
+                case "Black Mill" => controller.setCounter += 1
+                case "No Mill" => controller.setCounter = 0
+              }
+            }
           case MoveModeState() => controller.moveCounter += 1
-            println("movecounter" + controller.moveCounter)
             if (controller.moveCounter == 2) {
               controller.moveStone(controller.tmpCell._1, controller.tmpCell._2, row, column)
               val m = controller.checkMill(row, column)
-              println(m)
               m match {
                 case "White Mill" => controller.moveCounter += 1
                 case "Black Mill" => controller.moveCounter += 1
                 case "No Mill" => controller.moveCounter = 0
               }
             } else if (controller.moveCounter == 4) {
-              println("remove stone now")
               controller.removeStone(row, column)
               controller.moveCounter = 0
             } else {

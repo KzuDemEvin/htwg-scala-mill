@@ -22,7 +22,6 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   val injector = Guice.createInjector(new MillModule)
   val fileIo = injector.instance[FileIOInterface]
   val borderToMoveMode = 18
-  var roundCounter = 0
 
   def createEmptyField(size: Int): Unit = {
     roundCounter = 0
@@ -80,7 +79,10 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       gameState = GameState.handle(WhiteTurnState())
     }
     print("roundcounter danach " + roundCounter + "\n")
-    checkMill(row, col)
+    val m = checkMill(row, col)
+    if (!m.equals(MillState.handle(NoMillState()))) {
+      roundCounter -= 1
+    }
     modeChoice()
     publish(new CellChanged)
   }
@@ -156,11 +158,13 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       case 2 => millState = MillState.handle(WhiteMillState())
       case _ => millState = MillState.handle(NoMillState())
     }
+    println(millState)
     millState
   }
 
   def removeStone(row: Int, col: Int): Unit = {
     field = field.removeStone(row, col)
+    roundCounter -= 1
     publish(new CellChanged)
   }
 

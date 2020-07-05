@@ -5,8 +5,10 @@ import scala.swing.Publisher
 
 trait ControllerInterface extends Publisher {
   var tmpCell = (0,0)
+  var setCounter = 0
   var moveCounter = 0
   var flyCounter = 0
+  var roundCounter = 0
   def createEmptyField(size: Int): Unit
   def createRandomField(size: Int): Unit
   def fieldToString: String
