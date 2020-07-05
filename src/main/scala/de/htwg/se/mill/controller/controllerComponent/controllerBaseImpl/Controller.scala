@@ -158,8 +158,8 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   }
 
   def removeStone(row: Int, col: Int): Unit = {
-    field.removeStone(row, col)
-    print(cell(row, col).getContent.whichColor)
+    field = field.removeStone(row, col)
+    publish(new CellChanged)
   }
 
   def statusText:String = GameState.state
