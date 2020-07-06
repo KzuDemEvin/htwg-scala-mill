@@ -1,6 +1,7 @@
 package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
 import com.google.inject.Inject
+import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, MoveModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color, FieldInterface}
 
 case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
@@ -10,10 +11,6 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
   }
 
   val size: Int = allCells.size
-
-  var savedRoundCounter = 0
-  def setRoundCounter(counter: Int): Unit = savedRoundCounter = counter
-  def getRoundCounter(): Int = savedRoundCounter
 
   def cell(row: Int, col: Int): Cell = allCells.cell(row, col)
 
@@ -230,5 +227,25 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
     }
     string += "\n"
     string
+  }
+
+  var savedRoundCounter = 0
+  def setRoundCounter(counter: Int): Unit = savedRoundCounter = counter
+  def getRoundCounter(): Int = savedRoundCounter
+
+  var player1Mode = ModeState.handle(SetModeState())
+  def setPlayer1Mode(mode: String): Unit = player1Mode = ModeState.handle(checkModeState(mode))
+  def getPlayer1Mode(): String = player1Mode
+
+  var player2Mode = ModeState.handle(SetModeState())
+  def setPlayer2Mode(mode: String): Unit = player2Mode = ModeState.handle(checkModeState(mode))
+  def getPlayer2Mode(): String = player2Mode
+
+  def checkModeState(mode: String): ModeState = {
+    mode match {
+      case "SetMode" => SetModeState()
+      case "MoveMode" => MoveModeState()
+      case "FlyMode" => FlyModeState()
+    }
   }
 }

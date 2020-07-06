@@ -1,10 +1,10 @@
 package de.htwg.se.mill.model.fieldComponent
 
+import de.htwg.se.mill.controller.controllerComponent.ModeState
+
 trait FieldInterface {
   def size: Int
 
-  def setRoundCounter(counter: Int): Unit
-  def getRoundCounter(): Int
   def cell(row: Int, col: Int): Cell
   def possiblePosition(row: Int, col: Int): Boolean
   def available(row: Int, col: Int): Boolean
@@ -20,4 +20,13 @@ trait FieldInterface {
   def checkMill(row: Int, col: Int): Int
 
   def createNewField:FieldInterface
+
+  def setRoundCounter(counter: Int): Unit
+  def getRoundCounter(): Int
+
+  def setPlayer1Mode(mode: String): Unit
+  def getPlayer1Mode(): String
+
+  def setPlayer2Mode(mode: String): Unit
+  def getPlayer2Mode(): String
 }

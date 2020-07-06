@@ -15,6 +15,8 @@ class FileIO extends FileIOInterface {
     var field: FieldInterface = null
     val file = scala.xml.XML.loadFile("field.xml")
     val roundCounter = (file \\ "field" \ "@roundCounter").text.toInt
+    val player1Mode = (file \\ "field" \ "@player1Mode").text
+    val player2Mode = (file \\ "field" \ "@player2Mode").text
     val injector = Guice.createInjector(new MillModule)
     field = injector.instance[FieldInterface](Names.named("normal"))
     val cellNodes = (file \\ "cell")
@@ -29,6 +31,8 @@ class FileIO extends FileIOInterface {
       }
     }
     field.setRoundCounter(roundCounter)
+    field.setPlayer1Mode(player1Mode)
+    field.setPlayer2Mode(player2Mode)
     field
   }
 
@@ -48,7 +52,8 @@ class FileIO extends FileIOInterface {
   }
 
   def fieldToXml(field: FieldInterface): Node = {
-    <field roundCounter={ field.getRoundCounter().toString }>
+    <field roundCounter={ field.getRoundCounter().toString } player1Mode={ field.getPlayer1Mode() }
+           player2Mode={ field.getPlayer2Mode() }>
       {
       for {
         row <- 0 until field.size

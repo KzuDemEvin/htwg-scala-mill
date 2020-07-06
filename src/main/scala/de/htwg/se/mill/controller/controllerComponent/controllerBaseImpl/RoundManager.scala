@@ -18,6 +18,9 @@ case class RoundManager() {
     if (roundCounter < borderToMoveMode) {
       player1.mode = ModeState.handle(SetModeState())
       player2.mode = ModeState.handle(SetModeState())
+      if (roundCounter == borderToMoveMode - 1) {
+        player1.mode = ModeState.handle(MoveModeState())
+      }
     } else if (field.placedBlackStones() == 3 || field.placedWhiteStones() == 3) {
       if (field.placedWhiteStones() == 3) {
         player1.mode = ModeState.handle(FlyModeState())
