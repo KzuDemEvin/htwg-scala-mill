@@ -80,7 +80,6 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       undoManager.doStep(new SetCommand(row, col, Cell("cw"), this))
       gameState = GameState.handle(WhiteTurnState())
     }
-    print("roundcounter danach " + roundCounter + "\n")
     modeChoice()
     publish(new CellChanged)
   }
@@ -103,7 +102,6 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       }
     }
     //checkMill(rowNew, colNew)
-    print("roundcounter danach " + roundCounter + "\n")
     modeChoice()
     publish(new CellChanged)
   }
