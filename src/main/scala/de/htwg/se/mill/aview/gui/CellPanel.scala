@@ -1,10 +1,11 @@
 package de.htwg.se.mill.aview.gui
 
-import scala.swing._
-import scala.swing.event._
-import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, FlyModeState, MoveModeState, SetModeState}
+import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface}
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
 import javax.swing.ImageIcon
+
+import scala.swing._
+import scala.swing.event._
 
 class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends FlowPanel {
 
@@ -12,7 +13,7 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
 
   val sizeDim = new Dimension(100, 100)
 
-  def myCell = controller.cell(row, column)
+  def myCell: Cell = controller.cell(row, column)
 
   //upperLeft, upperRight, bottomRight, bottomLeft, Middle, HoriTop, HoriBottom, SideLeft, SideRight
   val imagesPerPosition = Map(List((0,0), (1,1), (2,2)) -> new ImageIcon("src\\assets\\media\\AvailableCellTopLeft.png"),
@@ -86,23 +87,23 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
     icon
   }
 
-  val setButton = new Button {
-    minimumSize = sizeDim
-    maximumSize = sizeDim
-    preferredSize = sizeDim
-    background = unavailableColor
-    icon = cellIcon(row, column)
+  val setButton: Button = new Button {
+    layoutButton(this)
   }
 
-  val notValidButton = new Button {
-    minimumSize = sizeDim
-    maximumSize = sizeDim
-    preferredSize = sizeDim
-    background = unavailableColor
-    icon = cellIcon(row, column)
+  val notValidButton: Button = new Button {
+    layoutButton(this)
   }
 
-  val cell = new BoxPanel(Orientation.Vertical) {
+  def layoutButton(btn:Button):Unit = {
+    btn.minimumSize = sizeDim
+    btn.maximumSize = sizeDim
+    btn.preferredSize = sizeDim
+    btn.background = unavailableColor
+    btn.icon = cellIcon(row, column)
+  }
+
+  val cell: BoxPanel = new BoxPanel(Orientation.Vertical) {
     if (cellType(row, column) < 3) {
       contents += setButton
     } else {
@@ -113,15 +114,12 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
     listenTo(controller)
     listenTo(setButton)
     reactions += {
-      case ButtonClicked(component) if component == setButton => {
+      case ButtonClicked(component) if component == setButton =>
         controller.handleClick(row, column)
-      }
-      case event:CellChanged =>
-      repaint
     }
   }
 
-  def redraw:Unit = {
+  def redraw():Unit = {
     contents.clear()
     setButton.background = unavailableColor
     setButton.icon = cellIcon(row, column)
