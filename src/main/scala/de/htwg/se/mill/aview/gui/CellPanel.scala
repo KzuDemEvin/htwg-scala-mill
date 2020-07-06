@@ -6,32 +6,24 @@ import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerIn
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
 import javax.swing.ImageIcon
 
-case object Images extends Enumeration {
-  val white = Value
-  val black = Value
-  val noColor = Value
-}
-
-
-
 class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends FlowPanel {
 
   val unavailableColor = new Color(238, 238, 238) // backgroundcolor
-  val transparentColor = new Color(0, 0, 0, 0)
 
   val sizeDim = new Dimension(100, 100)
 
   def myCell = controller.cell(row, column)
 
-  val imagesPerPosition = Map(List((0,0), (1,1), (2,2)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"),
-                              List((0,6), (1,5), (2,4)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"),
-                              List((6,6), (5,5), (4,4)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"),
-                              List((6,0), (5,1), (4,2)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"),
-                              List((3,1), (3,5), (5,3), (3,1)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"),
-                              List((0,3), (4,3)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"),
-                              List((2,3), (6,3)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"),
-                              List((3,0), (3,4)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"),
-                              List((3,2), (3,6)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"))
+  //upperLeft, upperRight, bottomRight, bottomLeft, Middle, HoriTop, HoriBottom, SideLeft, SideRight
+  val imagesPerPosition = Map(List((0,0), (1,1), (2,2)) -> new ImageIcon("src\\assets\\media\\AvailableCellTopLeft.png"),
+                              List((0,6), (1,5), (2,4)) -> new ImageIcon("src\\assets\\media\\AvailableCellTopRight.png"),
+                              List((6,6), (5,5), (4,4)) -> new ImageIcon("src\\assets\\media\\AvailableCellBottomRight.png"),
+                              List((6,0), (5,1), (4,2)) -> new ImageIcon("src\\assets\\media\\AvailableCellBottomLeft.png"),
+                              List((1,3), (3,5), (5,3), (3,1)) -> new ImageIcon("src\\assets\\media\\AvailableCellMiddle.png"),
+                              List((0,3), (4,3)) -> new ImageIcon("src\\assets\\media\\AvailableCellHorizontalTop.png"),
+                              List((2,3), (6,3)) -> new ImageIcon("src\\assets\\media\\AvailableCellHorizontalBottom.png"),
+                              List((3,0), (3,4)) -> new ImageIcon("src\\assets\\media\\AvailableCellVerticalLeft.png"),
+                              List((3,2), (3,6)) -> new ImageIcon("src\\assets\\media\\AvailableCellVerticalRight.png"))
 
 
 
@@ -45,18 +37,7 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
                (4, 0),(4, 1),(4, 5),(4, 6),
                       (5, 0),(5, 6))
 
-
-  def cellIcon2(row:Int, col:Int):ImageIcon = {
-    var icon = new ImageIcon()
-    for (x <- imagesPerPosition.keySet) {
-      if (x.contains((row, col))) {
-        icon = imagesPerPosition(x)
-      }
-    }
-    icon
-  }
-
-  // 0 = white, 1 = black, 2 = available, 3 = notValidHorizontal, 4 = notValidVertical, 5 = middle
+  // 0 = white, 1 = black, 2 = availableCell, 3 = notValidHorizontal, 4 = notValidVertical, 5 = middle
   def cellType(row: Int, col: Int): Int = {
     var cellType = 5
     if (controller.possiblePosition(row, col)) {
@@ -88,11 +69,21 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
     cellType(row, col) match {
       case 0 => new ImageIcon("src\\assets\\media\\WhiteStone.png")
       case 1 => new ImageIcon("src\\assets\\media\\BlackStone.png")
-      case 2 => new ImageIcon("src\\assets\\media\\CellStone.png")
+      case 2 => cellIcon2(row, col)
       case 3 => new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png")
       case 4 => new ImageIcon("src\\assets\\media\\UnavailableCellVertical.png")
       case 5 => new ImageIcon("src\\assets\\media\\MiddleCell.png")
     }
+  }
+
+  def cellIcon2(row:Int, col:Int):ImageIcon = {
+    var icon = new ImageIcon()
+    for (x <- imagesPerPosition.keySet) {
+      if (x.contains((row, col))) {
+        icon = imagesPerPosition(x)
+      }
+    }
+    icon
   }
 
   val setButton = new Button {
@@ -133,8 +124,7 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
   def redraw:Unit = {
     contents.clear()
     setButton.background = unavailableColor
-    setButton.icon = cellIcon2(row, column)
-    //setButton.icon = cellIcon(row, column)
+    setButton.icon = cellIcon(row, column)
     notValidButton.background = unavailableColor
     notValidButton.icon = cellIcon(row, column)
     contents += cell
