@@ -1,12 +1,20 @@
 package de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl
 
-import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, MoveModeState, SetModeState}
+import com.google.inject.{Guice, Inject, Injector}
+import com.google.inject.name.Names
+import de.htwg.se.mill.Mill.injector
+import de.htwg.se.mill.MillModule
+import de.htwg.se.mill.controller.controllerComponent.{ControllerInterface, FlyModeState, ModeState, MoveModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent.FieldInterface
-import de.htwg.se.mill.model.playerComponent.PlayerInterface
+import de.htwg.se.mill.model.playerComponent.{Player, PlayerInterface}
 
-case class RoundManager() {
+case class RoundManager @Inject() ()  {
   var roundCounter = 0
   val borderToMoveMode = 18
+  val injector: Injector = Guice.createInjector(new MillModule)
+  //val player3 = injector.instance[PlayerInterface](Names.named("player1"))
+  //val player1 = injector.getInstance(classOf[PlayerInterface])
+  //val player2 = injector.getInstance(classOf[PlayerInterface])
   val player1 = Player("Kevin")
   val player2 = Player("Manuel")
 
