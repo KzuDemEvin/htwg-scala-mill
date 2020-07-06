@@ -14,8 +14,7 @@ class FileIO extends FileIOInterface {
   override def load: FieldInterface = {
     var field: FieldInterface = null
     val file = scala.xml.XML.loadFile("field.xml")
-    val sizeAttr = (file \\ "field" \ "@size")
-    val size = sizeAttr.text.toInt
+    val roundCounter = (file \\ "field" \ "@roundCounter").text.toInt
     val injector = Guice.createInjector(new MillModule)
     field = injector.instance[FieldInterface](Names.named("normal"))
     val cellNodes = (file \\ "cell")
@@ -24,31 +23,32 @@ class FileIO extends FileIOInterface {
       val col: Int = (cell \ "@col").text.toInt
       val content: String = cell.text.trim
       content match {
-        case "White Stone" => field = field.set(row, col, Cell("cw"))
-        case "Black Stone" => field = field.set(row, col, Cell("cb"))
-        case "No Stone" => field = field.set(row, col, Cell("ce"))
+        case "white" => field = field.set(row, col, Cell("cw"))
+        case "black" => field = field.set(row, col, Cell("cb"))
+        case "noColor" => field = field.set(row, col, Cell("ce"))
       }
     }
+    field.setRoundCounter(roundCounter)
     field
   }
 
-  override def save(field: FieldInterface): Unit = saveString(field)
+  def save(field: FieldInterface): Unit = saveString(field)
 
-  def saveXML (field: FieldInterface): Unit = {
+  def saveXML(field: FieldInterface): Unit = {
     scala.xml.XML.save("field.xml", fieldToXml(field))
   }
 
-  def saveString(grid: FieldInterface): Unit = {
+  def saveString(field: FieldInterface): Unit = {
     import java.io._
-    val pw = new PrintWriter(new File("grid.xml"))
+    val pw = new PrintWriter(new File("field.xml"))
     val prettyPrinter = new PrettyPrinter(120, 4)
-    val xml = prettyPrinter.format(fieldToXml(grid))
+    val xml = prettyPrinter.format(fieldToXml(field))
     pw.write(xml)
     pw.close
   }
 
   def fieldToXml(field: FieldInterface): Node = {
-    <field size={ field.size.toString }>
+    <field roundCounter={ field.getRoundCounter().toString }>
       {
       for {
         row <- 0 until field.size
@@ -58,9 +58,9 @@ class FileIO extends FileIOInterface {
     </field>
   }
 
-  def cellToXml(field: FieldInterface, row: Int, col: Int): Unit = {
+  def cellToXml(field: FieldInterface, row: Int, col: Int): Node = {
     <cell row={ row.toString } col={ col.toString }>
-      { field.cell(row, col).toString }
+      { field.cell(row, col).getContent.whichColor }
     </cell>
   }
 

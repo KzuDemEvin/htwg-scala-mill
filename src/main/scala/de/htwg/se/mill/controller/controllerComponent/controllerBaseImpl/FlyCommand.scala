@@ -8,7 +8,7 @@ class FlyCommand(rowOld:Int, colOld: Int, rowNew:Int, colNew:Int, controller: Co
 
   override def undoStep: Unit = controller.field = {
     controller.field = controller.field.replace(rowNew, colNew, Cell("ce"))
-    if (controller.roundCounter % 2 == 0) {
+    if (controller.mgr.blackTurn()) {
       controller.field = controller.field.replace(rowOld, rowOld, Cell("cw"))
     } else {
       controller.field = controller.field.replace(rowOld, rowOld, Cell("cb"))

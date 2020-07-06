@@ -4,7 +4,7 @@
     "cells" : [ {
       "row" : 0,
       "col" : 0,
-      "color" : "black"
+      "color" : "white"
     }, {
       "row" : 0,
       "col" : 1,
@@ -16,19 +16,19 @@
     }, {
       "row" : 0,
       "col" : 3,
-      "color" : "black"
-    }, {
-      "row" : 0,
-      "col" : 4,
       "color" : "noColor"
     }, {
       "row" : 0,
+      "col" : 4,
+      "color" : "noColor"
+    }, {
+      "row" : 0,
       "col" : 5,
       "color" : "noColor"
     }, {
       "row" : 0,
       "col" : 6,
-      "color" : "white"
+      "color" : "black"
     }, {
       "row" : 1,
       "col" : 0,
@@ -36,7 +36,7 @@
     }, {
       "row" : 1,
       "col" : 1,
-      "color" : "white"
+      "color" : "black"
     }, {
       "row" : 1,
       "col" : 2,
@@ -44,7 +44,7 @@
     }, {
       "row" : 1,
       "col" : 3,
-      "color" : "noColor"
+      "color" : "black"
     }, {
       "row" : 1,
       "col" : 4,
@@ -52,7 +52,7 @@
     }, {
       "row" : 1,
       "col" : 5,
-      "color" : "noColor"
+      "color" : "black"
     }, {
       "row" : 1,
       "col" : 6,
@@ -68,7 +68,7 @@
     }, {
       "row" : 2,
       "col" : 2,
-      "color" : "black"
+      "color" : "noColor"
     }, {
       "row" : 2,
       "col" : 3,
@@ -92,11 +92,11 @@
     }, {
       "row" : 3,
       "col" : 1,
-      "color" : "black"
+      "color" : "white"
     }, {
       "row" : 3,
       "col" : 2,
-      "color" : "white"
+      "color" : "noColor"
     }, {
       "row" : 3,
       "col" : 3,
@@ -128,11 +128,11 @@
     }, {
       "row" : 4,
       "col" : 3,
-      "color" : "black"
+      "color" : "white"
     }, {
       "row" : 4,
       "col" : 4,
-      "color" : "white"
+      "color" : "black"
     }, {
       "row" : 4,
       "col" : 5,
@@ -148,7 +148,7 @@
     }, {
       "row" : 5,
       "col" : 1,
-      "color" : "white"
+      "color" : "noColor"
     }, {
       "row" : 5,
       "col" : 2,
@@ -156,7 +156,7 @@
     }, {
       "row" : 5,
       "col" : 3,
-      "color" : "noColor"
+      "color" : "white"
     }, {
       "row" : 5,
       "col" : 4,
@@ -164,7 +164,7 @@
     }, {
       "row" : 5,
       "col" : 5,
-      "color" : "black"
+      "color" : "white"
     }, {
       "row" : 5,
       "col" : 6,
@@ -196,7 +196,7 @@
     }, {
       "row" : 6,
       "col" : 6,
-      "color" : "noColor"
+      "color" : "black"
     } ]
   }
 }

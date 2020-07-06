@@ -1,7 +1,5 @@
 package de.htwg.se.mill.model.fieldComponent
 
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Color
-
 trait Stone {
   def isSet: Boolean
   def whichColor: Color.Value

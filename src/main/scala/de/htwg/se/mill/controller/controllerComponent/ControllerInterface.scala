@@ -8,11 +8,12 @@ trait ControllerInterface extends Publisher {
   var setCounter = 0
   var moveCounter = 0
   var flyCounter = 0
-  var roundCounter = 0
   def createEmptyField(size: Int): Unit
   def createRandomField(size: Int): Unit
   def fieldToString: String
 
+  def getRoundCounter:Int
+  def selectDriveCommand():ModeState
   def set(row: Int, col: Int): Unit
   def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Unit
   def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Unit
@@ -31,8 +32,7 @@ trait ControllerInterface extends Publisher {
   def placedStones(): Int
   def placedWhiteStones():Int
   def placedBlackStones():Int
-  def modeChoice():Unit
-  def selectDriveCommand():ModeState
+  def isNeigbour(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Boolean
   def fieldsize:Int
 }
 
