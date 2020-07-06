@@ -204,28 +204,24 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
 
   def removeStone(row: Int, col: Int): Boolean = {
     if (mgr.blackTurn()) {
-      if (cell(row, col).getContent.whichColor == Color.white) {
-        val r = field.removeStone(row, col)
-        field = r._1
-        mgr.modeChoice(field)
-        publish(new CellChanged)
-        r._2
-      } else {
-        false
-      }
+      stoneHasOtherColor(row, col, Color.white)
     } else if (mgr.whiteTurn()) {
-      if (cell(row, col).getContent.whichColor == Color.black) {
-        val r = field.removeStone(row, col)
-        field = r._1
-        mgr.modeChoice(field)
-        publish(new CellChanged)
-        r._2
-      } else {
-        false
-      }
+      stoneHasOtherColor(row, col, Color.black)
     } else {
       mgr.modeChoice(field)
       publish(new CellChanged)
+      false
+    }
+  }
+
+  def stoneHasOtherColor(row:Int, col:Int, color: Color.Value):Boolean = {
+    if (cell(row, col).getContent.whichColor == color) {
+      val r = field.removeStone(row, col)
+      field = r._1
+      mgr.modeChoice(field)
+      publish(new CellChanged)
+      r._2
+    } else {
       false
     }
   }

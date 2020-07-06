@@ -1,6 +1,7 @@
 package de.htwg.se.mill.controller.controllerComponent
 
-import de.htwg.se.mill.model.fieldComponent.Cell
+import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
+
 import scala.swing.Publisher
 
 trait ControllerInterface extends Publisher {
@@ -21,11 +22,12 @@ trait ControllerInterface extends Publisher {
   def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Unit
   def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Unit
   def removeStone(row:Int, col:Int):Boolean
-  def undo: Unit
-  def redo: Unit
+  def stoneHasOtherColor(row:Int, col:Int, color: Color.Value):Boolean
+  def undo(): Unit
+  def redo(): Unit
   def checkMill(row:Int, col:Int):String
-  def save: Unit
-  def load: Unit
+  def save(): Unit
+  def load(): Unit
   def statusText:String
   def millText:String
   def cell(row:Int, col:Int):Cell
