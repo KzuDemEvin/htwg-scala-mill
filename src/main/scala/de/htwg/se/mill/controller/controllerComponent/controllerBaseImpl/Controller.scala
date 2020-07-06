@@ -44,8 +44,62 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
 
   def fieldToString: String = field.toString
 
-  def getRoundCounter:Int = {
+  def getRoundCounter: Int = {
     mgr.roundCounter
+  }
+
+
+  def handleClick(row: Int, column: Int): Unit = {
+    val whichCmd = selectDriveCommand()
+    whichCmd match {
+      case SetModeState() => setCounter = handleSet(row, column, setCounter)
+      case MoveModeState() => moveCounter = handleMoveAndFly(row, column, moveCounter)
+      case FlyModeState() => flyCounter = handleMoveAndFly(row, column, flyCounter)
+    }
+  }
+
+  def handleSet(row:Int, column:Int, counter:Int):Int = {
+    var cnt = counter
+    if (cnt >= 1) {
+      if (removeStone(row, column)) {
+        cnt = 0
+      } else {
+        cnt += 1
+      }
+    } else {
+      set(row, column)
+      val m = checkMill(row, column)
+      m match {
+        case "White Mill" => cnt += 1
+        case "Black Mill" => cnt += 1
+        case "No Mill" => cnt = 0
+      }
+    }
+    cnt
+  }
+
+  def handleMoveAndFly(row:Int, column:Int, counter:Int):Int = {
+    var cnt = counter
+    cnt += 1
+    print("movecounter:" + cnt + "\n")
+    if (cnt == 2) {
+      moveStone(tmpCell._1, tmpCell._2, row, column)
+      val m = checkMill(row, column)
+      m match {
+        case "White Mill" => cnt += 1
+        case "Black Mill" => cnt += 1
+        case "No Mill" => cnt = 0
+      }
+    } else if (cnt >= 4) {
+      if (removeStone(row, column)) {
+        cnt = 0
+      } else {
+        cnt += 1
+      }
+    } else {
+      tmpCell = (row, column)
+    }
+    cnt
   }
 
   def selectDriveCommand():ModeState = {

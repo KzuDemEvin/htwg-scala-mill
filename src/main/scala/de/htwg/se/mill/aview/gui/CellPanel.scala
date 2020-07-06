@@ -6,6 +6,14 @@ import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerIn
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
 import javax.swing.ImageIcon
 
+case object Images extends Enumeration {
+  val white = Value
+  val black = Value
+  val noColor = Value
+}
+
+
+
 class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends FlowPanel {
 
   val unavailableColor = new Color(238, 238, 238) // backgroundcolor
@@ -14,6 +22,18 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
   val sizeDim = new Dimension(100, 100)
 
   def myCell = controller.cell(row, column)
+
+  val imagesPerPosition = Map(List((0,0), (1,1), (2,2)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"),
+                              List((0,6), (1,5), (2,4)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"),
+                              List((6,6), (5,5), (4,4)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"),
+                              List((6,0), (5,1), (4,2)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"),
+                              List((3,1), (3,5), (5,3), (3,1)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"),
+                              List((0,3), (4,3)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"),
+                              List((2,3), (6,3)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"),
+                              List((3,0), (3,4)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"),
+                              List((3,2), (3,6)) -> new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png"))
+
+
 
   val horizontalCells = List((0, 1), (0, 2), (0, 4), (0,5),
                                 (1, 2),(1, 4),
@@ -24,6 +44,17 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
                (2, 0),(2, 1),(2, 5),(2, 6),
                (4, 0),(4, 1),(4, 5),(4, 6),
                       (5, 0),(5, 6))
+
+
+  def cellIcon2(row:Int, col:Int):ImageIcon = {
+    var icon = new ImageIcon()
+    for (x <- imagesPerPosition.keySet) {
+      if (x.contains((row, col))) {
+        icon = imagesPerPosition(x)
+      }
+    }
+    icon
+  }
 
   // 0 = white, 1 = black, 2 = available, 3 = notValidHorizontal, 4 = notValidVertical, 5 = middle
   def cellType(row: Int, col: Int): Int = {
@@ -92,63 +123,7 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
     listenTo(setButton)
     reactions += {
       case ButtonClicked(component) if component == setButton => {
-        val whichCmd = controller.selectDriveCommand()
-        whichCmd match {
-          case SetModeState() =>
-            if (controller.setCounter >= 1) {
-              if (controller.removeStone(row, column)) {
-                controller.setCounter = 0
-              } else {
-                controller.setCounter += 1
-              }
-            } else {
-              controller.set(row, column)
-              val m = controller.checkMill(row, column)
-              m match {
-                case "White Mill" => controller.setCounter += 1
-                case "Black Mill" => controller.setCounter += 1
-                case "No Mill" => controller.setCounter = 0
-              }
-            }
-          case MoveModeState() => controller.moveCounter += 1
-            print("movecounter:" + controller.moveCounter + "\n")
-            if (controller.moveCounter == 2) {
-              controller.moveStone(controller.tmpCell._1, controller.tmpCell._2, row, column)
-              val m = controller.checkMill(row, column)
-              m match {
-                case "White Mill" => controller.moveCounter += 1
-                case "Black Mill" => controller.moveCounter += 1
-                case "No Mill" => controller.moveCounter = 0
-              }
-            } else if (controller.moveCounter >= 4) {
-              if (controller.removeStone(row, column)) {
-                controller.moveCounter = 0
-              } else {
-                controller.moveCounter += 1
-              }
-            } else {
-              controller.tmpCell = (row, column)
-            }
-          case FlyModeState() => controller.flyCounter += 1
-            print("flycounter:" + controller.flyCounter + "\n")
-            if (controller.flyCounter == 2) {
-              controller.fly(controller.tmpCell._1, controller.tmpCell._2, row, column)
-              val m = controller.checkMill(row, column)
-              m match {
-                case "White Mill" => controller.flyCounter += 1
-                case "Black Mill" => controller.flyCounter += 1
-                case "No Mill" => controller.flyCounter = 0
-              }
-            } else if (controller.flyCounter >= 4) {
-              if (controller.removeStone(row, column)) {
-                controller.flyCounter = 0
-              } else {
-                controller.flyCounter += 1
-              }
-            } else {
-              controller.tmpCell = (row, column)
-            }
-        }
+        controller.handleClick(row, column)
       }
       case event:CellChanged =>
       repaint
@@ -158,7 +133,8 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
   def redraw:Unit = {
     contents.clear()
     setButton.background = unavailableColor
-    setButton.icon = cellIcon(row, column)
+    setButton.icon = cellIcon2(row, column)
+    //setButton.icon = cellIcon(row, column)
     notValidButton.background = unavailableColor
     notValidButton.icon = cellIcon(row, column)
     contents += cell

@@ -1,7 +1,4 @@
 Logik:
 
 Player-Verwaltung --> evtl interface
-Player in unterschiedlichen Modes  -> ja
-Mode-Verwaltung -> ja
 
-nach laden kann man noch ein stein mehr setzen --> kevin
