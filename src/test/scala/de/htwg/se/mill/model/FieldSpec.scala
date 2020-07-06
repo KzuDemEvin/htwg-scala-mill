@@ -2,8 +2,8 @@
 
 package de.htwg.se.mill.model
 
-import de.htwg.se.mill.model.fieldComponent.{Cell, Stone, fieldBaseImpl}
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Color, Field}
+import de.htwg.se.mill.model.fieldComponent.{Cell, Color, Stone, fieldBaseImpl}
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
 import org.scalatest.{Matchers, WordSpec}
 
 class FieldSpec extends WordSpec with Matchers {

@@ -3,8 +3,7 @@ package de.htwg.se.mill.aview.gui
 import scala.swing._
 import scala.swing.event._
 import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, FlyModeState, MoveModeState, SetModeState}
-import de.htwg.se.mill.model.fieldComponent.Cell
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Color
+import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
 import javax.swing.ImageIcon
 
 class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends FlowPanel {
@@ -112,6 +111,7 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
               }
             }
           case MoveModeState() => controller.moveCounter += 1
+            print("movecounter:" + controller.moveCounter + "\n")
             if (controller.moveCounter == 2) {
               controller.moveStone(controller.tmpCell._1, controller.tmpCell._2, row, column)
               val m = controller.checkMill(row, column)
@@ -120,22 +120,38 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
                 case "Black Mill" => controller.moveCounter += 1
                 case "No Mill" => controller.moveCounter = 0
               }
-            } else if (controller.moveCounter == 4) {
-              controller.removeStone(row, column)
-              controller.moveCounter = 0
+            } else if (controller.moveCounter >= 4) {
+              if (controller.removeStone(row, column)) {
+                controller.moveCounter = 0
+              } else {
+                controller.moveCounter += 1
+              }
             } else {
               controller.tmpCell = (row, column)
             }
           case FlyModeState() => controller.flyCounter += 1
+            print("flycounter:" + controller.flyCounter + "\n")
             if (controller.flyCounter == 2) {
               controller.fly(controller.tmpCell._1, controller.tmpCell._2, row, column)
-              controller.flyCounter = 0
+              val m = controller.checkMill(row, column)
+              m match {
+                case "White Mill" => controller.flyCounter += 1
+                case "Black Mill" => controller.flyCounter += 1
+                case "No Mill" => controller.flyCounter = 0
+              }
+            } else if (controller.flyCounter >= 4) {
+              if (controller.removeStone(row, column)) {
+                controller.flyCounter = 0
+              } else {
+                controller.flyCounter += 1
+              }
             } else {
               controller.tmpCell = (row, column)
             }
         }
-        repaint
       }
+      case event:CellChanged =>
+      repaint
     }
   }
 

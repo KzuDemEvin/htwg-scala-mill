@@ -11,6 +11,7 @@ trait FieldInterface {
   def set(row:Int, col:Int, c:Cell) : FieldInterface
   def replace(row:Int, col:Int, c:Cell) : FieldInterface
   def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): FieldInterface
+  def isNeigbour(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Boolean
   def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):FieldInterface
   def removeStone(row:Int, col:Int):(FieldInterface, Boolean)
   def placedStones(): Int

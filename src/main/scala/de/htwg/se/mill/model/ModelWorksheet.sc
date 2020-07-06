@@ -1,5 +1,5 @@
-import de.htwg.se.mill.model.fieldComponent.{Stone, fieldBaseImpl}
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Color, Field, Matrix}
+import de.htwg.se.mill.model.fieldComponent.{Color, Stone, fieldBaseImpl}
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Field, Matrix}
 
 import scala.io.StdIn.readLine
 

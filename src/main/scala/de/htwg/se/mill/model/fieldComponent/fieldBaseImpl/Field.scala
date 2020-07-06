@@ -1,7 +1,7 @@
 package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
 import com.google.inject.Inject
-import de.htwg.se.mill.model.fieldComponent.{Cell, FieldInterface}
+import de.htwg.se.mill.model.fieldComponent.{Cell, Color, FieldInterface}
 
 case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
 
@@ -39,17 +39,27 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
       if (x._1 == rowNew && x._2 == colNew && !cell(rowNew, colNew).isSet) {
         val oldCell = cell(rowOld, colOld)
         field = field.replace(rowOld, colOld, Cell("ce"))
-        field = field.set(x._1, x._2, oldCell)
+        field = field.set(rowNew, colNew, oldCell)
       }
     }
     field
   }
 
+  def isNeigbour(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Boolean = {
+    var r = false
+    val s = for (x <- neighbours(rowOld, colOld)) {
+      if (x._1 == rowNew && x._2 == colNew) {
+        r = true
+      }
+    }
+    r
+  }
+
   def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
     var field = this
     val oldCell = cell(rowOld, colOld)
+    field = field.replace(rowOld, colOld, Cell("ce"))
     field = field.set(rowNew, colNew, oldCell)
-    field = field.set(rowOld, colOld, Cell("ce"))
     field
   }
 
