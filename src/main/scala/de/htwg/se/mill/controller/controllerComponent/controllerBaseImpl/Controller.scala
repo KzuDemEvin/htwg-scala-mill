@@ -174,6 +174,8 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
 
   def save: Unit = {
     field.setRoundCounter(mgr.roundCounter)
+    field.setPlayer1Mode(mgr.player1.mode)
+    field.setPlayer2Mode(mgr.player2.mode)
     fileIo.save(field)
     publish(new CellChanged)
   }
@@ -181,6 +183,8 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   def load: Unit = {
     field = fileIo.load
     mgr.roundCounter = field.getRoundCounter()
+    mgr.player1.mode = field.getPlayer1Mode()
+    mgr.player2.mode = field.getPlayer2Mode()
     publish(new CellChanged)
   }
 

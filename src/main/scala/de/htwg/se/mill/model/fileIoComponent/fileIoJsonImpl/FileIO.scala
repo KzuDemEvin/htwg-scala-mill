@@ -17,6 +17,8 @@ class FileIO extends FileIOInterface {
     val source: String = Source.fromFile("field.json").getLines.mkString
     val json: JsValue = Json.parse(source)
     val roundCounter = (json \ "field" \ "roundCounter").get.toString.toInt
+    val player1Mode = (json \ "field" \ "player1Mode").get.toString.replaceAll("\"", "")
+    val player2Mode = (json \ "field" \ "player2Mode").get.toString.replaceAll("\"", "")
     val injector = Guice.createInjector(new MillModule)
     field = injector.instance[FieldInterface](Names.named("normal"))
     for (index <- 0 until field.size * field.size) {
@@ -30,6 +32,8 @@ class FileIO extends FileIOInterface {
       }
     }
     field.setRoundCounter(roundCounter)
+    field.setPlayer1Mode(player1Mode)
+    field.setPlayer2Mode(player2Mode)
     field
   }
 
@@ -44,6 +48,8 @@ class FileIO extends FileIOInterface {
     Json.obj(
       "field" -> Json.obj(
         "roundCounter" -> JsNumber(field.getRoundCounter()),
+        "player1Mode" -> JsString(field.getPlayer1Mode()),
+        "player2Mode" -> JsString(field.getPlayer2Mode()),
         "cells" -> Json.toJson(
           for {
             row <- 0 until field.size
