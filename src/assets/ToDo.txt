@@ -1,4 +1,7 @@
 Logik:
 
 Player-Verwaltung --> evtl interface
+bug mit Mühle beim Fliegen
+Mill-State zu spät aktualisiert
 
+roundcounter nicht immer angezeigt

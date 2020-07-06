@@ -14,6 +14,10 @@ import scala.swing.Publisher
 class Controller @Inject() (var field: FieldInterface) extends ControllerInterface with Publisher {
   private val undoManager = new UndoManager
   val mgr: RoundManager = RoundManager()
+  var tmpCell: (Int, Int) = (0,0)
+  var setCounter = 0
+  var moveCounter = 0
+  var flyCounter = 0
   var gameState: String = GameState.handle(NewState())
   var millState: String = MillState.handle(NoMillState())
   val injector: Injector = Guice.createInjector(new MillModule)

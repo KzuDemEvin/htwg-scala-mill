@@ -2,13 +2,13 @@ package de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl
 
 import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, MoveModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent.FieldInterface
-import de.htwg.se.mill.model.playerComponent.Player
+import de.htwg.se.mill.model.playerComponent.PlayerInterface
 
 case class RoundManager() {
   var roundCounter = 0
   val borderToMoveMode = 18
-  val player1: Player = Player("Kevin")
-  val player2: Player = Player("Manuel")
+  val player1 = Player("Kevin")
+  val player2 = Player("Manuel")
 
   def blackTurn():Boolean = if (roundCounter % 2 == 0) true else false
 

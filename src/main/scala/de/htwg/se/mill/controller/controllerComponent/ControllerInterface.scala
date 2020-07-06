@@ -4,10 +4,10 @@ import de.htwg.se.mill.model.fieldComponent.Cell
 import scala.swing.Publisher
 
 trait ControllerInterface extends Publisher {
-  var tmpCell = (0,0)
-  var setCounter = 0
-  var moveCounter = 0
-  var flyCounter = 0
+  var tmpCell:(Int,Int)
+  var setCounter:Int
+  var moveCounter:Int
+  var flyCounter:Int
   def createEmptyField(size: Int): Unit
   def createRandomField(size: Int): Unit
   def fieldToString: String
