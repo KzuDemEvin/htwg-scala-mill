@@ -5,5 +5,3 @@ Player in unterschiedlichen Modes  -> ja
 Mode-Verwaltung -> ja
 
 nach laden kann man noch ein stein mehr setzen --> kevin
-
-remove methode geht nicth --> aktualisiert nicht
