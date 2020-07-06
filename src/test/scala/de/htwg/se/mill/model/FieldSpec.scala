@@ -32,10 +32,28 @@ class FieldSpec extends WordSpec with Matchers {
         changedField.cell(0, 0).getContent.whichColor should be(Color.white)
         normalField.cell(0, 0).getContent.whichColor should be(Color.noColor)
       }
+
       "should return a string which looks like the gameboard" in {
         var blackwhiteField = normalField.set(0, 0, Cell("cw"))
         blackwhiteField = blackwhiteField.set(1, 1, Cell("cb"))
         blackwhiteField.toString should be("Mill Gameboard:\n w  -  -  o  -  -  o \n -  b  -  o  -  o  - \n -  -  o  o  o  -  - \n o  o  o  -  o  o  o \n -  -  o  o  o  -  - \n -  o  -  o  -  o  - \n o  -  -  o  -  -  o \n")
+      }
+      "should be able to set and return a roundCounter" in {
+        val roundCounter = 3
+        normalField.setRoundCounter(roundCounter)
+        normalField.getRoundCounter() should be(3)
+      }
+      "should be able to set and return player 1 in setMode" in {
+        normalField.setPlayer1Mode("SetMode")
+        normalField.getPlayer1Mode should be("SetMode")
+      }
+      "should be able to set and return player 1 in moveMode" in {
+        normalField.setPlayer1Mode("MoveMode")
+        normalField.getPlayer1Mode should be("MoveMode")
+      }
+      "should be able to set and return player 2 flyMode" in {
+        normalField.setPlayer2Mode("FlyMode")
+        normalField.getPlayer2Mode should be("FlyMode")
       }
     }
   }

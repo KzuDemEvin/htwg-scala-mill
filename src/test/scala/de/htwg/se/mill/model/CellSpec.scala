@@ -5,13 +5,28 @@ import org.scalatest.{Matchers, WordSpec}
 
 class CellSpec extends WordSpec with Matchers {
   "A Cell" when {
-    "set with any stone" should {
-      val filledCell = Cell("cw")
+    "filled with a white stone" should {
+      val filledWhiteCell = Cell("cw")
       "should be filled with a white Stone" in {
-        filledCell.getContent.whichColor should be(Color.white)
+        filledWhiteCell.getContent.whichColor should be(Color.white)
       }
       "is filled" in {
-        filledCell.isSet should be(true)
+        filledWhiteCell.isSet should be(true)
+      }
+      "have the String method" in {
+        filledWhiteCell.toString should be("White Stone")
+      }
+    }
+    "filled with a black stone" should {
+      val filledBlackCell = Cell("cb")
+      "should be filled with a black Stone" in {
+        filledBlackCell.getContent.whichColor should be(Color.black)
+      }
+      "is filled" in {
+        filledBlackCell.isSet should be(true)
+      }
+      "have the String method" in {
+        filledBlackCell.toString should be("Black Stone")
       }
     }
     "by default a not filled Cell has no Stone" should {
@@ -21,6 +36,9 @@ class CellSpec extends WordSpec with Matchers {
       }
       "is not filled" in {
         emptyCell.isSet should be (false)
+      }
+      "have the String method" in {
+        emptyCell.toString should be("No Stone")
       }
     }
   }
