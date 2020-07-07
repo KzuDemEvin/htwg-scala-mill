@@ -57,8 +57,8 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     val whichCmd = selectDriveCommand()
     whichCmd match {
       case SetModeState() => setCounter = handleSet(row, column, setCounter)
-      case MoveModeState() => moveCounter = handleMoveAndFly(row, column, moveCounter)
-      case FlyModeState() => flyCounter = handleMoveAndFly(row, column, flyCounter)
+      case MoveModeState() => moveCounter = handleMoveAndFly(row, column, moveCounter, MoveModeState())
+      case FlyModeState() => flyCounter = handleMoveAndFly(row, column, flyCounter, FlyModeState())
     }
   }
 
@@ -82,12 +82,17 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     cnt
   }
 
-  def handleMoveAndFly(row:Int, column:Int, counter:Int):Int = {
+  def handleMoveAndFly(row:Int, column:Int, counter:Int, mode:ModeState):Int = {
     var cnt = counter
     cnt += 1
-    print("movecounter:" + cnt + "\n")
     if (cnt == 2) {
-      moveStone(tmpCell._1, tmpCell._2, row, column)
+      if (mode == MoveModeState()) {
+        moveStone(tmpCell._1, tmpCell._2, row, column)
+        println("movecounter: " + cnt)
+      } else {
+        fly(tmpCell._1, tmpCell._2, row, column)
+        println("flycounter: " + cnt)
+      }
       val m = checkMill(row, column)
       m match {
         case "White Mill" => cnt += 1
