@@ -17,7 +17,7 @@ trait ControllerInterface extends Publisher {
   def selectDriveCommand():ModeState
   def handleClick(row: Int, column: Int): Unit
   def handleSet(row:Int, column:Int, counter:Int):Int
-  def handleMoveAndFly(row:Int, column:Int, counter:Int):Int
+  def handleMoveAndFly(row:Int, column:Int, counter:Int, move:ModeState):Int
   def set(row: Int, col: Int): Unit
   def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Unit
   def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Unit
