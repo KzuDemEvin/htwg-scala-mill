@@ -104,13 +104,44 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.cell(3, 2).isSet should be(true)
         controller.gameState should be("Black's turn")
         controller.mgr.roundCounter should be(19)
-        controller.moveStone(6, 0, 3, 0) // not possible, same color
+        controller.moveStone(6, 6, 3, 6) // not possible, same color
         controller.mgr.roundCounter should be(19) // should not change
-        controller.moveStone(6, 0, 6, 3) // possible
+        controller.moveStone(6, 6, 6, 3) // possible
         //controller.moveStone(6, 6, 6, 3) // not possible, not available
-        //controller.mgr.roundCounter should be(20)
+        controller.mgr.roundCounter should be(20)
         print(controller.fieldToString)
       }
+      "change to fly mode" in {
+        controller.moveStone(1, 1, 3, 1) // white
+        controller.removeStone(2, 2)
+        controller.moveStone(0, 6, 0, 3) // black
+        controller.moveStone(3, 1, 1, 1) // white
+        controller.moveStone(0, 3, 0, 6) // black
+
+        controller.moveStone(1, 1, 3, 1) // white
+        controller.removeStone(5, 1)
+        controller.moveStone(0, 6, 0, 3) // black
+        controller.moveStone(3, 1, 1, 1) // white
+        controller.moveStone(0, 3, 0, 6) // black
+
+        controller.moveStone(1, 1, 3, 1) // white
+        controller.removeStone(6, 3)
+        controller.moveStone(0, 6, 0, 3) // black
+        controller.moveStone(3, 1, 1, 1) // white
+        controller.moveStone(0, 3, 0, 6) // black
+
+        controller.moveStone(1, 1, 3, 1) // white
+        controller.removeStone(4, 4)
+        controller.moveStone(0, 6, 0, 3) // black
+        controller.moveStone(3, 1, 1, 1) // white
+        controller.moveStone(0, 3, 0, 6) // black
+
+        controller.moveStone(1, 1, 3, 1) // white
+        controller.removeStone(3, 5)
+        controller.mgr.player2.mode should be("FlyMode")
+        printf(controller.placedBlackStones().toString)
+      }
+
 
 //      "should return valid values with its methods" in {
 //        controller.cell(0, 0).getContent.whichColor should be (Color.white)
