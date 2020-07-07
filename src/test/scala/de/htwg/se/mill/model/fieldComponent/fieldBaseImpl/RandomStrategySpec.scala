@@ -1,6 +1,5 @@
-package de.htwg.se.mill.model
+package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.RandomStrategy
 import org.scalatest.{Matchers, WordSpec}
 
 class RandomStrategySpec extends WordSpec with Matchers {

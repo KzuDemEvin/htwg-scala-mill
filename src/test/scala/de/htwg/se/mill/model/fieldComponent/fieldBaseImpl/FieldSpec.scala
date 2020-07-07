@@ -1,9 +1,8 @@
 
 
-package de.htwg.se.mill.model
+package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
-import de.htwg.se.mill.model.fieldComponent.{Cell, Color, Stone, fieldBaseImpl}
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
+import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
 import org.scalatest.{Matchers, WordSpec}
 
 class FieldSpec extends WordSpec with Matchers {
@@ -54,6 +53,50 @@ class FieldSpec extends WordSpec with Matchers {
       "should be able to set and return player 2 flyMode" in {
         normalField.setPlayer2Mode("FlyMode")
         normalField.getPlayer2Mode should be("FlyMode")
+      }
+      "should be able to move a stone to a new position" in {
+        var changedfield = normalField.set(0,0, Cell("cw"))
+        changedfield = changedfield.moveStone(0,0,0,3)
+        changedfield.cell(0,3).getContent.whichColor should be(Color.white)
+      }
+      "should be able to fly with a stone to a new position" in {
+        var changedfield = normalField.set(0,0, Cell("cw"))
+        changedfield = changedfield.fly(0,0,0,3)
+        changedfield.cell(0,3).getContent.whichColor should be(Color.white)
+      }
+      "should be able to remove a stone, for example when there is a mill" should {
+        var changedfield = normalField.set(0, 0, Cell("cw"))
+        changedfield = changedfield.set(3,0, Cell("cb"))
+        "remove was successfull" in {
+          changedfield = changedfield.set(0,3, Cell("cw"))
+          changedfield = changedfield.set(0,6 ,Cell("cw"))
+          val x = changedfield.removeStone(3, 0)
+          x._2 should be(true)
+          x._1.cell(3, 0).getContent.whichColor should be(Color.noColor)
+        }
+        "was not successfull" in {
+          val x = changedfield.removeStone(0, 0)
+          x._2 should be(false)
+          x._1.cell(0, 0).getContent.whichColor should be(Color.white)
+        }
+      }
+      "should be able to check if there is a mill" should {
+        "black mill" in {
+          var changedfield = normalField.set(0, 0, Cell("cb"))
+          changedfield = changedfield.set(0,3, Cell("cb"))
+          changedfield = changedfield.set(0,6 ,Cell("cb"))
+          changedfield.checkMill(0,0) should be(1)
+        }
+        "white mill" in {
+          var changedfield = normalField.set(0, 0, Cell("cw"))
+          changedfield = changedfield.set(0,3, Cell("cw"))
+          changedfield = changedfield.set(0,6 ,Cell("cw"))
+          changedfield.checkMill(0,0) should be(2)
+        }
+      }
+      "should create a new field" in {
+        val newfield = normalField.createNewField
+        newfield.placedBlackStones() should be(0)
       }
     }
   }

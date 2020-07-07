@@ -27,7 +27,7 @@ class RandomStrategy extends Strategy {
       col = Random.nextInt(field.size)
     }
     while (!field.available(row, col))
-    var color = Random.nextInt(2)
+    val color = Random.nextInt(2)
     if (color == 0) {
       if (whiteCounter < maxStones) {
         whiteCounter += 1
@@ -35,7 +35,9 @@ class RandomStrategy extends Strategy {
       } else if (blackCounter < maxStones){
         blackCounter += 1
         field.set(row, col, Cell("cb"))
-      } else {field}
+      } else {
+        field
+      }
     } else {
       if (blackCounter < maxStones) {
         blackCounter += 1
@@ -43,7 +45,9 @@ class RandomStrategy extends Strategy {
       } else if (whiteCounter < maxStones) {
         whiteCounter += 1
         field.set(row, col, Cell("cw"))
-      } else {field}
+      } else {
+        field
       }
     }
+  }
 }

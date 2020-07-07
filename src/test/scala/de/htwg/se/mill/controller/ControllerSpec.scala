@@ -77,6 +77,7 @@ class ControllerSpec extends WordSpec with Matchers {
     "move a stone" in {
       controller.set(6,6)
       controller.moveStone(6,6,6,3)
+
     }
 //    "should handle a no mill correct" in {
 //      controller.set(2,2)

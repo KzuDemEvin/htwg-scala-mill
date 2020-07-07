@@ -1,7 +1,6 @@
-package de.htwg.se.mill.model
+package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
-import de.htwg.se.mill.model.fieldComponent.{Cell, Color, Stone, fieldBaseImpl}
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Matrix
+import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
 import org.scalatest.{Matchers, WordSpec}
 
 class MatrixSpec extends WordSpec with Matchers {
