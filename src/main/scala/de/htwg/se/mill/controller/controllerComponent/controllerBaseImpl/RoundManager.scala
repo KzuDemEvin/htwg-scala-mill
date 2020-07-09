@@ -18,9 +18,9 @@ case class RoundManager @Inject() ()  {
   val player1 = Player("Kevin")
   val player2 = Player("Manuel")
 
-  def blackTurn():Boolean = if (roundCounter % 2 == 0) true else false
+  def blackTurn():Boolean = if (roundCounter % 2 == 1) true else false
 
-  def whiteTurn():Boolean = if (roundCounter % 2 == 1) true else false
+  def whiteTurn():Boolean = if (roundCounter % 2 == 0) true else false
 
   def modeChoice(field:FieldInterface): Unit = {
     if (roundCounter < borderToMoveMode) {
@@ -29,6 +29,10 @@ case class RoundManager @Inject() ()  {
       if (roundCounter == borderToMoveMode - 1) {
         player1.mode = ModeState.handle(MoveModeState())
       }
+    } else if (field.placedBlackStones() == 2) {
+      println("Winner: black")
+    } else if (field.placedWhiteStones() == 2) {
+      println("Winner: white")
     } else if (field.placedBlackStones() == 3 || field.placedWhiteStones() == 3) {
       if (field.placedWhiteStones() == 3) {
         player1.mode = ModeState.handle(FlyModeState())
@@ -45,9 +49,9 @@ case class RoundManager @Inject() ()  {
   def selectDriveCommand():ModeState = {
     var cmd = ModeState.whichState(SetModeState().handle)
     if (blackTurn()) {
-      cmd = ModeState.whichState(player1.mode)
-    } else {
       cmd = ModeState.whichState(player2.mode)
+    } else {
+      cmd = ModeState.whichState(player1.mode)
     }
     cmd
   }

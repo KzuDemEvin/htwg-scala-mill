@@ -54,6 +54,12 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
 
 
   def handleClick(row: Int, column: Int): Unit = {
+    if (mgr.blackTurn()) {
+      gameState = GameState.handle(BlackTurnState())
+    } else {
+      gameState = GameState.handle(WhiteTurnState())
+    }
+
     val whichCmd = selectDriveCommand()
     whichCmd match {
       case SetModeState() => setCounter = handleSet(row, column, setCounter)
@@ -67,6 +73,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     if (cnt >= 1) {
       if (removeStone(row, column)) {
         cnt = 0
+        mgr.roundCounter += 1
       } else {
         cnt += 1
       }
@@ -77,8 +84,10 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
         case "White Mill" => cnt += 1
         case "Black Mill" => cnt += 1
         case "No Mill" => cnt = 0
+          mgr.roundCounter += 1
       }
     }
+    mgr.modeChoice(field)
     cnt
   }
 
@@ -98,16 +107,19 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
         case "White Mill" => cnt += 1
         case "Black Mill" => cnt += 1
         case "No Mill" => cnt = 0
+          mgr.roundCounter += 1
       }
     } else if (cnt >= 4) {
       if (removeStone(row, column)) {
         cnt = 0
+        mgr.roundCounter += 1
       } else {
         cnt += 1
       }
     } else {
       tmpCell = (row, column)
     }
+    mgr.modeChoice(field)
     cnt
   }
 
@@ -117,65 +129,61 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
 
   def set(row: Int, col: Int): Unit = {
     if (field.available(row, col)) {
-      mgr.roundCounter += 1
-    }
-    if (mgr.blackTurn()) {
-      undoManager.doStep(new SetCommand(row, col, Cell("cb"), this))
-      gameState = GameState.handle(WhiteTurnState())
+      if (mgr.blackTurn()) {
+        undoManager.doStep(new SetCommand(row, col, Cell("cb"), this))
+        gameState = GameState.handle(WhiteTurnState())
+      } else {
+        undoManager.doStep(new SetCommand(row, col, Cell("cw"), this))
+        gameState = GameState.handle(BlackTurnState())
+      }
     } else {
-      undoManager.doStep(new SetCommand(row, col, Cell("cw"), this))
-      gameState = GameState.handle(BlackTurnState())
+      mgr.roundCounter -= 1
     }
-    print("roundcounter danach " + mgr.roundCounter + "\n")
-    mgr.modeChoice(field)
     publish(new CellChanged)
   }
 
   def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Unit = {
     if (field.available(rowNew, colNew) && isNeigbour(rowOld, colOld, rowNew, colNew)) {
-      mgr.roundCounter += 1
       if (mgr.blackTurn()) {
         if (cell(rowOld, colOld).getContent.whichColor == Color.black) {
           undoManager.doStep(new MoveCommand(rowOld, colOld, rowNew, colNew, this))
-          gameState = GameState.handle(WhiteTurnState())
+          //gameState = GameState.handle(WhiteTurnState())
         } else {
           mgr.roundCounter -= 1
         }
       } else {
         if (cell(rowOld, colOld).getContent.whichColor == Color.white) {
           undoManager.doStep(new MoveCommand(rowOld, colOld, rowNew, colNew, this))
-          gameState = GameState.handle(BlackTurnState())
+          //gameState = GameState.handle(BlackTurnState())
         } else {
           mgr.roundCounter -= 1
         }
       }
+    } else {
+      mgr.roundCounter -= 1
     }
-    print("roundcounter nach moveStone " + mgr.roundCounter + "\n")
-    mgr.modeChoice(field)
     publish(new CellChanged)
   }
 
   def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Unit = {
     if (field.available(rowNew, colNew)) {
-      mgr.roundCounter += 1
       if (mgr.blackTurn()) {
         if (cell(rowOld, colOld).getContent.whichColor == Color.black) {
           undoManager.doStep(new FlyCommand(rowOld, colOld, rowNew, colNew, this))
-          gameState = GameState.handle(WhiteTurnState())
+          //gameState = GameState.handle(WhiteTurnState())
         } else {
           mgr.roundCounter -= 1
         }
       } else {
         if (cell(rowOld, colOld).getContent.whichColor == Color.white) {
           undoManager.doStep(new FlyCommand(rowOld, colOld, rowNew, colNew, this))
-          gameState = GameState.handle(BlackTurnState())
+          //gameState = GameState.handle(BlackTurnState())
         } else {
           mgr.roundCounter -= 1
         }
       }
     }
-    print("roundcounter nach fly " + mgr.roundCounter + "\n")
-    mgr.modeChoice(field)
+
     publish(new CellChanged)
   }
 

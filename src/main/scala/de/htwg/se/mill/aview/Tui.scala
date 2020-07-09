@@ -44,8 +44,9 @@ class Tui(controller: ControllerInterface) extends Reactor {
   }
 
   def printTui: Unit = {
-    println(controller.fieldToString)
-    println(GameState.state)
+    //println(controller.fieldToString)
+    //println(GameState.state)
+    println(controller.getRoundCounter)
   }
 //  override def update: Boolean = {
 //    println(controller.fieldToString)
