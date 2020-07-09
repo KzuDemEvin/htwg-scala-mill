@@ -30,9 +30,9 @@ case class RoundManager @Inject() ()  {
         player1.mode = ModeState.handle(MoveModeState())
       }
     } else if (field.placedBlackStones() == 2) {
-      println("Winner: black")
-    } else if (field.placedWhiteStones() == 2) {
       println("Winner: white")
+    } else if (field.placedWhiteStones() == 2) {
+      println("Winner: black")
     } else if (field.placedBlackStones() == 3 || field.placedWhiteStones() == 3) {
       if (field.placedWhiteStones() == 3) {
         player1.mode = ModeState.handle(FlyModeState())
