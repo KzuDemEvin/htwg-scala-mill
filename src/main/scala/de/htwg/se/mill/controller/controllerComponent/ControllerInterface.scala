@@ -9,6 +9,7 @@ trait ControllerInterface extends Publisher {
   var setCounter:Int
   var moveCounter:Int
   var flyCounter:Int
+  var winnerText:String
   def createEmptyField(size: Int): Unit
   def createRandomField(size: Int): Unit
   def fieldToString: String
@@ -26,6 +27,7 @@ trait ControllerInterface extends Publisher {
   def undo(): Unit
   def redo(): Unit
   def checkMill(row:Int, col:Int):String
+  def checkWinner(): Int
   def save(): Unit
   def load(): Unit
   def statusText:String
