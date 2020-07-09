@@ -32,6 +32,14 @@ case class RedoState() extends GameState {
   override def handle: String = "Redo"
 }
 
+case class SaveState() extends GameState {
+  override def handle: String = "Game saved"
+}
+
+case class LoadState() extends GameState {
+  override def handle: String = "Game loaded"
+}
+
 
 
 object GameState {
@@ -45,6 +53,8 @@ object GameState {
       case RandomState() => state = RandomState().handle
       case UndoState() => state = UndoState().handle
       case RedoState() => state = RedoState().handle
+      case SaveState() => state = SaveState().handle
+      case LoadState() => state = LoadState().handle
     }
     state
   }

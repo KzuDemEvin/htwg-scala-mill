@@ -12,11 +12,9 @@ case class RoundManager @Inject() ()  {
   var roundCounter = 0
   val borderToMoveMode = 18
   val injector: Injector = Guice.createInjector(new MillModule)
-  //val player3 = injector.instance[PlayerInterface](Names.named("player1"))
-  //val player1 = injector.getInstance(classOf[PlayerInterface])
-  //val player2 = injector.getInstance(classOf[PlayerInterface])
   val player1 = Player("Kevin")
   val player2 = Player("Manuel")
+  var winner = 0
 
   def blackTurn():Boolean = if (roundCounter % 2 == 1) true else false
 
@@ -30,9 +28,9 @@ case class RoundManager @Inject() ()  {
         player1.mode = ModeState.handle(MoveModeState())
       }
     } else if (field.placedBlackStones() == 2) {
-      println("Winner: white")
+      winner = 1
     } else if (field.placedWhiteStones() == 2) {
-      println("Winner: black")
+      winner = 2
     } else if (field.placedBlackStones() == 3 || field.placedWhiteStones() == 3) {
       if (field.placedWhiteStones() == 3) {
         player1.mode = ModeState.handle(FlyModeState())

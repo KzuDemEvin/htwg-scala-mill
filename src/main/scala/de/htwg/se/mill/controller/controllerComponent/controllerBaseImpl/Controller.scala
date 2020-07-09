@@ -20,6 +20,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   var flyCounter = 0
   var gameState: String = GameState.handle(NewState())
   var millState: String = MillState.handle(NoMillState())
+  var winnerText: String = "No Winner"
   val injector: Injector = Guice.createInjector(new MillModule)
   val fileIo: FileIOInterface = injector.instance[FileIOInterface]
 
@@ -239,11 +240,22 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     }
   }
 
+  def checkWinner(): Int = {
+    val winner = mgr.winner
+    winner match {
+      case 0 => winnerText = "No Winner"
+      case 1 => winnerText = mgr.player1.name + " playing white wins!"
+      case 2 => winnerText = mgr.player2.name + " playing black wins!"
+    }
+    winner
+  }
+
   def save: Unit = {
     field.setRoundCounter(mgr.roundCounter)
     field.setPlayer1Mode(mgr.player1.mode)
     field.setPlayer2Mode(mgr.player2.mode)
     fileIo.save(field)
+    gameState = GameState.handle(SaveState())
     publish(new CellChanged)
   }
 
@@ -252,6 +264,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     mgr.roundCounter = field.getRoundCounter()
     mgr.player1.mode = field.getPlayer1Mode()
     mgr.player2.mode = field.getPlayer2Mode()
+    gameState = GameState.handle(LoadState())
     publish(new CellChanged)
   }
 

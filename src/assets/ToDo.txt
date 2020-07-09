@@ -5,4 +5,4 @@ bug mit Mühle beim Fliegen
 Mill-State zu spät aktualisiert
 
 roundcounter nicht immer angezeigt
-Test
+moven in die gleiche farbe in eine mühle lässt einen stein von der gleichen farbe wegnehmen
