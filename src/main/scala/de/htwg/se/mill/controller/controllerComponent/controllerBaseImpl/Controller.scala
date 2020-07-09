@@ -236,6 +236,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     field.setPlayer1Mode(mgr.player1.mode)
     field.setPlayer2Mode(mgr.player2.mode)
     fileIo.save(field)
+    gameState = GameState.handle(SaveState())
     publish(new CellChanged)
   }
 
@@ -244,6 +245,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     mgr.roundCounter = field.getRoundCounter()
     mgr.player1.mode = field.getPlayer1Mode()
     mgr.player2.mode = field.getPlayer2Mode()
+    gameState = GameState.handle(LoadState())
     publish(new CellChanged)
   }
 
