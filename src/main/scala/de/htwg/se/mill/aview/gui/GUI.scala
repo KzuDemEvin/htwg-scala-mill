@@ -47,7 +47,7 @@ class GUI(controller: ControllerInterface) extends MainFrame {
 
   visible = true
 
-  val sizeDim = new Dimension(740, 840)
+  val sizeDim = new Dimension(708, 840)
   size = sizeDim
   centerOnScreen()
   updateField()

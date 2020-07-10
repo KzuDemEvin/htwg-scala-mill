@@ -22,8 +22,8 @@ class GUIGridPanel(controller: ControllerInterface, allCellPanels: Array[Array[C
           contents += cellPanel
         }
       }
-      vGap_=(0)
-      hGap_=(0)
+      //vGap_=(0)
+      //hGap_=(0)
     }
     gridPanel
   }
