@@ -17,11 +17,13 @@ class ControllerSpec extends WordSpec with Matchers {
         controllerUndoRedo.field.cell(0, 0).isSet should be(false)
         controllerUndoRedo.undo
         controllerUndoRedo.field.cell(0, 0).isSet should be(false)
+        controllerUndoRedo.mgr.roundCounter should be(0)
         controllerUndoRedo.redo
         controllerUndoRedo.field.cell(0, 0).isSet should be(false)
+        controllerUndoRedo.mgr.roundCounter should be(0)
       }
       "handle undo/redo of setting a cell correctly" in {
-        controllerUndoRedo.set(0, 0)
+        controllerUndoRedo.handleClick(0, 0)
         controllerUndoRedo.field.cell(0, 0).isSet should be(true)
         controllerUndoRedo.field.cell(0, 0).getContent.whichColor should be(Color.white)
         controllerUndoRedo.undo
@@ -30,12 +32,21 @@ class ControllerSpec extends WordSpec with Matchers {
         controllerUndoRedo.redo
         controllerUndoRedo.field.cell(0, 0).isSet should be(true)
         controllerUndoRedo.field.cell(0, 0).getContent.whichColor should be(Color.white)
-        controllerUndoRedo.statusText should be("Redo")
+        controllerUndoRedo.gameState should be("Redo")
       }
   }
     "ready to play" should {
       val field = new Field(7)
       val controller = new Controller(field)
+      "should return valid values with its methods" in {
+        controller.cell(0, 0).getContent.whichColor should be (Color.noColor)
+        controller.isSet(0, 0) should be (false)
+        controller.available(6, 6) should be (true)
+        controller.possiblePosition(0, 1) should be(false)
+        controller.placedStones() should be (0)
+        controller.placedWhiteStones() should be (0)
+        controller.fieldsize should be (7)
+      }
       "be able to place random stones" in {
         controller.createRandomField(7)
         controller.placedStones() should be(18)
@@ -55,125 +66,107 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.getRoundCounter should be(0)
       }
       "handle setting stones correctly" in {
-        controller.set(0, 0)
+        controller.handleClick(0, 0)
         controller.cell(0, 0).isSet should be(true)
         controller.cell(0, 0).getContent.whichColor should be(Color.white)
-        controller.set(0, 6)
+        controller.handleClick(0, 6)
         controller.cell(0, 6).isSet should be(true)
         controller.cell(0, 6).getContent.whichColor should be(Color.black)
         controller.placedStones() should be(2)
         controller.gameState should be("White's turn")
       }
       "handle white mills correctly" in {
-        controller.set(3, 0)
-        controller.set(3, 6)
-        controller.set(6, 0)
+        controller.handleClick(3, 0)
+        controller.handleClick(3, 6)
+        controller.handleClick(6, 0)
         controller.checkMill(6, 0) should be("White Mill")
       }
       "handle removing stones correctly" in {
-        controller.removeStone(6, 0) // not possible, same color + mill
+        controller.handleClick(6, 0) // remove, not possible, same color + mill
         controller.cell(6, 0).isSet should be(true)
         controller.cell(6, 0).getContent.whichColor should be(Color.white)
         controller.placedStones() should be(5)
-        controller.removeStone(3, 6)
+        controller.handleClick(3, 6) // remove, possible
         controller.cell(3, 6).isSet should be(false)
         controller.cell(3, 6).getContent.whichColor should be(Color.noColor)
         controller.placedStones() should be(4)
         controller.mgr.roundCounter should be(5)
       }
       "handle black mills correctly" in {
-        controller.set(3, 6)
-        controller.set(1, 1)
-        controller.set(6, 6)
+        controller.handleClick(3, 6) // set
+        controller.handleClick(1, 1) // set
+        controller.handleClick(6, 6) // set
         controller.checkMill(6, 6) should be("Black Mill")
       }
       "not remove a stone when its in a mill" in {
-        controller.removeStone(0, 6)
+        controller.handleClick(0, 6) // remove, not possible
         controller.cell(0, 6).isSet should be(true)
-        controller.removeStone(1, 1)
+        println(controller.fieldToString)
+        controller.handleClick(1, 1) // remove
       }
       "handle move correctly" in {
-        controller.set(1, 1) ; controller.set(1, 5) ; controller.set(3, 1) ; controller.set(3, 5) ; controller.set(4, 2)
-        controller.set(5, 1) ; controller.set(5, 5) ; controller.set(2, 2) ; controller.set(2, 4)
-        controller.moveStone(2, 4, 3, 4) // not possible yet <- set state
-        controller.cell(2, 4).isSet should be(true)
-        controller.cell(3, 4).isSet should be(false)
-        controller.set(4, 4)
-        controller.moveStone(3, 1, 3, 2) // possible
+        controller.handleClick(1, 1) ; controller.handleClick(1, 5) // set
+        controller.handleClick(3, 1) ; controller.handleClick(3, 5) // set
+        controller.handleClick(4, 2) ; controller.handleClick(5, 1) // set
+        controller.handleClick(5, 5) ; controller.handleClick(2, 2) // set
+        controller.handleClick(2, 4) ; controller.handleClick(4, 4) // set
+        controller.handleClick(3, 1) ; controller.handleClick(3, 2) // move, possible
         controller.cell(3, 1).isSet should be(false)
         controller.cell(3, 2).isSet should be(true)
-        controller.gameState should be("Black's turn")
-        controller.mgr.roundCounter should be(19)
-        controller.moveStone(6, 6, 3, 6) // not possible, same color
-        controller.mgr.roundCounter should be(19) // should not change
-        controller.moveStone(6, 6, 6, 3) // possible
-        //controller.moveStone(6, 6, 6, 3) // not possible, not available
+        controller.gameState should be("White's turn")
+        controller.getRoundManager.roundCounter should be(19)
+        controller.handleClick(6, 6) ; controller.handleClick(6, 3) // move, possible
         controller.mgr.roundCounter should be(20)
-        print(controller.fieldToString)
       }
       "change to fly mode" in {
-        controller.moveStone(1, 1, 3, 1) // white
-        controller.removeStone(2, 2)
-        controller.moveStone(0, 6, 0, 3) // black
-        controller.moveStone(3, 1, 1, 1) // white
-        controller.moveStone(0, 3, 0, 6) // black
+        controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
+        controller.handleClick(2, 2) // remove
+        controller.handleClick(0, 6) ; controller.handleClick(0, 3) // black
+        controller.handleClick(3, 1) ; controller.handleClick(1, 1) // white
+        controller.handleClick(0, 3) ; controller.handleClick(0, 6) // black
 
-        controller.moveStone(1, 1, 3, 1) // white
-        controller.removeStone(5, 1)
-        controller.moveStone(0, 6, 0, 3) // black
-        controller.moveStone(3, 1, 1, 1) // white
-        controller.moveStone(0, 3, 0, 6) // black
+        controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
+        controller.handleClick(5, 1) // remove
+        controller.handleClick(0, 6) ; controller.handleClick(0, 3) // black
+        controller.handleClick(3, 1) ; controller.handleClick(1, 1) // white
+        controller.handleClick(0, 3) ; controller.handleClick(0, 6) // black
 
-        controller.moveStone(1, 1, 3, 1) // white
-        controller.removeStone(6, 3)
-        controller.moveStone(0, 6, 0, 3) // black
-        controller.moveStone(3, 1, 1, 1) // white
-        controller.moveStone(0, 3, 0, 6) // black
+        controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
+        controller.handleClick(6, 3) // remove
+        controller.handleClick(0, 6) ; controller.handleClick(0, 3) // black
+        controller.handleClick(3, 1) ; controller.handleClick(1, 1) // white
+        controller.handleClick(0, 3) ; controller.handleClick(0, 6) // black
 
-        controller.moveStone(1, 1, 3, 1) // white
-        controller.removeStone(4, 4)
-        controller.moveStone(0, 6, 0, 3) // black
-        controller.moveStone(3, 1, 1, 1) // white
-        controller.moveStone(0, 3, 0, 6) // black
+        controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
+        controller.handleClick(4, 4) // remove
+        controller.handleClick(0, 6) ; controller.handleClick(0, 3) // black
+        controller.handleClick(3, 1) ; controller.handleClick(1, 1) // white
+        controller.handleClick(0, 3) ; controller.handleClick(0, 6) // black
 
-        controller.moveStone(1, 1, 3, 1) // white
-        controller.removeStone(3, 5)
+        controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
+        controller.handleClick(3, 5) // remove
         controller.mgr.player2.mode should be("FlyMode")
-        printf(controller.placedBlackStones().toString)
+        controller.placedBlackStones() should be(3)
+        printf(controller.fieldToString)
       }
-
-
-//      "should return valid values with its methods" in {
-//        controller.cell(0, 0).getContent.whichColor should be (Color.white)
-//        controller.isSet(0, 0) should be (true)
-//        controller.isSet(0,3) should be (false)
-//        controller.available(6, 6) should be (true)
-//        controller.possiblePosition(0, 1) should be(false)
-//        controller.placedStones() should be (1)
-//        controller.fieldsize should be (7)
-//      }
+      "handle fly correctly" in {
+        controller.handleClick(1, 5) ; controller.handleClick(6, 6)
+        controller.cell(1, 5).isSet should be(false)
+        controller.cell(6, 6).isSet should be (true)
+      }
+      "handle remove in flymode correctly" in {
+        controller.handleClick(4, 2)
+        controller.cell(4, 2).isSet should be(false)
+      }
+      "handly choosing a winner correctly" in {
+        controller.checkWinner() should be(0) // no Winner
+        controller.handleClick(3, 1) ; controller.handleClick(1, 1) // white
+        controller.handleClick(0, 6) ; controller.handleClick(5, 1) // black
+        controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
+        controller.handleClick(5, 1) // remove
+        controller.checkWinner() should be(1) // white winner
+      }
     }
 
-
-//    "move a stone" in {
-//      controller.set(6,6)
-//      controller.moveStone(6,6,6,3)
-//
-//    }
-//    "should handle a no mill correct" in {
-//      controller.set(2,2)
-//      controller.millText should be("No Mill")
-//    }
-//    "should handle a white mill correct" in {
-//      controller.set(2,4)
-//      controller.set(3,2)
-//      controller.set(3,4)
-//      controller.set(4,2)
-//      controller.millText should be("White Mill")
-//    }
-//    "should handle a black mill correct" in {
-//      controller.set(4,4)
-//      controller.millText should be("Black Mill")
-//    }
   }
 }
