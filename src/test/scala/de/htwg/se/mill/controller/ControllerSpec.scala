@@ -159,12 +159,12 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.cell(4, 2).isSet should be(false)
       }
       "handly choosing a winner correctly" in {
-        controller.checkWinner() should be(0) // no Winner
+        controller.mgr.winner should be(0) // no Winner
         controller.handleClick(3, 1) ; controller.handleClick(1, 1) // white
         controller.handleClick(0, 6) ; controller.handleClick(5, 1) // black
         controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
         controller.handleClick(5, 1) // remove
-        controller.checkWinner() should be(1) // white winner
+        controller.mgr.winner should be(1) // white winner
       }
     }
 
