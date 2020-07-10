@@ -15,6 +15,7 @@ case class RoundManager @Inject() ()  {
   var player1 = Player("Kevin")
   var player2 = Player("Manuel")
   var winner = 0
+  var winnerText = "No Winner"
 
   def blackTurn():Boolean = if (roundCounter % 2 == 1) true else false
 
@@ -29,8 +30,10 @@ case class RoundManager @Inject() ()  {
       }
     } else if (field.placedBlackStones() == 2) {
       winner = 1
+      handleWinnerText(1)
     } else if (field.placedWhiteStones() == 2) {
       winner = 2
+      handleWinnerText(2)
     } else if (field.placedBlackStones() == 3 || field.placedWhiteStones() == 3) {
       if (field.placedWhiteStones() == 3) {
         player1.mode = ModeState.handle(FlyModeState())
@@ -53,5 +56,15 @@ case class RoundManager @Inject() ()  {
     }
     cmd
   }
+
+  def handleWinnerText(winner:Int): Unit = {
+    winner match {
+      case 0 => winnerText = "No Winner"
+      case 1 => winnerText = player1.name + " wins (White) !"
+      case 2 => winnerText = player2.name + " wins (Black) !"
+    }
+  }
+
+
 
 }
