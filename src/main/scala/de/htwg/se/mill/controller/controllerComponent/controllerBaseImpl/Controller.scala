@@ -117,7 +117,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
         cnt = 0
         mgr.roundCounter += 1
       } else {
-        cnt += 1
+        checkWinner(row, column)
       }
     } else {
       tmpCell = (row, column)
@@ -238,14 +238,17 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     }
   }
 
-  def checkWinner(): Int = {
-    val winner = mgr.winner
-    winner match {
-      case 0 => winnerText = "No Winner"
-      case 1 => winnerText = mgr.player1.name + " wins (White) !"
-      case 2 => winnerText = mgr.player2.name + " wins (Black) !"
+  def checkWinner(row:Int, column:Int): Unit = {
+    if (mgr.player1.mode == ModeState.handle(FlyModeState()) && mgr.player2.mode == ModeState.handle(FlyModeState())) {
+      val m = checkMill(row, column)
+      m match {
+        case "White Mill" => mgr.winner = 2
+          mgr.handleWinnerText(2)
+        case "Black Mill" => mgr.winner = 1
+          mgr.handleWinnerText(1)
+        case "No Mill" => mgr.winner = 0
+      }
     }
-    winner
   }
 
   def save: Unit = {

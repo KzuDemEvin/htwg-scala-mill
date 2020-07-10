@@ -116,8 +116,38 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
     reactions += {
       case ButtonClicked(component) if component == setButton =>
         controller.handleClick(row, column)
+        if (controller.getRoundManager.winner != 0) {
+          winnerDialog()
+        }
+    }
+
+    def winnerDialog(): MainFrame = {
+      val winnerframe: MainFrame = new MainFrame() {
+        title = "Winner"
+        val newGame = new Button("New Game")
+        val exitGame = new Button("Exit Game")
+        listenTo(newGame)
+        listenTo(exitGame)
+        contents = new BoxPanel(Orientation.Vertical) {
+          val label = new Label(controller.getRoundManager.winnerText)
+          label.font = Font("Impact", Font.Bold, 30)
+          contents += new FlowPanel(label)
+          contents += new FlowPanel(newGame, exitGame)
+        }
+        reactions += {
+          case ButtonClicked(component) if component == newGame => controller.createEmptyField(7)
+            dispose()
+          case ButtonClicked(component) if component == exitGame => System.exit(0)
+        }
+        size = new Dimension(400, 200)
+        visible = true
+        centerOnScreen()
+      }
+      winnerframe
     }
   }
+
+
 
   def redraw():Unit = {
     contents.clear()
