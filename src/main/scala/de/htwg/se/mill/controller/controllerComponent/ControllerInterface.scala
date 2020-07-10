@@ -1,5 +1,6 @@
 package de.htwg.se.mill.controller.controllerComponent
 
+import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.RoundManager
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
 
 import scala.swing.Publisher
@@ -41,6 +42,7 @@ trait ControllerInterface extends Publisher {
   def placedBlackStones():Int
   def isNeigbour(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Boolean
   def fieldsize:Int
+  def getRoundManager:RoundManager
 }
 
 import scala.swing.event.Event

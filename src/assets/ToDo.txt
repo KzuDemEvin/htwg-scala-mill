@@ -1,8 +1,9 @@
 Logik:
 
 Player-Verwaltung --> evtl interface
-bug mit Mühle beim Fliegen
 Mill-State zu spät aktualisiert
 
-roundcounter nicht immer angezeigt
+roundcounter nicht immer angezeigt --> nur bei jedem zweiten
 moven in die gleiche farbe in eine mühle lässt einen stein von der gleichen farbe wegnehmen
+nicht gewonnen am ende wenn gegner mühle hat mit nur noch 3 steinen
+

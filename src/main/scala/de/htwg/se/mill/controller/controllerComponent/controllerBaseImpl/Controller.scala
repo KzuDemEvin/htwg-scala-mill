@@ -244,8 +244,8 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     val winner = mgr.winner
     winner match {
       case 0 => winnerText = "No Winner"
-      case 1 => winnerText = mgr.player1.name + " playing white wins!"
-      case 2 => winnerText = mgr.player2.name + " playing black wins!"
+      case 1 => winnerText = mgr.player1.name + " wins (White) !"
+      case 2 => winnerText = mgr.player2.name + " wins (Black) !"
     }
     winner
   }
@@ -281,4 +281,5 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   def isNeigbour(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Boolean =
     field.isNeigbour(rowOld, colOld, rowNew, colNew)
   def fieldsize:Int = field.size
+  def getRoundManager:RoundManager = mgr
 }

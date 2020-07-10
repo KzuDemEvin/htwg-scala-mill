@@ -12,8 +12,8 @@ case class RoundManager @Inject() ()  {
   var roundCounter = 0
   val borderToMoveMode = 18
   val injector: Injector = Guice.createInjector(new MillModule)
-  val player1 = Player("Kevin")
-  val player2 = Player("Manuel")
+  var player1 = Player("Kevin")
+  var player2 = Player("Manuel")
   var winner = 0
 
   def blackTurn():Boolean = if (roundCounter % 2 == 1) true else false
