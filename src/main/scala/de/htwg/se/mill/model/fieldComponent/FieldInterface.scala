@@ -22,11 +22,18 @@ trait FieldInterface {
   def createNewField:FieldInterface
 
   def setRoundCounter(counter: Int): Unit
-  def getRoundCounter(): Int
+  var savedRoundCounter: Int
 
   def setPlayer1Mode(mode: String): Unit
-  def getPlayer1Mode(): String
+  var player1Mode: String
+
+  def setPlayer1Name(name: String): Unit
+  var player1Name: String
 
   def setPlayer2Mode(mode: String): Unit
-  def getPlayer2Mode(): String
+  var player2Mode: String
+
+  def setPlayer2Name(name: String): Unit
+  var player2Name: String
+
 }
