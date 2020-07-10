@@ -9,7 +9,7 @@ import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.RandomStrategy
 import de.htwg.se.mill.model.fieldComponent.FieldInterface
 import de.htwg.se.mill.model.fieldComponent.fieldAdvancedImpl.Field
 import de.htwg.se.mill.model.fileIoComponent._
-import de.htwg.se.mill.model.playerComponent.{Player, PlayerInterface}
+import de.htwg.se.mill.model.playerComponent.Player
 
 
 class MillModule extends AbstractModule with ScalaModule {
@@ -20,7 +20,6 @@ class MillModule extends AbstractModule with ScalaModule {
     bindConstant().annotatedWith(Names.named("DefaultSize")).to(defaultSize)
     bind[FieldInterface].to[Field]
     bind[ControllerInterface].to[controllerBaseImpl.Controller]
-    //bind[PlayerInterface].to[Player]
 
 
     bind[FieldInterface].annotatedWithName("normal").toInstance(new Field(defaultSize))

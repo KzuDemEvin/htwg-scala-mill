@@ -7,7 +7,7 @@ class PlayerSpec extends WordSpec with Matchers {
   "A Player" when {
     "new" should {
       "with extra specification of amount of stones" should {
-        val player2 = Player("Manuel", 9)
+        val player2 = Player.apply("Manuel", 9)
         "have a name" in {
           player2.name should be("Manuel")
         }
@@ -19,7 +19,7 @@ class PlayerSpec extends WordSpec with Matchers {
         }
       }
       "by default" should {
-        val player1 = new Player("Kevin")
+        val player1 = Player.apply("Kevin")
         "have a name" in {
           player1.name should be("Kevin")
         }

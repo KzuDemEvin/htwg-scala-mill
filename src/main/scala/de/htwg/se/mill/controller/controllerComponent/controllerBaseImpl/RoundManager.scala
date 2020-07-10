@@ -6,14 +6,14 @@ import de.htwg.se.mill.Mill.injector
 import de.htwg.se.mill.MillModule
 import de.htwg.se.mill.controller.controllerComponent.{ControllerInterface, FlyModeState, ModeState, MoveModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent.FieldInterface
-import de.htwg.se.mill.model.playerComponent.{Player, PlayerInterface}
+import de.htwg.se.mill.model.playerComponent.Player
 
 case class RoundManager @Inject() ()  {
   var roundCounter = 0
   val borderToMoveMode = 18
   val injector: Injector = Guice.createInjector(new MillModule)
-  var player1 = Player("Kevin")
-  var player2 = Player("Manuel")
+  var player1 = Player("No Name1")
+  var player2 = Player("No Name2")
   var winner = 0
   var winnerText = "No Winner"
 

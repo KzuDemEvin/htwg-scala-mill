@@ -28,10 +28,10 @@ class GUIPlayerWindow(controller:ControllerInterface) extends MainFrame {
 
   reactions += {
     case ButtonClicked(component) if component == createbtn1 =>
-      controller.getRoundManager.player1 = new Player(inputtxt.text)
+      controller.getRoundManager.player1 = Player(inputtxt.text)
       contents = nextPlayer()
     case ButtonClicked(component) if component == createbtn2 =>
-      controller.getRoundManager.player2 = new Player(inputtxt.text)
+      controller.getRoundManager.player2 = Player(inputtxt.text)
       dispose()
   }
 
