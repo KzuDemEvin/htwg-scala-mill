@@ -1,12 +1,12 @@
 {
   "field" : {
-    "roundCounter" : 18,
-    "player1Mode" : "MoveMode",
-    "player2Mode" : "MoveMode",
+    "roundCounter" : 0,
+    "player1Mode" : "SetMode",
+    "player2Mode" : "SetMode",
     "cells" : [ {
       "row" : 0,
       "col" : 0,
-      "color" : "black"
+      "color" : "white"
     }, {
       "row" : 0,
       "col" : 1,
@@ -18,7 +18,7 @@
     }, {
       "row" : 0,
       "col" : 3,
-      "color" : "white"
+      "color" : "noColor"
     }, {
       "row" : 0,
       "col" : 4,
@@ -30,7 +30,7 @@
     }, {
       "row" : 0,
       "col" : 6,
-      "color" : "black"
+      "color" : "noColor"
     }, {
       "row" : 1,
       "col" : 0,
@@ -38,7 +38,7 @@
     }, {
       "row" : 1,
       "col" : 1,
-      "color" : "white"
+      "color" : "noColor"
     }, {
       "row" : 1,
       "col" : 2,
@@ -46,7 +46,7 @@
     }, {
       "row" : 1,
       "col" : 3,
-      "color" : "black"
+      "color" : "noColor"
     }, {
       "row" : 1,
       "col" : 4,
@@ -70,11 +70,11 @@
     }, {
       "row" : 2,
       "col" : 2,
-      "color" : "white"
+      "color" : "noColor"
     }, {
       "row" : 2,
       "col" : 3,
-      "color" : "white"
+      "color" : "noColor"
     }, {
       "row" : 2,
       "col" : 4,
@@ -90,11 +90,11 @@
     }, {
       "row" : 3,
       "col" : 0,
-      "color" : "black"
+      "color" : "noColor"
     }, {
       "row" : 3,
       "col" : 1,
-      "color" : "black"
+      "color" : "noColor"
     }, {
       "row" : 3,
       "col" : 2,
@@ -106,11 +106,11 @@
     }, {
       "row" : 3,
       "col" : 4,
-      "color" : "black"
+      "color" : "noColor"
     }, {
       "row" : 3,
       "col" : 5,
-      "color" : "white"
+      "color" : "noColor"
     }, {
       "row" : 3,
       "col" : 6,
@@ -126,15 +126,15 @@
     }, {
       "row" : 4,
       "col" : 2,
-      "color" : "white"
+      "color" : "noColor"
     }, {
       "row" : 4,
       "col" : 3,
-      "color" : "white"
+      "color" : "noColor"
     }, {
       "row" : 4,
       "col" : 4,
-      "color" : "black"
+      "color" : "noColor"
     }, {
       "row" : 4,
       "col" : 5,
@@ -150,7 +150,7 @@
     }, {
       "row" : 5,
       "col" : 1,
-      "color" : "black"
+      "color" : "noColor"
     }, {
       "row" : 5,
       "col" : 2,
@@ -166,7 +166,7 @@
     }, {
       "row" : 5,
       "col" : 5,
-      "color" : "white"
+      "color" : "noColor"
     }, {
       "row" : 5,
       "col" : 6,
@@ -186,7 +186,7 @@
     }, {
       "row" : 6,
       "col" : 3,
-      "color" : "white"
+      "color" : "noColor"
     }, {
       "row" : 6,
       "col" : 4,
