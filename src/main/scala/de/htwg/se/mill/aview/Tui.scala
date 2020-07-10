@@ -28,10 +28,8 @@ class Tui(controller: ControllerInterface) extends Reactor {
       case "exit" =>
         Success(input)
       case _ => input.toList.filter(p => p != ' ').filter(_.isDigit).map(p => p.toString.toInt) match {
-        case rowOld :: columnOld :: rowNew :: columnNew :: Nil => controller.moveStone(rowOld, columnOld, rowNew, columnNew)
-          Success("valid command: " + input)
-        case row :: column :: Nil => controller.set(row, column)
-          println(controller.millText)
+        case row :: column :: Nil => controller.handleClick(row, column)
+          println(controller.millState)
           Success("valid command: " + input)
       }
       case _ =>
@@ -44,14 +42,7 @@ class Tui(controller: ControllerInterface) extends Reactor {
   }
 
   def printTui: Unit = {
-    //println(controller.fieldToString)
-    //println(GameState.state)
-    println(controller.getRoundCounter)
+    println(controller.fieldToString)
+    println(GameState.state)
   }
-//  override def update: Boolean = {
-//    println(controller.fieldToString)
-//    println(GameState.state)
-//    GameState.handle(InProgessState())
-//    true
-//  }
 }
