@@ -52,8 +52,8 @@ class FileIO extends FileIOInterface {
   }
 
   def fieldToXml(field: FieldInterface): Node = {
-    <field roundCounter={ field.getRoundCounter().toString } player1Mode={ field.getPlayer1Mode() }
-           player2Mode={ field.getPlayer2Mode() }>
+    <field roundCounter={ field.savedRoundCounter.toString } player1Mode={ field.player1Mode }
+           player2Mode={ field.player2Mode }>
       {
       for {
         row <- 0 until field.size

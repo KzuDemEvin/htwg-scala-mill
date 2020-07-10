@@ -47,9 +47,9 @@ class FileIO extends FileIOInterface {
   def fieldToJson(field: FieldInterface): JsValue = {
     Json.obj(
       "field" -> Json.obj(
-        "roundCounter" -> JsNumber(field.getRoundCounter()),
-        "player1Mode" -> JsString(field.getPlayer1Mode()),
-        "player2Mode" -> JsString(field.getPlayer2Mode()),
+        "roundCounter" -> JsNumber(field.savedRoundCounter),
+        "player1Mode" -> JsString(field.player1Mode),
+        "player2Mode" -> JsString(field.player2Mode),
         "cells" -> Json.toJson(
           for {
             row <- 0 until field.size
