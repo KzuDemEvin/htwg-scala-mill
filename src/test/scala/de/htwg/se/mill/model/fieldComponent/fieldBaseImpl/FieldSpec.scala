@@ -38,7 +38,8 @@ class FieldSpec extends WordSpec with Matchers {
         blackwhiteField.toString should be("Mill Gameboard:\n w  -  -  o  -  -  o \n -  b  -  o  -  o  - " +
           "\n -  -  o  o  o  -  - \n o  o  o  -  o  o  o \n -  -  o  o  o  -  - \n -  o  -  o  -  o  - \n o" +
           "  -  -  o  -  -  o \n")
-        //blackwhiteField.set(1, 1, Cell("wb")) should be(blackwhiteField)
+        blackwhiteField = blackwhiteField.set(1, 1, Cell("cw"))
+        blackwhiteField.cell(1, 1).getContent.whichColor should be(Color.black)
       }
       "should be able to set and return a roundCounter" in {
         val roundCounter = 3
