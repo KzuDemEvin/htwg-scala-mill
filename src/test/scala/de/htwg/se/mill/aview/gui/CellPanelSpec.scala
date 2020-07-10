@@ -8,6 +8,10 @@ class CellPanelSpec extends WordSpec with Matchers {
   "A CellPanel" when {
     val controller = new Controller(new Field(7))
     "created" should {
+      val winnerCellPanel = new CellPanel(0, 0, controller)
+      "should be able to pop up Winners Menu" in {
+        winnerCellPanel.winnerDialog()
+      }
       val availableCellPanel = new CellPanel(0, 0, controller)
       "have the cellType 'available'" in {
         availableCellPanel.cellType(0, 0) should be (2)

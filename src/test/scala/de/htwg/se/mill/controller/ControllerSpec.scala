@@ -37,7 +37,7 @@ class ControllerSpec extends WordSpec with Matchers {
     "ready to play" should {
       val field = new Field(7)
       val controller = new Controller(field)
-      "should return valid values with its methods" in {
+      "return valid values with its methods" in {
         controller.cell(0, 0).getContent.whichColor should be (Color.noColor)
         controller.isSet(0, 0) should be (false)
         controller.available(6, 6) should be (true)
@@ -45,6 +45,12 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.placedStones() should be (0)
         controller.placedWhiteStones() should be (0)
         controller.fieldsize should be (7)
+      }
+      "be able to save its current state" in {
+        controller.save
+      }
+      "be able to load from an older state" in {
+        controller.load
       }
       "be able to place random stones" in {
         controller.createRandomField(7)
