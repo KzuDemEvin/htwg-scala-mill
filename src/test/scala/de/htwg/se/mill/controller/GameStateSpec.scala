@@ -1,6 +1,6 @@
 package de.htwg.se.mill.controller
 
-import de.htwg.se.mill.controller.controllerComponent.{BlackTurnState, FinishedState, GameState, NewState, WhiteTurnState}
+import de.htwg.se.mill.controller.controllerComponent.{BlackTurnState, FinishedState, GameState, LoadState, NewState, SaveState, WhiteTurnState}
 import org.scalatest.{Matchers, WordSpec}
 
 class GameStateSpec extends WordSpec with Matchers {
@@ -22,14 +22,14 @@ class GameStateSpec extends WordSpec with Matchers {
         val gameStateBlack = GameState.handle(BlackTurnState())
         gameStateBlack should be("Black's turn")
       }
-//      "say its a whitemill" in {
-//        val gameStateWhiteMill = GameState.handle(WhiteMillState())
-//        gameStateWhiteMill should be("White Mill")
-//      }
-//      "say its a blackmill" in {
-//        val gameStateBlackMill = GameState.handle(BlackMillState())
-//        gameStateBlackMill should be("Black Mill")
-//      }
+      "say its in Save State" in {
+        val gameStateSave = GameState.handle(SaveState())
+        gameStateSave should be("Game saved")
+      }
+      "say its in Load State" in {
+        val gameStateLoad = GameState.handle(LoadState())
+        gameStateLoad should be("Game loaded")
+      }
     }
 
   }

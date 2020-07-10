@@ -20,7 +20,6 @@ trait ControllerInterface extends Publisher {
   def getRoundCounter:Int
   def selectDriveCommand():ModeState
   def handleClick(row: Int, column: Int): Unit
-  def removeStone(row:Int, col:Int):Boolean
   def stoneHasOtherColor(row:Int, col:Int, color: Color.Value):Boolean
   def undo(): Unit
   def redo(): Unit
