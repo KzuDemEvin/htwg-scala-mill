@@ -231,15 +231,18 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
 
   var savedRoundCounter = 0
   def setRoundCounter(counter: Int): Unit = savedRoundCounter = counter
-  def getRoundCounter(): Int = savedRoundCounter
 
   var player1Mode = ModeState.handle(SetModeState())
   def setPlayer1Mode(mode: String): Unit = player1Mode = ModeState.handle(checkModeState(mode))
-  def getPlayer1Mode(): String = player1Mode
+
+  var player1Name = ""
+  def setPlayer1Name(name: String): Unit = player1Name = name
 
   var player2Mode = ModeState.handle(SetModeState())
   def setPlayer2Mode(mode: String): Unit = player2Mode = ModeState.handle(checkModeState(mode))
-  def getPlayer2Mode(): String = player2Mode
+
+  var player2Name = ""
+  def setPlayer2Name(name: String): Unit = player2Name = name
 
   def checkModeState(mode: String): ModeState = {
     mode match {

@@ -17,7 +17,7 @@ class CellPanelSpec extends WordSpec with Matchers {
       }
     }
     "placed a white stone within it" should {
-      controller.set(0, 3)
+      controller.handleClick(0, 3)
       val blackCellPanel = new CellPanel(0, 3, controller)
       "have the cellType 'available'" in {
         blackCellPanel.cellType(0, 3) should be(0)
@@ -27,7 +27,7 @@ class CellPanelSpec extends WordSpec with Matchers {
       }
     }
     "placed a black stone within it" should {
-      controller.set(0, 6)
+      controller.handleClick(0, 6)
       val whiteCellPanel = new CellPanel(0, 6, controller)
       "have the cellType 'available'" in {
         whiteCellPanel.cellType(0, 6) should be (1)

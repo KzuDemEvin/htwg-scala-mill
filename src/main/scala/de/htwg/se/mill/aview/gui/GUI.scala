@@ -19,11 +19,11 @@ class GUI(controller: ControllerInterface) extends MainFrame {
   menuBar = new GUIMenuBar(controller).menuBar
 
   val gridPanel: GridPanel = new GUIGridPanel(controller, cells).gridPanel
-  val statusline: TextField = new TextField(controller.statusText) {
+  val statusline: TextField = new TextField(controller.gameState) {
     font = Font("Dialog", Font.Bold, 16)
     editable = false
   }
-  val millline: TextField = new TextField(controller.millText) {
+  val millline: TextField = new TextField(controller.millState) {
     font = Font("Dialog", Font.Bold, 16)
     editable = false
   }
@@ -63,8 +63,8 @@ class GUI(controller: ControllerInterface) extends MainFrame {
       row <- 0 until controller.fieldsize
       col <- 0 until controller.fieldsize
     } cells(row)(col).redraw()
-    statusline.text = controller.statusText
-    millline.text = controller.millText
+    statusline.text = controller.gameState
+    millline.text = controller.millState
     roundCounter.text = "Round: " + controller.getRoundCounter.toString
 
     repaint

@@ -10,6 +10,8 @@ trait ControllerInterface extends Publisher {
   var setCounter:Int
   var moveCounter:Int
   var flyCounter:Int
+  var gameState:String
+  var millState:String
   var winnerText:String
   def createEmptyField(size: Int): Unit
   def createRandomField(size: Int): Unit
@@ -18,11 +20,6 @@ trait ControllerInterface extends Publisher {
   def getRoundCounter:Int
   def selectDriveCommand():ModeState
   def handleClick(row: Int, column: Int): Unit
-  def handleSet(row:Int, column:Int, counter:Int):Int
-  def handleMoveAndFly(row:Int, column:Int, counter:Int, move:ModeState):Int
-  def set(row: Int, col: Int): Unit
-  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Unit
-  def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Unit
   def removeStone(row:Int, col:Int):Boolean
   def stoneHasOtherColor(row:Int, col:Int, color: Color.Value):Boolean
   def undo(): Unit
@@ -31,8 +28,6 @@ trait ControllerInterface extends Publisher {
   def checkWinner(row:Int, column:Int): Unit
   def save(): Unit
   def load(): Unit
-  def statusText:String
-  def millText:String
   def cell(row:Int, col:Int):Cell
   def isSet(row:Int, col:Int):Boolean
   def available(row:Int, col:Int):Boolean

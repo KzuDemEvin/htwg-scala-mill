@@ -29,6 +29,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     moveCounter = 0
     flyCounter = 0
     mgr.roundCounter = 0
+    mgr.winner = 0
     field = injector.instance[FieldInterface](Names.named("normal"))
     mgr.modeChoice(field)
     gameState = GameState.handle(NewState())
@@ -40,6 +41,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     setCounter = 0
     moveCounter = 0
     flyCounter = 0
+    mgr.winner = 0
     mgr.roundCounter = mgr.borderToMoveMode
     field = injector.instance[FieldInterface](Names.named("random"))
     mgr.modeChoice(field)
@@ -148,14 +150,12 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       if (mgr.blackTurn()) {
         if (cell(rowOld, colOld).getContent.whichColor == Color.black) {
           undoManager.doStep(new MoveCommand(rowOld, colOld, rowNew, colNew, this))
-          //gameState = GameState.handle(WhiteTurnState())
         } else {
           mgr.roundCounter -= 1
         }
       } else {
         if (cell(rowOld, colOld).getContent.whichColor == Color.white) {
           undoManager.doStep(new MoveCommand(rowOld, colOld, rowNew, colNew, this))
-          //gameState = GameState.handle(BlackTurnState())
         } else {
           mgr.roundCounter -= 1
         }
@@ -171,14 +171,12 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
       if (mgr.blackTurn()) {
         if (cell(rowOld, colOld).getContent.whichColor == Color.black) {
           undoManager.doStep(new FlyCommand(rowOld, colOld, rowNew, colNew, this))
-          //gameState = GameState.handle(WhiteTurnState())
         } else {
           mgr.roundCounter -= 1
         }
       } else {
         if (cell(rowOld, colOld).getContent.whichColor == Color.white) {
           undoManager.doStep(new FlyCommand(rowOld, colOld, rowNew, colNew, this))
-          //gameState = GameState.handle(BlackTurnState())
         } else {
           mgr.roundCounter -= 1
         }
@@ -256,7 +254,9 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   def save: Unit = {
     field.setRoundCounter(mgr.roundCounter)
     field.setPlayer1Mode(mgr.player1.mode)
+    field.setPlayer1Name(mgr.player1.name)
     field.setPlayer2Mode(mgr.player2.mode)
+    field.setPlayer2Name(mgr.player2.name)
     fileIo.save(field)
     gameState = GameState.handle(SaveState())
     publish(new CellChanged)
@@ -264,15 +264,12 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
 
   def load: Unit = {
     field = fileIo.load
-    mgr.roundCounter = field.getRoundCounter()
-    mgr.player1.mode = field.getPlayer1Mode()
-    mgr.player2.mode = field.getPlayer2Mode()
+    mgr.roundCounter = field.savedRoundCounter
+    mgr.player1.mode = field.player1Mode
+    mgr.player2.mode = field.player2Mode
     gameState = GameState.handle(LoadState())
     publish(new CellChanged)
   }
-
-  def statusText:String = GameState.state
-  def millText:String = MillState.state
 
   def cell(row:Int, col:Int):Cell = field.cell(row, col)
   def isSet(row:Int, col:Int):Boolean = field.cell(row, col).isSet

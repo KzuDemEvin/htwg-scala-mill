@@ -35,24 +35,35 @@ class FieldSpec extends WordSpec with Matchers {
       "should return a string which looks like the gameboard" in {
         var blackwhiteField = normalField.set(0, 0, Cell("cw"))
         blackwhiteField = blackwhiteField.set(1, 1, Cell("cb"))
-        blackwhiteField.toString should be("Mill Gameboard:\n w  -  -  o  -  -  o \n -  b  -  o  -  o  - \n -  -  o  o  o  -  - \n o  o  o  -  o  o  o \n -  -  o  o  o  -  - \n -  o  -  o  -  o  - \n o  -  -  o  -  -  o \n")
+        blackwhiteField.toString should be("Mill Gameboard:\n w  -  -  o  -  -  o \n -  b  -  o  -  o  - " +
+          "\n -  -  o  o  o  -  - \n o  o  o  -  o  o  o \n -  -  o  o  o  -  - \n -  o  -  o  -  o  - \n o" +
+          "  -  -  o  -  -  o \n")
+        //blackwhiteField.set(1, 1, Cell("wb")) should be(blackwhiteField)
       }
       "should be able to set and return a roundCounter" in {
         val roundCounter = 3
         normalField.setRoundCounter(roundCounter)
-        normalField.getRoundCounter() should be(3)
+        normalField.savedRoundCounter should be(3)
       }
       "should be able to set and return player 1 in setMode" in {
         normalField.setPlayer1Mode("SetMode")
-        normalField.getPlayer1Mode should be("SetMode")
+        normalField.player1Mode should be("SetMode")
       }
       "should be able to set and return player 1 in moveMode" in {
         normalField.setPlayer1Mode("MoveMode")
-        normalField.getPlayer1Mode should be("MoveMode")
+        normalField.player1Mode should be("MoveMode")
+      }
+      "should be able to set and return player 1 name" in {
+        normalField.setPlayer1Name("Name1")
+        normalField.player1Name should be("Name1")
       }
       "should be able to set and return player 2 flyMode" in {
         normalField.setPlayer2Mode("FlyMode")
-        normalField.getPlayer2Mode should be("FlyMode")
+        normalField.player2Mode should be("FlyMode")
+      }
+      "should be able to set and return player 2 name" in {
+        normalField.setPlayer2Name("Name2")
+        normalField.player2Name should be("Name2")
       }
       "should be able to move a stone to a new position" in {
         var changedfield = normalField.set(0,0, Cell("cw"))
