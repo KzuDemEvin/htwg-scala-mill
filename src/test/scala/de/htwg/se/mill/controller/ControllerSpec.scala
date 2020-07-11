@@ -171,6 +171,125 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.handleClick(5, 1) // remove
         controller.mgr.winner should be(1) // white winner
       }
+      "check if at the end a player is choosing a stone in a mill to remove and to win" should {
+        "black wins" in {
+          val field = new Field(7)
+          val controller = new Controller(field)
+          controller.handleClick(0, 0)
+          controller.handleClick(6, 0)
+          controller.handleClick(0, 3)
+          controller.handleClick(6, 3)
+          controller.handleClick(0, 6)
+          controller.handleClick(6, 3) //Remove
+          controller.handleClick(6, 3)
+          controller.handleClick(1, 1)
+          controller.handleClick(6, 6)
+          controller.handleClick(1, 1) //Remove
+          controller.handleClick(1, 1)
+          controller.handleClick(5, 1)
+          controller.handleClick(1, 3)
+          controller.handleClick(5, 3)
+          controller.handleClick(1, 5)
+          controller.handleClick(5, 3) //remove
+          controller.handleClick(5, 3)
+          controller.handleClick(2, 2)
+          controller.handleClick(5, 5)
+          controller.handleClick(2, 2) //remove
+          controller.handleClick(2, 2)
+          controller.handleClick(4, 2)
+          controller.handleClick(2, 2); controller.handleClick(2, 3)
+          controller.handleClick(4, 2)
+          controller.handleClick(5, 3); controller.handleClick(4, 3)
+          controller.handleClick(2, 3); controller.handleClick(2, 2)
+          controller.handleClick(4, 3); controller.handleClick(5, 3)
+          controller.handleClick(2, 2) //remove
+          controller.handleClick(1, 3); controller.handleClick(2, 3)
+          controller.handleClick(5, 3); controller.handleClick(4, 3)
+          controller.handleClick(2, 3); controller.handleClick(2, 2)
+          controller.handleClick(6, 3); controller.handleClick(5, 3)
+          controller.handleClick(2, 2) //remove
+          controller.handleClick(0, 3); controller.handleClick(1, 3)
+          controller.handleClick(4, 3) //remove
+          controller.handleClick(5, 3); controller.handleClick(6, 3)
+          controller.handleClick(0, 0) //remove
+          controller.handleClick(1, 3); controller.handleClick(0, 3)
+          controller.handleClick(6, 3); controller.handleClick(5, 3)
+          controller.handleClick(0, 6) //remove
+          controller.handleClick(0, 3); controller.handleClick(1, 3)
+          controller.handleClick(6, 6) //remove
+          controller.handleClick(6, 0); controller.handleClick(3, 0)
+
+          controller.handleClick(1, 3); controller.handleClick(0, 3)
+          controller.handleClick(5, 3); controller.handleClick(6, 3)
+
+          controller.handleClick(0, 3); controller.handleClick(1, 3)
+          controller.handleClick(3, 0) //remove
+          controller.handleClick(6, 3); controller.handleClick(5, 3)
+          controller.handleClick(1, 1) //remove
+          controller.mgr.winner should be(2)
+        }
+        "white wins" in {
+          val field = new Field(7)
+          val controller = new Controller(field)
+          controller.handleClick(0, 0)
+          controller.handleClick(6, 0)
+          controller.handleClick(0, 3)
+          controller.handleClick(6, 3)
+          controller.handleClick(0, 6)
+          controller.handleClick(6, 3) //Remove
+          controller.handleClick(6, 3)
+          controller.handleClick(1, 1)
+          controller.handleClick(6, 6)
+          controller.handleClick(1, 1) //Remove
+          controller.handleClick(1, 1)
+          controller.handleClick(5, 1)
+          controller.handleClick(1, 3)
+          controller.handleClick(5, 3)
+          controller.handleClick(1, 5)
+          controller.handleClick(5, 3) //remove
+          controller.handleClick(5, 3)
+          controller.handleClick(2, 2)
+          controller.handleClick(5, 5)
+          controller.handleClick(2, 2) //remove
+          controller.handleClick(2, 2)
+          controller.handleClick(4, 2)
+          controller.handleClick(2, 2); controller.handleClick(2, 3)
+          controller.handleClick(4, 2)
+          controller.handleClick(5, 3); controller.handleClick(4, 3)
+          controller.handleClick(2, 3); controller.handleClick(2, 2)
+          controller.handleClick(4, 3); controller.handleClick(5, 3)
+          controller.handleClick(2, 2) //remove
+          controller.handleClick(1, 3); controller.handleClick(2, 3)
+          controller.handleClick(5, 3); controller.handleClick(4, 3)
+          controller.handleClick(2, 3); controller.handleClick(2, 2)
+          controller.handleClick(6, 3); controller.handleClick(5, 3)
+          controller.handleClick(2, 2) //remove
+          controller.handleClick(0, 3); controller.handleClick(1, 3)
+          controller.handleClick(4, 3) //remove
+          controller.handleClick(5, 3); controller.handleClick(6, 3)
+          controller.handleClick(0, 0) //remove
+          controller.handleClick(1, 3); controller.handleClick(0, 3)
+          controller.handleClick(6, 0); controller.handleClick(3, 0)
+          controller.handleClick(0, 3); controller.handleClick(1, 3)
+          controller.handleClick(3, 0) //remove
+          controller.handleClick(6, 6); controller.handleClick(3, 6)
+          controller.handleClick(1, 3); controller.handleClick(0, 3)
+          controller.handleClick(3, 6); controller.handleClick(6, 6)
+          controller.handleClick(0, 3); controller.handleClick(1, 3)
+          controller.handleClick(6, 6) //remove
+          controller.handleClick(6, 3); controller.handleClick(6, 6)
+          controller.handleClick(0, 6); controller.handleClick(3, 6)
+          controller.handleClick(6, 6); controller.handleClick(6, 3)
+          controller.handleClick(1, 3); controller.handleClick(0, 3)
+          controller.handleClick(6, 3); controller.handleClick(5, 3)
+          controller.handleClick(3, 6) //remove
+          controller.handleClick(0, 3); controller.handleClick(1, 3)
+          controller.handleClick(0, 0) //remove
+          controller.mgr.winner should be(0)
+          controller.handleClick(5, 3) //remove
+          controller.mgr.winner should be(1)
+        }
+      }
     }
 
   }
