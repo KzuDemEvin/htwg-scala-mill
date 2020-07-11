@@ -23,11 +23,11 @@ class GUI(controller: ControllerInterface) extends MainFrame {
     font = Font("Dialog", Font.Bold, 16)
     editable = false
   }
-  val millline: TextField = new TextField(controller.millState) {
+  val millline: TextField = new TextField(controller.millState, 7) {
     font = Font("Dialog", Font.Bold, 16)
     editable = false
   }
-  val roundCounter: TextField = new TextField(controller.getRoundCounter.toString) {
+  val roundCounter: TextField = new TextField(controller.getRoundCounter.toString, 6) {
     font = Font("Dialog", Font.Bold, 16)
     editable = false
   }

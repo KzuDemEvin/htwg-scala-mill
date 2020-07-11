@@ -44,7 +44,7 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
 
   def isNeigbour(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Boolean = {
     var r = false
-    val s = for (x <- neighbours(rowOld, colOld)) {
+    for (x <- neighbours(rowOld, colOld)) {
       if (x._1 == rowNew && x._2 == colNew) {
         r = true
       }

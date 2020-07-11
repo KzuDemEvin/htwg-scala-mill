@@ -187,19 +187,25 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   }
 
   def undo: Unit = {
+    undoManager.undoStep()
     if (mgr.roundCounter > 0) {
       mgr.roundCounter -= 1
+      flyCounter = 0
+      moveCounter = 0
+      setCounter = 0
     }
-    undoManager.undoStep()
     gameState = GameState.handle(UndoState())
     publish(new CellChanged)
   }
 
   def redo: Unit = {
+    undoManager.redoStep()
     if (mgr.roundCounter > 0) {
       mgr.roundCounter += 1
+      flyCounter = 0
+      moveCounter = 0
+      setCounter = 0
     }
-    undoManager.redoStep()
     gameState = GameState.handle(RedoState())
     publish(new CellChanged)
   }
@@ -215,27 +221,26 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   }
 
   def removeStone(row: Int, col: Int): Boolean = {
+    var r = false
     if (mgr.blackTurn()) {
-      stoneHasOtherColor(row, col, Color.white)
-    } else if (mgr.whiteTurn()) {
-      stoneHasOtherColor(row, col, Color.black)
-    } else {
+      r = stoneHasOtherColor(row, col, Color.white)
       mgr.modeChoice(field)
       publish(new CellChanged)
-      false
+    } else {
+      r = stoneHasOtherColor(row, col, Color.black)
+      mgr.modeChoice(field)
+      publish(new CellChanged)
     }
+    r
   }
 
   def stoneHasOtherColor(row:Int, col:Int, color: Color.Value):Boolean = {
+    var r = (field, false)
     if (cell(row, col).getContent.whichColor == color) {
-      val r = field.removeStone(row, col)
+      r = field.removeStone(row, col)
       field = r._1
-      mgr.modeChoice(field)
-      publish(new CellChanged)
-      r._2
-    } else {
-      false
     }
+    r._2
   }
 
   def checkWinner(row:Int, column:Int): Unit = {

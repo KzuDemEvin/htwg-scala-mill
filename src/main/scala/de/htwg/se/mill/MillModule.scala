@@ -9,7 +9,6 @@ import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.RandomStrategy
 import de.htwg.se.mill.model.fieldComponent.FieldInterface
 import de.htwg.se.mill.model.fieldComponent.fieldAdvancedImpl.Field
 import de.htwg.se.mill.model.fileIoComponent._
-import de.htwg.se.mill.model.playerComponent.Player
 
 
 class MillModule extends AbstractModule with ScalaModule {

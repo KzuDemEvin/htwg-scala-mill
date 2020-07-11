@@ -1,14 +1,12 @@
 package de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl
 
-import com.google.inject.{Guice, Inject, Injector}
-import com.google.inject.name.Names
-import de.htwg.se.mill.Mill.injector
+import com.google.inject.{Guice, Injector}
 import de.htwg.se.mill.MillModule
-import de.htwg.se.mill.controller.controllerComponent.{ControllerInterface, FlyModeState, ModeState, MoveModeState, SetModeState}
+import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, MoveModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent.FieldInterface
 import de.htwg.se.mill.model.playerComponent.Player
 
-case class RoundManager @Inject() ()  {
+case class RoundManager()  {
   var roundCounter = 0
   val borderToMoveMode = 18
   val injector: Injector = Guice.createInjector(new MillModule)
@@ -64,7 +62,4 @@ case class RoundManager @Inject() ()  {
       case 2 => winnerText = player2.name + " wins (Black) !"
     }
   }
-
-
-
 }
