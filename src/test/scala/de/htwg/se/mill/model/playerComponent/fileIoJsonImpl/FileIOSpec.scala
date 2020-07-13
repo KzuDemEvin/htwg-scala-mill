@@ -8,22 +8,21 @@ import org.scalatest.{Matchers, WordSpec}
 class FileIOSpec extends WordSpec with Matchers {
   "A FileIO" when {
     "new" should {
-      var field = new Field(7)
+      var savedField = new Field(7)
       val fileIo = new FileIO
       "Should be able to save the game" in {
-        fileIo.save(field)
+        savedField = new Field(7)
+        savedField = savedField.set(0, 0, Cell("cw"))
+        savedField = savedField.set(6, 6, Cell("cb"))
+        savedField = savedField.set(1, 1, Cell("cw"))
+        savedField.placedWhiteStones() should be(2)
+        savedField.placedBlackStones() should be(1)
+        fileIo.save(savedField)
       }
       "Should be able to load the game" in {
-        fileIo.load
-      }
-      "Should be able to save the game again" in {
-        field = new Field(7)
-        field = field.set(0, 0, Cell("cw"))
-        field = field.set(6, 6, Cell("cb"))
-        fileIo.save(field)
-      }
-      "Should be able to load the game again" in {
-        fileIo.load
+        val loadedField = fileIo.load
+        loadedField.placedWhiteStones() should be(2)
+        loadedField.placedBlackStones() should be(1)
       }
     }
   }
