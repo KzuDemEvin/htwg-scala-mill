@@ -12,13 +12,12 @@ import scala.xml.{Node, NodeSeq, PrettyPrinter}
 class FileIO extends FileIOInterface {
 
   override def load: FieldInterface = {
-    var field: FieldInterface = null
     val file = scala.xml.XML.loadFile("field.xml")
     val roundCounter = (file \\ "field" \ "@roundCounter").text.toInt
     val player1Mode = (file \\ "field" \ "@player1Mode").text
     val player2Mode = (file \\ "field" \ "@player2Mode").text
     val injector = Guice.createInjector(new MillModule)
-    field = injector.instance[FieldInterface](Names.named("normal"))
+    var field = injector.instance[FieldInterface](Names.named("normal"))
     val cellNodes = (file \\ "cell")
     for (cell <- cellNodes) {
       val row: Int = (cell \ "@row").text.toInt
