@@ -10,21 +10,21 @@ case class RoundManager()  {
   var roundCounter = 0
   val borderToMoveMode = 18
   val injector: Injector = Guice.createInjector(new MillModule)
-  var player1 = Player("No Name1")
-  var player2 = Player("No Name2")
+  var player1: Player = Player(name = "No Name1")
+  var player2: Player = Player(name = "No Name2")
   var winner = 0
   var winnerText = "No Winner"
 
-  def blackTurn():Boolean = if (roundCounter % 2 == 1) true else false
+  def blackTurn():Boolean = roundCounter % 2 == 1
 
-  def whiteTurn():Boolean = if (roundCounter % 2 == 0) true else false
+  def whiteTurn():Boolean = roundCounter % 2 == 0
 
   def modeChoice(field:FieldInterface): Unit = {
     if (roundCounter < borderToMoveMode) {
-      player1.mode = ModeState.handle(SetModeState())
-      player2.mode = ModeState.handle(SetModeState())
+      player1 = player1.changeMode(ModeState.handle(SetModeState()))
+      player2 = player2.changeMode(ModeState.handle(SetModeState()))
       if (roundCounter == borderToMoveMode - 1) {
-        player1.mode = ModeState.handle(MoveModeState())
+        player1 = player1.changeMode(ModeState.handle(MoveModeState()))
       }
     } else if (field.placedBlackStones() == 2) {
       winner = 1
@@ -34,14 +34,14 @@ case class RoundManager()  {
       handleWinnerText(2)
     } else if (field.placedBlackStones() == 3 || field.placedWhiteStones() == 3) {
       if (field.placedWhiteStones() == 3) {
-        player1.mode = ModeState.handle(FlyModeState())
+        player1 = player1.changeMode(ModeState.handle(FlyModeState()))
       }
       if (field.placedBlackStones() == 3) {
-        player2.mode = ModeState.handle(FlyModeState())
+        player2 = player2.changeMode(ModeState.handle(FlyModeState()))
       }
     } else {
-      player1.mode = ModeState.handle(MoveModeState())
-      player2.mode = ModeState.handle(MoveModeState())
+      player1 = player1.changeMode(ModeState.handle(MoveModeState()))
+      player2 = player2.changeMode(ModeState.handle(MoveModeState()))
     }
   }
 

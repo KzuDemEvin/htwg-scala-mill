@@ -270,8 +270,8 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   def load: Unit = {
     field = fileIo.load
     mgr.roundCounter = field.savedRoundCounter
-    mgr.player1.mode = field.player1Mode
-    mgr.player2.mode = field.player2Mode
+    mgr.player1 = mgr.player1.changeMode(field.player1Mode)
+    mgr.player2 = mgr.player2.changeMode(field.player2Mode)
     gameState = GameState.handle(LoadState())
     publish(new CellChanged)
   }

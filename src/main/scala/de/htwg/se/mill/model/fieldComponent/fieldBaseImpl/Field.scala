@@ -31,7 +31,7 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
   }
 
   def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
-    var field = this
+    var field = copy()
     for (x <- neighbours(rowOld, colOld)) {
       if (x._1 == rowNew && x._2 == colNew && !cell(rowNew, colNew).isSet) {
         val oldCell = cell(rowOld, colOld)
@@ -53,7 +53,7 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
   }
 
   def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
-    var field = this
+    var field = copy()
     val oldCell = cell(rowOld, colOld)
     field = field.replace(rowOld, colOld, Cell("ce"))
     field = field.set(rowNew, colNew, oldCell)
@@ -61,7 +61,7 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
   }
 
   def removeStone(row:Int, col:Int):(Field, Boolean) = {
-    var field = this
+    var field = copy()
     if (checkMill(row, col) == 0) {
       field = field.replace(row, col, Cell("ce"))
       (field, true)
