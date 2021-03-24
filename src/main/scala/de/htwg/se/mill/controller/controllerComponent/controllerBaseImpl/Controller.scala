@@ -28,8 +28,8 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     setCounter = 0
     moveCounter = 0
     flyCounter = 0
-    mgr.roundCounter = 0
     mgr.winner = 0
+    mgr.roundCounter = 0
     field = injector.instance[FieldInterface](Names.named("normal"))
     mgr.modeChoice(field)
     gameState = GameState.handle(NewState())
@@ -51,10 +51,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
 
   def fieldToString: String = field.toString
 
-  def getRoundCounter: Int = {
-    mgr.roundCounter
-  }
-
+  def getRoundCounter: Int = mgr.roundCounter
 
   def handleClick(row: Int, column: Int): Unit = {
     if (mgr.blackTurn()) {
@@ -126,9 +123,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     cnt
   }
 
-  def selectDriveCommand():ModeState = {
-    mgr.selectDriveCommand()
-  }
+  def selectDriveCommand():ModeState = mgr.selectDriveCommand()
 
   def set(row: Int, col: Int): Unit = {
     if (field.available(row, col)) {
@@ -258,10 +253,10 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
 
   def save: Unit = {
     field.setRoundCounter(mgr.roundCounter)
-    field.setPlayer1Mode(mgr.player1.mode)
-    field.setPlayer1Name(mgr.player1.name)
-    field.setPlayer2Mode(mgr.player2.mode)
-    field.setPlayer2Name(mgr.player2.name)
+    field = field.setPlayer1Mode(mgr.player1.mode)
+    field = field.setPlayer1Name(mgr.player1.name)
+    field = field.setPlayer2Mode(mgr.player2.mode)
+    field = field.setPlayer2Name(mgr.player2.name)
     fileIo.save(field)
     gameState = GameState.handle(SaveState())
     publish(new CellChanged)

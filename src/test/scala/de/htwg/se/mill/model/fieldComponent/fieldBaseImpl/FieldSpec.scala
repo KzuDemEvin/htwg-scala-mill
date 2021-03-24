@@ -6,16 +6,20 @@ import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
 import org.scalatest.{Matchers, WordSpec}
 
 class FieldSpec extends WordSpec with Matchers {
+  val weirdSize = 2
+  val tinySize = 3
+  val smallSize = 5
+  val normalSize = 7
   "A Field is the playingfield of Mill. A Field" when {
     "can be constructed in different sizes" in {
-      val tinyField = new Field(3)
-      val smallField = new Field(5)
-      val weirdField = new Field(2)
+      val tinyField = new Field(tinySize)
+      val smallField = new Field(smallSize)
+      val weirdField = new Field(weirdSize)
     }
     "to be constructed in a normal size" should {
-      val normalField = new Field(7)
+      val normalField = new Field(normalSize)
       "have the size 7" in {
-        normalField.size should be(7)
+        normalField.size should be(normalSize)
       }
       "give access to its cells" in {
         normalField.cell(0, 0).getContent.whichColor should be(Color.noColor)
@@ -31,7 +35,6 @@ class FieldSpec extends WordSpec with Matchers {
         changedField.cell(0, 0).getContent.whichColor should be(Color.white)
         normalField.cell(0, 0).getContent.whichColor should be(Color.noColor)
       }
-
       "should return a string which looks like the gameboard" in {
         var blackwhiteField = normalField.set(0, 0, Cell("cw"))
         blackwhiteField = blackwhiteField.set(1, 1, Cell("cb"))
@@ -47,24 +50,19 @@ class FieldSpec extends WordSpec with Matchers {
         normalField.savedRoundCounter should be(3)
       }
       "should be able to set and return player 1 in setMode" in {
-        normalField.setPlayer1Mode("SetMode")
-        normalField.player1Mode should be("SetMode")
+        new Field(normalSize).setPlayer1Mode("SetMode").player1Mode should be("SetMode")
       }
       "should be able to set and return player 1 in moveMode" in {
-        normalField.setPlayer1Mode("MoveMode")
-        normalField.player1Mode should be("MoveMode")
+        new Field(normalSize).setPlayer1Mode("MoveMode").player1Mode should be("MoveMode")
       }
       "should be able to set and return player 1 name" in {
-        normalField.setPlayer1Name("Name1")
-        normalField.player1Name should be("Name1")
+        new Field(normalSize).setPlayer1Name("Name1").player1Name should be("Name1")
       }
       "should be able to set and return player 2 flyMode" in {
-        normalField.setPlayer2Mode("FlyMode")
-        normalField.player2Mode should be("FlyMode")
+        new Field(normalSize).setPlayer2Mode("FlyMode").player2Mode should be("FlyMode")
       }
       "should be able to set and return player 2 name" in {
-        normalField.setPlayer2Name("Name2")
-        normalField.player2Name should be("Name2")
+        new Field(normalSize).setPlayer2Name("Name2").player2Name should be("Name2")
       }
       "should be able to move a stone to a new position" in {
         var changedfield = normalField.set(0,0, Cell("cw"))
