@@ -24,16 +24,16 @@ trait FieldInterface {
   def setRoundCounter(counter: Int): Unit
   var savedRoundCounter: Int
 
-  def setPlayer1Mode(mode: String): Unit
-  var player1Mode: String
+  def setPlayer1Mode(mode: String): FieldInterface
+  val player1Mode: String
 
-  def setPlayer1Name(name: String): Unit
-  var player1Name: String
+  def setPlayer1Name(name: String): FieldInterface
+  val player1Name: String
 
-  def setPlayer2Mode(mode: String): Unit
-  var player2Mode: String
+  def setPlayer2Mode(mode: String): FieldInterface
+  val player2Mode: String
 
-  def setPlayer2Name(name: String): Unit
-  var player2Name: String
+  def setPlayer2Name(name: String): FieldInterface
+  val player2Name: String
 
 }

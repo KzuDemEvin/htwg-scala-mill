@@ -4,7 +4,16 @@ import com.google.inject.Inject
 import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, MoveModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color, FieldInterface}
 
-case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
+case class Field @Inject() (allCells: Matrix[Cell], player1Mode: String, player1Name: String, player2Mode: String, player2Name: String) extends FieldInterface {
+
+  def this(allCells: Matrix[Cell]) {
+
+    this(allCells = allCells,
+      player1Mode = ModeState.handle(SetModeState()),
+      player1Name = "",
+      player2Mode = ModeState.handle(SetModeState()),
+      player2Name = "")
+  }
 
   def this(size: Int) {
     this(new Matrix[Cell](size, Cell("ce")))
@@ -31,18 +40,16 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
   }
 
   def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
-    var field = this
+    var field = copy()
     for (x <- neighbours(rowOld, colOld)) {
       if (x._1 == rowNew && x._2 == colNew && !cell(rowNew, colNew).isSet) {
-        val oldCell = cell(rowOld, colOld)
-        field = field.replace(rowOld, colOld, Cell("ce"))
-        field = field.set(rowNew, colNew, oldCell)
+        field = fly(rowOld, colOld, rowNew, colNew)
       }
     }
     field
   }
 
-  def isNeigbour(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Boolean = {
+  def isNeigbour(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Boolean = {
     var r = false
     for (x <- neighbours(rowOld, colOld)) {
       if (x._1 == rowNew && x._2 == colNew) {
@@ -53,15 +60,15 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
   }
 
   def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
-    var field = this
+    var field = copy()
     val oldCell = cell(rowOld, colOld)
     field = field.replace(rowOld, colOld, Cell("ce"))
     field = field.set(rowNew, colNew, oldCell)
     field
   }
 
-  def removeStone(row:Int, col:Int):(Field, Boolean) = {
-    var field = this
+  def removeStone(row: Int, col: Int): (Field, Boolean) = {
+    var field = copy()
     if (checkMill(row, col) == 0) {
       field = field.replace(row, col, Cell("ce"))
       (field, true)
@@ -184,19 +191,17 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
     millYesNo
   }
 
-  private def checkMillSet(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = {
-    cell1.isSet && cell2.isSet && cell3.isSet
+  private def checker[T](check: T => Boolean)(values: Vector[T]): Boolean = values.forall(check(_))
+
+  private def checkMillSet(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = checker[Cell](value => value.isSet)(Vector(cell1, cell2, cell3))
+
+  private def checkMillColor(color: Color.Value)(cell1: Cell, cell2: Cell, cell3: Cell) = {
+    checker[Cell](value => value.getContent.whichColor == color)(Vector(cell1, cell2, cell3))
   }
 
-  private def checkMillBlack(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = {
-    (cell1.getContent.whichColor == Color.black && cell2.getContent.whichColor == Color.black
-      && cell3.getContent.whichColor == Color.black)
-  }
+  private def checkMillBlack(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = checkMillColor(Color.black)(cell1, cell2, cell3)
 
-  private def checkMillWhite(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = {
-    (cell1.getContent.whichColor == Color.white && cell2.getContent.whichColor == Color.white
-      && cell3.getContent.whichColor == Color.white)
-  }
+  private def checkMillWhite(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = checkMillColor(Color.white)(cell1, cell2, cell3)
 
   override def createNewField: FieldInterface = new Field(size)
 
@@ -230,19 +235,16 @@ case class Field @Inject() (allCells: Matrix[Cell]) extends FieldInterface {
   }
 
   var savedRoundCounter = 0
+
   def setRoundCounter(counter: Int): Unit = savedRoundCounter = counter
 
-  var player1Mode = ModeState.handle(SetModeState())
-  def setPlayer1Mode(mode: String): Unit = player1Mode = ModeState.handle(checkModeState(mode))
+  def setPlayer1Mode(mode: String): Field = copy(player1Mode = ModeState.handle(checkModeState(mode)))
 
-  var player1Name = ""
-  def setPlayer1Name(name: String): Unit = player1Name = name
+  def setPlayer1Name(name: String): Field = copy(player1Name = name)
 
-  var player2Mode = ModeState.handle(SetModeState())
-  def setPlayer2Mode(mode: String): Unit = player2Mode = ModeState.handle(checkModeState(mode))
+  def setPlayer2Mode(mode: String): Field = copy(player2Mode = ModeState.handle(checkModeState(mode)))
 
-  var player2Name = ""
-  def setPlayer2Name(name: String): Unit = player2Name = name
+  def setPlayer2Name(name: String): Field = copy(player2Name = name)
 
   def checkModeState(mode: String): ModeState = {
     mode match {

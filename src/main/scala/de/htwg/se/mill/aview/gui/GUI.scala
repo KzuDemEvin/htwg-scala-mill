@@ -13,7 +13,7 @@ class GUI(controller: ControllerInterface) extends MainFrame {
   listenTo(controller)
 
   title = "Mill"
-  var cells: Array[Array[CellPanel]] = Array.ofDim[CellPanel](controller.fieldsize, controller.fieldsize)
+  val cells: Array[Array[CellPanel]] = Array.ofDim[CellPanel](controller.fieldsize, controller.fieldsize)
 
 
   menuBar = new GUIMenuBar(controller).menuBar

@@ -8,6 +8,7 @@ import scala.language.reflectiveCalls
 import org.scalatest.{Matchers, WordSpec}
 
 class ControllerSpec extends WordSpec with Matchers {
+  val normalSize = 7
   "A Controller" when {
     "new" should {
       val field = new Field(7)
@@ -35,7 +36,7 @@ class ControllerSpec extends WordSpec with Matchers {
       }
   }
     "ready to play" should {
-      val field = new Field(7)
+      val field = new Field(normalSize)
       val controller = new Controller(field)
       "return valid values with its methods" in {
         controller.cell(0, 0).getContent.whichColor should be (Color.noColor)
@@ -44,7 +45,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.possiblePosition(0, 1) should be(false)
         controller.placedStones() should be (0)
         controller.placedWhiteStones() should be (0)
-        controller.fieldsize should be (7)
+        controller.fieldsize should be (normalSize)
       }
       "be able to save its current state" in {
         controller.save
@@ -53,7 +54,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.load
       }
       "be able to place random stones" in {
-        controller.createRandomField(7)
+        controller.createRandomField(normalSize)
         controller.placedStones() should be(18)
         controller.gameState should be("New field filled with random stones")
         controller.getRoundCounter should be(18)

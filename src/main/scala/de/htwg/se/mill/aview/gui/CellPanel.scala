@@ -16,15 +16,15 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
   def myCell: Cell = controller.cell(row, column)
 
   //upperLeft, upperRight, bottomRight, bottomLeft, Middle, HoriTop, HoriBottom, SideLeft, SideRight
-  val imagesPerPosition = Map(List((0,0), (1,1), (2,2)) -> new ImageIcon("src\\assets\\media\\AvailableCellTopLeft.png"),
-                              List((0,6), (1,5), (2,4)) -> new ImageIcon("src\\assets\\media\\AvailableCellTopRight.png"),
-                              List((6,6), (5,5), (4,4)) -> new ImageIcon("src\\assets\\media\\AvailableCellBottomRight.png"),
-                              List((6,0), (5,1), (4,2)) -> new ImageIcon("src\\assets\\media\\AvailableCellBottomLeft.png"),
-                              List((1,3), (3,5), (5,3), (3,1)) -> new ImageIcon("src\\assets\\media\\AvailableCellMiddle.png"),
-                              List((0,3), (4,3)) -> new ImageIcon("src\\assets\\media\\AvailableCellHorizontalTop.png"),
-                              List((2,3), (6,3)) -> new ImageIcon("src\\assets\\media\\AvailableCellHorizontalBottom.png"),
-                              List((3,0), (3,4)) -> new ImageIcon("src\\assets\\media\\AvailableCellVerticalLeft.png"),
-                              List((3,2), (3,6)) -> new ImageIcon("src\\assets\\media\\AvailableCellVerticalRight.png"))
+  val imagesPerPosition = Map(List((0,0), (1,1), (2,2)) -> new ImageIcon("src/assets/media/AvailableCellTopLeft.png"),
+                              List((0,6), (1,5), (2,4)) -> new ImageIcon("src/assets/media/AvailableCellTopRight.png"),
+                              List((6,6), (5,5), (4,4)) -> new ImageIcon("src/assets/media/AvailableCellBottomRight.png"),
+                              List((6,0), (5,1), (4,2)) -> new ImageIcon("src/assets/media/AvailableCellBottomLeft.png"),
+                              List((1,3), (3,5), (5,3), (3,1)) -> new ImageIcon("src/assets/media/AvailableCellMiddle.png"),
+                              List((0,3), (4,3)) -> new ImageIcon("src/assets/media/AvailableCellHorizontalTop.png"),
+                              List((2,3), (6,3)) -> new ImageIcon("src/assets/media/AvailableCellHorizontalBottom.png"),
+                              List((3,0), (3,4)) -> new ImageIcon("src/assets/media/AvailableCellVerticalLeft.png"),
+                              List((3,2), (3,6)) -> new ImageIcon("src/assets/media/AvailableCellVerticalRight.png"))
 
 
 
@@ -68,12 +68,12 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
 
   def cellIcon(row: Int, col: Int): ImageIcon = {
     cellType(row, col) match {
-      case 0 => new ImageIcon("src\\assets\\media\\WhiteStone.png")
-      case 1 => new ImageIcon("src\\assets\\media\\BlackStone.png")
+      case 0 => new ImageIcon("src/assets/media/WhiteStone.png")
+      case 1 => new ImageIcon("src/assets/media/BlackStone.png")
       case 2 => cellIcon2(row, col)
-      case 3 => new ImageIcon("src\\assets\\media\\UnavailableCellHorizontal.png")
-      case 4 => new ImageIcon("src\\assets\\media\\UnavailableCellVertical.png")
-      case 5 => new ImageIcon("src\\assets\\media\\MiddleCell.png")
+      case 3 => new ImageIcon("src/assets/media/UnavailableCellHorizontal.png")
+      case 4 => new ImageIcon("src/assets/media/UnavailableCellVertical.png")
+      case 5 => new ImageIcon("src/assets/media/MiddleCell.png")
     }
   }
 
