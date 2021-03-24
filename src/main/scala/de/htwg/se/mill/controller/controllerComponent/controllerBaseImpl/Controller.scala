@@ -7,14 +7,15 @@ import de.htwg.se.mill.MillModule
 import de.htwg.se.mill.controller.controllerComponent._
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color, FieldInterface}
 import de.htwg.se.mill.model.fileIoComponent.FileIOInterface
-import de.htwg.se.mill.util.UndoManager
+import de.htwg.se.mill.util.{CommandTrait, UndoManager}
 
+import scala.reflect.ClassTag
 import scala.swing.Publisher
 
-class Controller @Inject() (var field: FieldInterface) extends ControllerInterface with Publisher {
+class Controller @Inject()(var field: FieldInterface) extends ControllerInterface with Publisher {
   private val undoManager = new UndoManager
   val mgr: RoundManager = RoundManager()
-  var tmpCell: (Int, Int) = (0,0)
+  var tmpCell: (Int, Int) = (0, 0)
   var setCounter = 0
   var moveCounter = 0
   var flyCounter = 0
@@ -25,9 +26,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   val fileIo: FileIOInterface = injector.instance[FileIOInterface]
 
   def createEmptyField(size: Int): Unit = {
-    setCounter = 0
-    moveCounter = 0
-    flyCounter = 0
+    resetCounters()
     mgr.winner = 0
     mgr.roundCounter = 0
     field = injector.instance[FieldInterface](Names.named("normal"))
@@ -38,9 +37,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
   }
 
   def createRandomField(size: Int): Unit = {
-    setCounter = 0
-    moveCounter = 0
-    flyCounter = 0
+    resetCounters()
     mgr.winner = 0
     mgr.roundCounter = mgr.borderToMoveMode
     field = injector.instance[FieldInterface](Names.named("random"))
@@ -68,7 +65,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     }
   }
 
-  def handleSet(row:Int, column:Int, counter:Int):Int = {
+  def handleSet(row: Int, column: Int, counter: Int): Int = {
     var cnt = counter
     if (cnt >= 1) {
       if (removeStone(row, column)) {
@@ -91,17 +88,16 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     cnt
   }
 
-  def handleMoveAndFly(row:Int, column:Int, counter:Int, mode:ModeState):Int = {
+  def handleMoveAndFly(row: Int, column: Int, counter: Int, mode: ModeState): Int = {
     var cnt = counter
     cnt += 1
     if (cnt == 2) {
-      if (mode == MoveModeState()) {
-        moveStone(tmpCell._1, tmpCell._2, row, column)
-        println("movecounter: " + cnt)
-      } else {
-        fly(tmpCell._1, tmpCell._2, row, column)
-        println("flycounter: " + cnt)
-      }
+      handleMoveAndFlyHelper(tmpCell._1, tmpCell._2, row, column,
+        if (mode == MoveModeState()) {
+          new MoveCommand(tmpCell._1, tmpCell._2, row, column, this)
+        } else {
+          new FlyCommand(tmpCell._1, tmpCell._2, row, column, this)
+        })
       val m = checkMill(row, column)
       m match {
         case "White Mill" => cnt += 1
@@ -123,7 +119,23 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     cnt
   }
 
-  def selectDriveCommand():ModeState = mgr.selectDriveCommand()
+  private def handleMoveAndFlyHelper(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int, command: CommandTrait): Unit = {
+    if ((command.isInstanceOf[FlyCommand] && field.available(rowNew, colNew)) ||
+      (command.isInstanceOf[MoveCommand] && field.available(rowNew, colNew) && isNeigbour(rowOld, colOld, rowNew, colNew))
+    ) {
+      val cellColor = cell(rowOld, colOld).getContent.whichColor
+      if (cellColor == Color.black || cellColor == Color.white) {
+        undoManager.doStep(command)
+      } else {
+        mgr.roundCounter -= 1
+      }
+    } else {
+      mgr.roundCounter -= 1
+    }
+    publish(new CellChanged)
+  }
+
+  def selectDriveCommand(): ModeState = mgr.selectDriveCommand()
 
   def set(row: Int, col: Int): Unit = {
     if (field.available(row, col)) {
@@ -140,54 +152,11 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     publish(new CellChanged)
   }
 
-  def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Unit = {
-    if (field.available(rowNew, colNew) && isNeigbour(rowOld, colOld, rowNew, colNew)) {
-      if (mgr.blackTurn()) {
-        if (cell(rowOld, colOld).getContent.whichColor == Color.black) {
-          undoManager.doStep(new MoveCommand(rowOld, colOld, rowNew, colNew, this))
-        } else {
-          mgr.roundCounter -= 1
-        }
-      } else {
-        if (cell(rowOld, colOld).getContent.whichColor == Color.white) {
-          undoManager.doStep(new MoveCommand(rowOld, colOld, rowNew, colNew, this))
-        } else {
-          mgr.roundCounter -= 1
-        }
-      }
-    } else {
-      mgr.roundCounter -= 1
-    }
-    publish(new CellChanged)
-  }
-
-  def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Unit = {
-    if (field.available(rowNew, colNew)) {
-      if (mgr.blackTurn()) {
-        if (cell(rowOld, colOld).getContent.whichColor == Color.black) {
-          undoManager.doStep(new FlyCommand(rowOld, colOld, rowNew, colNew, this))
-        } else {
-          mgr.roundCounter -= 1
-        }
-      } else {
-        if (cell(rowOld, colOld).getContent.whichColor == Color.white) {
-          undoManager.doStep(new FlyCommand(rowOld, colOld, rowNew, colNew, this))
-        } else {
-          mgr.roundCounter -= 1
-        }
-      }
-    }
-
-    publish(new CellChanged)
-  }
-
   def undo: Unit = {
     undoManager.undoStep()
     if (mgr.roundCounter > 0) {
       mgr.roundCounter -= 1
-      flyCounter = 0
-      moveCounter = 0
-      setCounter = 0
+      resetCounters()
     }
     gameState = GameState.handle(UndoState())
     publish(new CellChanged)
@@ -197,15 +166,13 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     undoManager.redoStep()
     if (mgr.roundCounter > 0) {
       mgr.roundCounter += 1
-      flyCounter = 0
-      moveCounter = 0
-      setCounter = 0
+      resetCounters()
     }
     gameState = GameState.handle(RedoState())
     publish(new CellChanged)
   }
 
-  def checkMill(row:Int, col:Int):String = {
+  def checkMill(row: Int, col: Int): String = {
     val m = field.checkMill(row, col)
     m match {
       case 1 => millState = MillState.handle(BlackMillState())
@@ -229,7 +196,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     r
   }
 
-  def stoneHasOtherColor(row:Int, col:Int, color: Color.Value):Boolean = {
+  def stoneHasOtherColor(row: Int, col: Int, color: Color.Value): Boolean = {
     var r = (field, false)
     if (cell(row, col).getContent.whichColor == color) {
       r = field.removeStone(row, col)
@@ -238,7 +205,7 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     r._2
   }
 
-  def checkWinner(row:Int, column:Int): Unit = {
+  def checkWinner(row: Int, column: Int): Unit = {
     if (mgr.player1.mode == ModeState.handle(FlyModeState()) && mgr.player2.mode == ModeState.handle(FlyModeState())) {
       val m = checkMill(row, column)
       m match {
@@ -271,6 +238,11 @@ class Controller @Inject() (var field: FieldInterface) extends ControllerInterfa
     publish(new CellChanged)
   }
 
+  def resetCounters(): Unit = {
+    setCounter = 0
+    moveCounter = 0
+    flyCounter = 0
+  }
   def cell(row:Int, col:Int):Cell = field.cell(row, col)
   def isSet(row:Int, col:Int):Boolean = field.cell(row, col).isSet
   def available(row:Int, col:Int):Boolean = field.available(row, col)

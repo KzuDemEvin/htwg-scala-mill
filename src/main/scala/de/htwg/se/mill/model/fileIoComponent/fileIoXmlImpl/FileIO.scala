@@ -40,7 +40,7 @@ class FileIO extends FileIOInterface {
   def save(field: FieldInterface): Unit = saveString(field)
 
   def saveXML(field: FieldInterface): Unit = {
-    scala.xml.XML.save("field.xml", fieldToXml(field), "UTF-8", true)
+    scala.xml.XML.save(filename = "field.xml", node = fieldToXml(field), enc = "UTF-8", xmlDecl = true)
   }
 
   def saveString(field: FieldInterface): Unit = {

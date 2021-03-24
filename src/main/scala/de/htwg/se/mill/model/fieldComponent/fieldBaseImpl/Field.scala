@@ -43,9 +43,7 @@ case class Field @Inject() (allCells: Matrix[Cell], player1Mode: String, player1
     var field = copy()
     for (x <- neighbours(rowOld, colOld)) {
       if (x._1 == rowNew && x._2 == colNew && !cell(rowNew, colNew).isSet) {
-        val oldCell = cell(rowOld, colOld)
-        field = field.replace(rowOld, colOld, Cell("ce"))
-        field = field.set(rowNew, colNew, oldCell)
+        field = fly(rowOld, colOld, rowNew, colNew)
       }
     }
     field
@@ -193,19 +191,17 @@ case class Field @Inject() (allCells: Matrix[Cell], player1Mode: String, player1
     millYesNo
   }
 
-  private def checkMillSet(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = {
-    cell1.isSet && cell2.isSet && cell3.isSet
+  private def checker[T](check: T => Boolean)(values: Vector[T]): Boolean = values.forall(check(_))
+
+  private def checkMillSet(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = checker[Cell](value => value.isSet)(Vector(cell1, cell2, cell3))
+
+  private def checkMillColor(color: Color.Value)(cell1: Cell, cell2: Cell, cell3: Cell) = {
+    checker[Cell](value => value.getContent.whichColor == color)(Vector(cell1, cell2, cell3))
   }
 
-  private def checkMillBlack(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = {
-    (cell1.getContent.whichColor == Color.black && cell2.getContent.whichColor == Color.black
-      && cell3.getContent.whichColor == Color.black)
-  }
+  private def checkMillBlack(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = checkMillColor(Color.black)(cell1, cell2, cell3)
 
-  private def checkMillWhite(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = {
-    (cell1.getContent.whichColor == Color.white && cell2.getContent.whichColor == Color.white
-      && cell3.getContent.whichColor == Color.white)
-  }
+  private def checkMillWhite(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = checkMillColor(Color.white)(cell1, cell2, cell3)
 
   override def createNewField: FieldInterface = new Field(size)
 
