@@ -11,15 +11,11 @@ class GUIGridPanel(controller: ControllerInterface, allCellPanels: Array[Array[C
         row <- 0 until controller.fieldsize
         col <- 0 until controller.fieldsize
       } {
+        val cellPanel = new CellPanel(row, col, controller)
+        allCellPanels(row)(col) = cellPanel
+        contents += cellPanel
         if (controller.possiblePosition(row, col)) {
-          val cellPanel = new CellPanel(row, col, controller)
-          allCellPanels(row)(col) = cellPanel
-          contents += cellPanel
           listenTo(cellPanel)
-        } else {
-          val cellPanel = new CellPanel(row, col, controller)
-          allCellPanels(row)(col) = cellPanel
-          contents += cellPanel
         }
       }
       //vGap_=(0)

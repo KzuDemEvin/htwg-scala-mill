@@ -31,8 +31,8 @@ class FileIO extends FileIOInterface {
       }
     }
     field.setRoundCounter(roundCounter)
-    field.setPlayer1Mode(player1Mode)
-    field.setPlayer2Mode(player2Mode)
+    field = field.setPlayer1Mode(player1Mode)
+    field = field.setPlayer2Mode(player2Mode)
     field
   }
 

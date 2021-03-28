@@ -1,24 +1,18 @@
 package de.htwg.se.mill.model.fieldComponent
 
-trait Stone {
+trait StoneTrait {
   def isSet: Boolean
   def whichColor: Color.Value
 }
 
-private class WhiteStone(value:Int, color:Color.Value) extends Stone {
+abstract class Stone(value: Int, color: Color.Value) extends StoneTrait {
   override def isSet: Boolean = value != 0
   override def whichColor:Color.Value =  color
 }
 
-private class BlackStone(value:Int, color:Color.Value) extends Stone {
-  override def isSet: Boolean = value != 0
-  override def whichColor:Color.Value =  color
-}
-
-private class ColorLessStone(value:Int, color: Color.Value) extends Stone {
-  override def isSet: Boolean = value != 0
-  override def whichColor:Color.Value =  color
-}
+private class WhiteStone(value: Int, color: Color.Value) extends Stone(value, color)
+private class BlackStone(value: Int, color: Color.Value) extends Stone(value, color)
+private class ColorLessStone(value: Int, color: Color.Value) extends Stone(value, color)
 
 object Stone {
   def apply(kind: String):Stone = kind match{

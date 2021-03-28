@@ -6,6 +6,7 @@ import net.codingwell.scalaguice.InjectorExtensions._
 import de.htwg.se.mill.MillModule
 import de.htwg.se.mill.model.fieldComponent.{Cell, FieldInterface}
 import de.htwg.se.mill.model.fileIoComponent.FileIOInterface
+import scala.xml.dtd.{DocType, PublicID}
 
 import scala.xml.{Node, NodeSeq, PrettyPrinter}
 
@@ -30,15 +31,15 @@ class FileIO extends FileIOInterface {
       }
     }
     field.setRoundCounter(roundCounter)
-    field.setPlayer1Mode(player1Mode)
-    field.setPlayer2Mode(player2Mode)
+    field = field.setPlayer1Mode(player1Mode)
+    field = field.setPlayer2Mode(player2Mode)
     field
   }
 
   def save(field: FieldInterface): Unit = saveString(field)
 
   def saveXML(field: FieldInterface): Unit = {
-    scala.xml.XML.save("field.xml", fieldToXml(field))
+    scala.xml.XML.save(filename = "field.xml", node = fieldToXml(field), enc = "UTF-8", xmlDecl = true)
   }
 
   def saveString(field: FieldInterface): Unit = {

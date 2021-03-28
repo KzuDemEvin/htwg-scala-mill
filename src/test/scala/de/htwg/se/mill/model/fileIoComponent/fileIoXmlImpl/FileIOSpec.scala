@@ -1,4 +1,4 @@
-package de.htwg.se.mill.model.playerComponent.fileIoXmlImpl
+package de.htwg.se.mill.model.fileIoComponent.fileIoXmlImpl
 
 import de.htwg.se.mill.model.fieldComponent.Cell
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
@@ -6,11 +6,11 @@ import de.htwg.se.mill.model.fileIoComponent.fileIoXmlImpl.FileIO
 import org.scalatest.{Matchers, WordSpec}
 
 class FileIOSpec extends WordSpec with Matchers {
-  "A FileIO" when {
+  "A XML FileIO" when {
     "new" should {
       var savedField = new Field(7)
       val fileIo = new FileIO
-      "Should be able to save the game" in {
+      "Should be able to save the game as XML" in {
         savedField = new Field(7)
         savedField = savedField.set(0, 0, Cell("cw"))
         savedField = savedField.set(6, 6, Cell("cb"))
