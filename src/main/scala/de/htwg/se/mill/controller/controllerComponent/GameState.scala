@@ -43,7 +43,7 @@ case class LoadState() extends GameState {
 
 
 object GameState {
-  var state = NewState().handle
+  var state: String = NewState().handle
   def handle(e: GameState): String = {
     e match {
       case FinishedState() => state = FinishedState().handle

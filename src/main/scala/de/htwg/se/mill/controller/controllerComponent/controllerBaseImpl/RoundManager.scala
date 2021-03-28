@@ -6,7 +6,7 @@ import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, 
 import de.htwg.se.mill.model.fieldComponent.FieldInterface
 import de.htwg.se.mill.model.playerComponent.Player
 
-case class RoundManager()  {
+case class RoundManager(/* player1: Player, player2: Player */) {
   var roundCounter = 0
   val borderToMoveMode = 18
   val injector: Injector = Guice.createInjector(new MillModule)
@@ -15,11 +15,28 @@ case class RoundManager()  {
   var winner = 0
   var winnerText = "No Winner"
 
-  def blackTurn():Boolean = roundCounter % 2 == 1
+  /*
+  def this() {
+    this(
+      player1 = Player(name = "No Name1"),
+      player2 = Player(name = "No Name2")
+    )
+  } */
 
-  def whiteTurn():Boolean = roundCounter % 2 == 0
+  def blackTurn(): Boolean = roundCounter % 2 == 1
 
-  def modeChoice(field:FieldInterface): Unit = {
+  def whiteTurn(): Boolean = roundCounter % 2 == 0
+
+  /*
+  def setPlayer(player: Player, number: Int = 1): RoundManager = {
+    if (number == 1) {
+      copy(player1 = player)
+    } else {
+      copy(player2 = player)
+    }
+  } */
+
+  def modeChoice(field: FieldInterface): Unit = {
     if (roundCounter < borderToMoveMode) {
       player1 = player1.changeMode(ModeState.handle(SetModeState()))
       player2 = player2.changeMode(ModeState.handle(SetModeState()))
@@ -45,17 +62,11 @@ case class RoundManager()  {
     }
   }
 
-  def selectDriveCommand():ModeState = {
-    var cmd = ModeState.whichState(SetModeState().handle)
-    if (blackTurn()) {
-      cmd = ModeState.whichState(player2.mode)
-    } else {
-      cmd = ModeState.whichState(player1.mode)
-    }
-    cmd
+  def selectDriveCommand(): ModeState = {
+    ModeState.whichState(if (blackTurn()) player2.mode else player1.mode)
   }
 
-  def handleWinnerText(winner:Int): Unit = {
+  def handleWinnerText(winner: Int): Unit = {
     winner match {
       case 0 => winnerText = "No Winner"
       case 1 => winnerText = player1.name + " wins (White) !"

@@ -32,9 +32,8 @@ class FileIO extends FileIOInterface {
       }
     }
     field.setRoundCounter(roundCounter)
-    field = field.setPlayer1Mode(player1Mode)
-    field = field.setPlayer2Mode(player2Mode)
-    field
+      .setPlayer1Mode(player1Mode)
+      .setPlayer2Mode(player2Mode)
   }
 
   override def save(field: FieldInterface): Unit = {
@@ -58,7 +57,7 @@ class FileIO extends FileIOInterface {
             Json.obj(
               "row" -> row,
               "col" -> col,
-              "color" -> Json.toJson(field.cell(row, col).getContent.whichColor)
+              "color" -> Json.toJson(field.cell(row, col).content.color)
             )
           }
         )

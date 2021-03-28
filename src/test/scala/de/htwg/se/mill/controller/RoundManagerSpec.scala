@@ -7,6 +7,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 class RoundManagerSpec extends WordSpec with Matchers {
   "A RoundManager" when {
+    val normalSize = 7
     "created" should {
       val roundManager = new RoundManager
       "handle the WinnerText" in {
@@ -20,21 +21,21 @@ class RoundManagerSpec extends WordSpec with Matchers {
         roundManager.winnerText should be(roundManager.player2.name + " wins (Black) !")
       }
       "select the right drive command when both players have SetMode and its whites turn" in {
-        val field = new Field(7)
+        val field = new Field(normalSize)
         val controller = new Controller(field)
         //controller.handleClick(0,0)
         roundManager.player1.mode should be(ModeState.handle(SetModeState()))
         roundManager.selectDriveCommand() should be(ModeState.whichState(SetModeState().handle))
       }
       "select the right drive command when both players have SetMode and its's blacks turn" in {
-        val field = new Field(7)
+        val field = new Field(normalSize)
         val controller = new Controller(field)
         controller.handleClick(0,0)
         roundManager.player2.mode should be(ModeState.handle(SetModeState()))
         roundManager.selectDriveCommand() should be(ModeState.whichState(SetModeState().handle))
       }
       "choose the correct mode per player" should {
-        val field = new Field(7)
+        val field = new Field(normalSize)
         val controller = new Controller(field)
         "both should be in Set Mode" in {
           controller.mgr.player1.mode should be(ModeState.handle(SetModeState()))

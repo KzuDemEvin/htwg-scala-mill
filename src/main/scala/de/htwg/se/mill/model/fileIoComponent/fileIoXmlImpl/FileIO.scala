@@ -2,13 +2,12 @@ package de.htwg.se.mill.model.fileIoComponent.fileIoXmlImpl
 
 import com.google.inject.Guice
 import com.google.inject.name.Names
-import net.codingwell.scalaguice.InjectorExtensions._
 import de.htwg.se.mill.MillModule
 import de.htwg.se.mill.model.fieldComponent.{Cell, FieldInterface}
 import de.htwg.se.mill.model.fileIoComponent.FileIOInterface
-import scala.xml.dtd.{DocType, PublicID}
+import net.codingwell.scalaguice.InjectorExtensions._
 
-import scala.xml.{Node, NodeSeq, PrettyPrinter}
+import scala.xml.{Node, PrettyPrinter}
 
 class FileIO extends FileIOInterface {
 
@@ -20,7 +19,7 @@ class FileIO extends FileIOInterface {
     val player2Mode = (file \\ "field" \ "@player2Mode").text
     val injector = Guice.createInjector(new MillModule)
     field = injector.instance[FieldInterface](Names.named("normal"))
-    val cellNodes = (file \\ "cell")
+    val cellNodes = file \\ "cell"
     for (cell <- cellNodes) {
       val row: Int = (cell \ "@row").text.toInt
       val col: Int = (cell \ "@col").text.toInt
@@ -32,9 +31,8 @@ class FileIO extends FileIOInterface {
       }
     }
     field.setRoundCounter(roundCounter)
-    field = field.setPlayer1Mode(player1Mode)
-    field = field.setPlayer2Mode(player2Mode)
-    field
+      .setPlayer1Mode(player1Mode)
+      .setPlayer2Mode(player2Mode)
   }
 
   def save(field: FieldInterface): Unit = saveString(field)
@@ -66,7 +64,7 @@ class FileIO extends FileIOInterface {
 
   def cellToXml(field: FieldInterface, row: Int, col: Int): Node = {
     <cell row={ row.toString } col={ col.toString }>
-      { field.cell(row, col).getContent.whichColor }
+      { field.cell(row, col).content.color }
     </cell>
   }
 

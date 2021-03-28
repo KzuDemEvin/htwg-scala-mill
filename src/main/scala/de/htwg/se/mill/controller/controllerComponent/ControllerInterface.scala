@@ -2,6 +2,7 @@ package de.htwg.se.mill.controller.controllerComponent
 
 import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.RoundManager
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
+import de.htwg.se.mill.model.playerComponent.Player
 
 import scala.swing.Publisher
 
@@ -13,6 +14,7 @@ trait ControllerInterface extends Publisher {
   var gameState:String
   var millState:String
   var winnerText:String
+  def createPlayer(name: String, number: Int): Player
   def createEmptyField(size: Int): Unit
   def createRandomField(size: Int): Unit
   def fieldToString: String

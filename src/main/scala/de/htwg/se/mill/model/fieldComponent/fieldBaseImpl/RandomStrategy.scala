@@ -13,7 +13,7 @@ class RandomStrategy extends Strategy {
   def fill(_field: Field): Field = {
     val num = 18
     var field = new Field(_field.size)
-    for (i <- 0 until num) {
+    for (_ <- 0 until num) {
       field = placeRandomStone(field)
     }
     field

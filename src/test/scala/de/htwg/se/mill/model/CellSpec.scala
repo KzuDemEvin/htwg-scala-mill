@@ -8,7 +8,7 @@ class CellSpec extends WordSpec with Matchers {
     "filled with a white stone" should {
       val filledWhiteCell = Cell("cw")
       "should be filled with a white Stone" in {
-        filledWhiteCell.getContent.whichColor should be(Color.white)
+        filledWhiteCell.content.color should be(Color.white)
       }
       "is filled" in {
         filledWhiteCell.isSet should be(true)
@@ -20,7 +20,7 @@ class CellSpec extends WordSpec with Matchers {
     "filled with a black stone" should {
       val filledBlackCell = Cell("cb")
       "should be filled with a black Stone" in {
-        filledBlackCell.getContent.whichColor should be(Color.black)
+        filledBlackCell.content.color should be(Color.black)
       }
       "is filled" in {
         filledBlackCell.isSet should be(true)
@@ -32,7 +32,7 @@ class CellSpec extends WordSpec with Matchers {
     "by default a not filled Cell has no Stone" should {
       val emptyCell = Cell("ce")
       "should be filled with no Stone" in {
-        emptyCell.getContent.whichColor should be(Color.noColor)
+        emptyCell.content.color should be(Color.noColor)
       }
       "is not filled" in {
         emptyCell.isSet should be (false)

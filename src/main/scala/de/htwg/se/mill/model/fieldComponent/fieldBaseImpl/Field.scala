@@ -4,11 +4,17 @@ import com.google.inject.Inject
 import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, MoveModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color, FieldInterface}
 
-case class Field @Inject() (allCells: Matrix[Cell], player1Mode: String, player1Name: String, player2Mode: String, player2Name: String) extends FieldInterface {
+case class Field @Inject()(allCells: Matrix[Cell],
+                           savedRoundCounter: Int,
+                           player1Mode: String,
+                           player1Name: String,
+                           player2Mode: String,
+                           player2Name: String) extends FieldInterface {
 
   def this(allCells: Matrix[Cell]) {
 
     this(allCells = allCells,
+      savedRoundCounter = 0,
       player1Mode = ModeState.handle(SetModeState()),
       player1Name = "",
       player2Mode = ModeState.handle(SetModeState()),
@@ -25,13 +31,13 @@ case class Field @Inject() (allCells: Matrix[Cell], player1Mode: String, player1
 
   def possiblePosition(row: Int, col: Int): Boolean = allCells.allowedCell(row, col)
 
-  def available(row: Int, col: Int): Boolean = if (possiblePosition(row, col) && !cell(row, col).isSet) true else false
+  def available(row: Int, col: Int): Boolean = possiblePosition(row, col) && !cell(row, col).isSet
 
   def set(row: Int, col: Int, c: Cell): Field = {
     if (available(row, col)) {
       replace(row, col, c)
     } else {
-      this
+      copy()
     }
   }
 
@@ -40,31 +46,19 @@ case class Field @Inject() (allCells: Matrix[Cell], player1Mode: String, player1
   }
 
   def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
-    var field = copy()
-    for (x <- neighbours(rowOld, colOld)) {
-      if (x._1 == rowNew && x._2 == colNew && !cell(rowNew, colNew).isSet) {
-        field = fly(rowOld, colOld, rowNew, colNew)
-      }
+    if (neighbours(rowOld, colOld).contains((rowNew, colNew)) && !cell(rowNew, colNew).isSet) {
+      fly(rowOld, colOld, rowNew, colNew)
+    } else {
+      copy()
     }
-    field
   }
 
-  def isNeigbour(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Boolean = {
-    var r = false
-    for (x <- neighbours(rowOld, colOld)) {
-      if (x._1 == rowNew && x._2 == colNew) {
-        r = true
-      }
-    }
-    r
+  def isNeighbour(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Boolean = {
+    neighbours(rowOld, colOld).contains((rowNew, colNew))
   }
 
   def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
-    var field = copy()
-    val oldCell = cell(rowOld, colOld)
-    field = field.replace(rowOld, colOld, Cell("ce"))
-    field = field.set(rowNew, colNew, oldCell)
-    field
+    copy().replace(rowOld, colOld, Cell("ce")).set(rowNew, colNew, cell(rowOld, colOld))
   }
 
   def removeStone(row: Int, col: Int): (Field, Boolean) = {
@@ -83,9 +77,9 @@ case class Field @Inject() (allCells: Matrix[Cell], player1Mode: String, player1
     var blackStones = 0
     for (x <- this.allCells.allowedPosition) {
       if (!this.available(x._1, x._2)) {
-        if (this.cell(x._1, x._2).getContent.whichColor.equals(Color.white)) {
+        if (this.cell(x._1, x._2).content.color.equals(Color.white)) {
           whiteStones += 1
-        } else if (this.cell(x._1, x._2).getContent.whichColor.equals(Color.black)) {
+        } else if (this.cell(x._1, x._2).content.color.equals(Color.black)) {
           blackStones += 1
         }
       }
@@ -93,17 +87,11 @@ case class Field @Inject() (allCells: Matrix[Cell], player1Mode: String, player1
     (whiteStones, blackStones)
   }
 
-  def placedStones(): Int = {
-    placedStonesCounter()._1 + placedStonesCounter()._2
-  }
+  def placedStones(): Int = placedStonesCounter()._1 + placedStonesCounter()._2
 
-  def placedWhiteStones(): Int = {
-    placedStonesCounter()._1
-  }
+  def placedWhiteStones(): Int = placedStonesCounter()._1
 
-  def placedBlackStones(): Int = {
-    placedStonesCounter()._2
-  }
+  def placedBlackStones(): Int = placedStonesCounter()._2
 
   val millPositions = List(((0, 0), (0, 3), (0, 6)), //horizontal mills
     ((1, 1), (1, 3), (1, 5)),
@@ -175,15 +163,14 @@ case class Field @Inject() (allCells: Matrix[Cell], player1Mode: String, player1
 
   def checkMill(row: Int, col: Int): Int = {
     var millYesNo = 0
-    for (x <- millneighbours(row, col)) {
-      val cell1 = cell(row, col)
-      val cell2 = cell(x._1._1, x._1._2)
-      val cell3 = cell(x._2._1, x._2._2)
+    val cell1 = cell(row, col)
+    for ((x1, x2) <- millneighbours(row, col)) {
+      val cell2 = cell(x1._1, x1._2)
+      val cell3 = cell(x2._1, x2._2)
       if (checkMillSet(cell1, cell2, cell3)) {
         if (checkMillBlack(cell1, cell2, cell3)) {
           millYesNo = 1
-        }
-        else if (checkMillWhite(cell1, cell2, cell3)) {
+        } else if (checkMillWhite(cell1, cell2, cell3)) {
           millYesNo = 2
         }
       }
@@ -195,8 +182,8 @@ case class Field @Inject() (allCells: Matrix[Cell], player1Mode: String, player1
 
   private def checkMillSet(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = checker[Cell](value => value.isSet)(Vector(cell1, cell2, cell3))
 
-  private def checkMillColor(color: Color.Value)(cell1: Cell, cell2: Cell, cell3: Cell) = {
-    checker[Cell](value => value.getContent.whichColor == color)(Vector(cell1, cell2, cell3))
+  private def checkMillColor(color: Color.Value)(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = {
+    checker[Cell](value => value.content.color == color)(Vector(cell1, cell2, cell3))
   }
 
   private def checkMillBlack(cell1: Cell, cell2: Cell, cell3: Cell): Boolean = checkMillColor(Color.black)(cell1, cell2, cell3)
@@ -205,38 +192,22 @@ case class Field @Inject() (allCells: Matrix[Cell], player1Mode: String, player1
 
   override def createNewField: FieldInterface = new Field(size)
 
-
   override def toString: String = {
     var string = "Mill Gameboard:\n"
-    var counter = 0
     for (a <- 0 until size) {
       for (b <- 0 until size) {
-        if (counter == 7) {
-          string += "\n"
-          counter = 0
-        }
         if (possiblePosition(a, b)) {
-          counter = counter + 1
-          if (this.cell(a, b).getContent.whichColor.equals(Color.white)) {
-            string += " w "
-          } else if (this.cell(a, b).getContent.whichColor.equals(Color.black)) {
-            string += " b "
-          } else {
-            string += " o "
-          }
+          string += s" ${this.cell(a, b).colorAsChar} "
         } else {
-          counter = counter + 1
           string += " - "
         }
       }
+      string += "\n"
     }
-    string += "\n"
     string
   }
 
-  var savedRoundCounter = 0
-
-  def setRoundCounter(counter: Int): Unit = savedRoundCounter = counter
+  def setRoundCounter(counter: Int): Field = copy(savedRoundCounter = counter)
 
   def setPlayer1Mode(mode: String): Field = copy(player1Mode = ModeState.handle(checkModeState(mode)))
 
