@@ -12,9 +12,12 @@ import scala.io.Source
 
 class FileIO extends FileIOInterface {
 
-  override def load: FieldInterface = {
+  override def load(filename: Option[String] = Some("field.json")): FieldInterface = {
     var field: FieldInterface = null
-    val source: String = Source.fromFile("field.json").getLines.mkString
+    val source: String = Source.fromFile(filename match {
+      case Some(fn) => fn
+      case None => "field.json"
+    }).getLines.mkString
     val json: JsValue = Json.parse(source)
     val roundCounter = (json \ "field" \ "roundCounter").get.toString.toInt
     val player1Mode = (json \ "field" \ "player1Mode").get.toString.replaceAll("\"", "")
@@ -36,9 +39,12 @@ class FileIO extends FileIOInterface {
       .setPlayer2Mode(player2Mode)
   }
 
-  override def save(field: FieldInterface): Unit = {
+  override def save(field: FieldInterface, filename: Option[String] = Some("field.json")): Unit = {
     import java.io._
-    val pw = new PrintWriter(new File("field.json"))
+    val pw = new PrintWriter(new File(filename match {
+      case Some(fn) => fn
+      case None => "field.json"
+    }))
     pw.write(Json.prettyPrint(fieldToJson(field)))
     pw.close()
   }

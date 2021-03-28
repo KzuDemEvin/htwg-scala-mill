@@ -214,13 +214,13 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
       .setPlayer1Name(mgr.player1.name)
       .setPlayer2Mode(mgr.player2.mode)
       .setPlayer2Name(mgr.player2.name)
-    fileIo.save(field)
+    fileIo.save(field, None)
     gameState = GameState.handle(SaveState())
     publish(new CellChanged)
   }
 
   def load: Unit = {
-    field = fileIo.load
+    field = fileIo.load(None)
     mgr.roundCounter = field.savedRoundCounter
     mgr.player1 = mgr.player1.changeMode(field.player1Mode)
     mgr.player2 = mgr.player2.changeMode(field.player2Mode)
