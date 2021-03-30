@@ -13,8 +13,8 @@ class RandomStrategy extends Strategy {
   def fill(_field: Field): Field = {
     val num = 18
     var field = new Field(_field.size)
-    for (_ <- 0 until num) {
-      field = placeRandomStone(field)
+    for (counter <- 0 until num) {
+      field = placeRandomStone(field, counter)
     }
     field
   }
@@ -30,5 +30,13 @@ class RandomStrategy extends Strategy {
     } else {
       field
     }
+  }
+
+  private def findNotFilledFields(field: Field): Vector[(Int, Int)] = {
+    (for {
+      row <- 0 until field.size
+      col <- 0 until field.size
+      if field.available(row, col)
+    } yield (row, col)).toVector
   }
 }

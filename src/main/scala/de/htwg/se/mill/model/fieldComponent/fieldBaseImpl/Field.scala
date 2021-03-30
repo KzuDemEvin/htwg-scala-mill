@@ -4,6 +4,8 @@ import com.google.inject.Inject
 import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, MoveModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color, FieldInterface}
 
+import scala.util.{Failure, Success, Try}
+
 case class Field @Inject()(allCells: Matrix[Cell],
                            savedRoundCounter: Int,
                            player1Mode: String,
@@ -72,7 +74,7 @@ case class Field @Inject()(allCells: Matrix[Cell],
 
   def placedWhiteStones(): Int = placedStonesCounter(Color.white)
 
-  def placedBlackStones(): Int = placedStonesCounter()._2
+  def placedBlackStones(): Int = placedStonesCounter(Color.black)
 
   val millPositions = List(((0, 0), (0, 3), (0, 6)), //horizontal mills
     ((1, 1), (1, 3), (1, 5)),
