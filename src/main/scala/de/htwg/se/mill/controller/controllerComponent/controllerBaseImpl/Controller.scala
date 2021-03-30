@@ -26,7 +26,7 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
   val fileIo: FileIOInterface = injector.instance[FileIOInterface]
 
   def createPlayer(name: String, number: Int = 1): Player = {
-    val player = Player(name)
+    val player: Player = Player(name)
     if (number == 1) {
       mgr.player1 = player
     } else {
@@ -68,9 +68,10 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
       case MoveModeState() => moveCounter = handleMoveAndFly(row, column, moveCounter, MoveModeState())
       case FlyModeState() => flyCounter = handleMoveAndFly(row, column, flyCounter, FlyModeState())
     }
+    publish(new CellChanged)
   }
 
-  def handleSet(row: Int, column: Int, counter: Int): Int = {
+  private def handleSet(row: Int, column: Int, counter: Int): Int = {
     var cnt = counter
     if (cnt >= 1) {
       if (removeStone(row, column)) {
@@ -80,11 +81,9 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
         cnt += 1
       }
     } else {
-      set(row, column)
-      val m = checkMill(row, column)
-      m match {
-        case "White Mill" => cnt += 1
-        case "Black Mill" => cnt += 1
+      handleSetHelper(row, column)
+      checkMill(row, column) match {
+        case "White Mill" | "Black Mill" => cnt += 1
         case "No Mill" => cnt = 0
           mgr.roundCounter += 1
       }
@@ -93,9 +92,8 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     cnt
   }
 
-  def handleMoveAndFly(row: Int, column: Int, counter: Int, mode: ModeState): Int = {
-    var cnt = counter
-    cnt += 1
+  private def handleMoveAndFly(row: Int, column: Int, counter: Int, mode: ModeState): Int = {
+    var cnt = counter + 1
     if (cnt == 2) {
       handleMoveAndFlyHelper(tmpCell._1, tmpCell._2, row, column,
         if (mode == MoveModeState()) {
@@ -141,7 +139,7 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
 
   def selectDriveCommand(): ModeState = mgr.selectDriveCommand()
 
-  def set(row: Int, col: Int): Unit = {
+  private def handleSetHelper(row: Int, col: Int): Unit = {
     if (field.available(row, col)) {
       undoManager.doStep(new SetCommand(row, col, if (mgr.blackTurn()) Cell("cb") else Cell("cw"), this))
       gameState = GameState.handle(if (mgr.blackTurn()) WhiteTurnState() else BlackTurnState())

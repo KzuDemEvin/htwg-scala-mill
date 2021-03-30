@@ -36,8 +36,7 @@ class GUIPlayerWindow(controller:ControllerInterface) extends MainFrame {
   def nextPlayer():BoxPanel = {
     label.text = "Name von Player2 eingeben: "
     inputtxt.text = ""
-    val boxpanel = createBoxPanel(label, inputtxt, createbtn2)
-    boxpanel
+    createBoxPanel(label, inputtxt, createbtn2)
   }
 
   private def createBoxPanel(label: Label, inputtxt: TextField, createbtn: Button): BoxPanel = {

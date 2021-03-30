@@ -33,17 +33,9 @@ case class Field @Inject()(allCells: Matrix[Cell],
 
   def available(row: Int, col: Int): Boolean = possiblePosition(row, col) && !cell(row, col).isSet
 
-  def set(row: Int, col: Int, c: Cell): Field = {
-    if (available(row, col)) {
-      replace(row, col, c)
-    } else {
-      copy()
-    }
-  }
+  def set(row: Int, col: Int, c: Cell): Field = if (available(row, col)) replace(row, col, c) else copy()
 
-  def replace(row: Int, col: Int, c: Cell): Field = {
-    copy(allCells.replaceCell(row, col, c))
-  }
+  def replace(row: Int, col: Int, c: Cell): Field = copy(allCells.replaceCell(row, col, c))
 
   def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Field = {
     if (neighbours(rowOld, colOld).contains((rowNew, colNew)) && !cell(rowNew, colNew).isSet) {
@@ -62,34 +54,23 @@ case class Field @Inject()(allCells: Matrix[Cell],
   }
 
   def removeStone(row: Int, col: Int): (Field, Boolean) = {
-    var field = copy()
     if (checkMill(row, col) == 0) {
-      field = field.replace(row, col, Cell("ce"))
-      (field, true)
+      (copy().replace(row, col, Cell("ce")), true)
     } else {
-      (field, false)
+      (copy(), false)
     }
   }
 
-  // (Whitestones, Blackstones)
-  private def placedStonesCounter(): (Int, Int) = {
-    var whiteStones = 0
-    var blackStones = 0
-    for (x <- this.allCells.allowedPosition) {
-      if (!this.available(x._1, x._2)) {
-        if (this.cell(x._1, x._2).content.color.equals(Color.white)) {
-          whiteStones += 1
-        } else if (this.cell(x._1, x._2).content.color.equals(Color.black)) {
-          blackStones += 1
-        }
-      }
-    }
-    (whiteStones, blackStones)
+  private def placedStonesCounter(color: Color.Value): Int = {
+    (for {
+      (x1, x2) <- this.allCells.allowedPosition
+      if !this.available(x1, x2) && this.cell(x1, x2).content.color.equals(color)
+    } yield {}).size
   }
 
-  def placedStones(): Int = placedStonesCounter()._1 + placedStonesCounter()._2
+  def placedStones(): Int = placedWhiteStones() + placedBlackStones()
 
-  def placedWhiteStones(): Int = placedStonesCounter()._1
+  def placedWhiteStones(): Int = placedStonesCounter(Color.white)
 
   def placedBlackStones(): Int = placedStonesCounter()._2
 
@@ -162,21 +143,31 @@ case class Field @Inject()(allCells: Matrix[Cell],
 
 
   def checkMill(row: Int, col: Int): Int = {
-    var millYesNo = 0
-    val cell1 = cell(row, col)
-    for ((x1, x2) <- millneighbours(row, col)) {
-      val cell2 = cell(x1._1, x1._2)
-      val cell3 = cell(x2._1, x2._2)
-      if (checkMillSet(cell1, cell2, cell3)) {
-        if (checkMillBlack(cell1, cell2, cell3)) {
-          millYesNo = 1
-        } else if (checkMillWhite(cell1, cell2, cell3)) {
-          millYesNo = 2
-        }
-      }
+    val checkMill: ((Cell, Cell, Cell) => Boolean) => Boolean = checkMillC(row, col)((c1, c2, c3) => checkMillSet(c1, c2, c3))
+    if (checkMill((c1, c2, c3) => checkMillBlack(c1, c2, c3))) {
+      1
+    } else if (checkMill((c1, c2, c3) => checkMillWhite(c1, c2, c3))) {
+      2
+    } else {
+      0
     }
-    millYesNo
   }
+
+  def checkMillC(row: Int, col: Int)(checkAll: (Cell, Cell, Cell) => Boolean)(check: (Cell, Cell, Cell) => Boolean): Boolean = {
+    val cell1 = cell(row, col)
+    Try(millneighbours(row, col)) match {
+      case Success(n) => (for {
+        (x1, x2) <- n
+        cell2 = cell(x1._1, x1._2)
+        cell3 = cell(x2._1, x2._2)
+        if checkAll(cell1, cell2, cell3)
+      } yield {
+        (cell1, cell2, cell3)
+      }).exists(c => check(c._1, c._2, c._3))
+      case Failure(_) => false
+    }
+  }
+
 
   private def checker[T](check: T => Boolean)(values: Vector[T]): Boolean = values.forall(check(_))
 
@@ -193,18 +184,21 @@ case class Field @Inject()(allCells: Matrix[Cell],
   override def createNewField: FieldInterface = new Field(size)
 
   override def toString: String = {
-    var string = "Mill Gameboard:\n"
-    for (a <- 0 until size) {
-      for (b <- 0 until size) {
-        if (possiblePosition(a, b)) {
-          string += s" ${this.cell(a, b).colorAsChar} "
-        } else {
-          string += " - "
-        }
-      }
-      string += "\n"
-    }
-    string
+    s"Mill Gameboard:\n${
+      (for {
+        a <- 0 until size
+      } yield {
+        (for {
+          b <- 0 until size
+        } yield {
+          if (possiblePosition(a, b)) {
+            s" ${this.cell(a, b).colorAsChar} "
+          } else {
+            " - "
+          }
+        }).mkString("")
+      }).mkString("\n")
+    }\n"
   }
 
   def setRoundCounter(counter: Int): Field = copy(savedRoundCounter = counter)

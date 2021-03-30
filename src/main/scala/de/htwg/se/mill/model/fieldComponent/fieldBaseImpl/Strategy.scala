@@ -2,11 +2,7 @@ package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
 trait Strategy {
 
-  def createNewField(size:Int): Field = {
-    var field  = new Field(size)
-    field = fill(field)
-    field
-  }
+  def createNewField(size: Int): Field = fill(new Field(size))
 
-  def fill(field: Field) : Field
+  def fill(field: Field): Field
 }

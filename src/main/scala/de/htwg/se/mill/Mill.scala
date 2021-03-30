@@ -24,7 +24,7 @@ object Mill {
       do {
         print("Possible commands: new, random, place <location,0/1>, undo, redo, exit  -->\n")
         input = readLine()
-        print(s"${tui.execInput(input).get}\n")
+        print(s"${tui.execInput(input)}\n")
       } while (input != "exit")
     }
   }

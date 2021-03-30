@@ -19,35 +19,16 @@ class RandomStrategy extends Strategy {
     field
   }
 
-  private def placeRandomStone (field: Field): Field = {
-    var row = 0
-    var col = 0
-    do {
-      row = Random.nextInt(field.size)
-      col = Random.nextInt(field.size)
-    }
-    while (!field.available(row, col))
-    val color = Random.nextInt(2)
-    if (color == 0) {
-      if (whiteCounter < maxStones) {
-        whiteCounter += 1
-        field.set(row, col, Cell("cw"))
-      } else if (blackCounter < maxStones){
-        blackCounter += 1
-        field.set(row, col, Cell("cb"))
-      } else {
-        field
-      }
+  private def placeRandomStone(field: Field, counter: Int): Field = {
+    val notFilledFields = findNotFilledFields(field)
+    val (row, col) = notFilledFields(Random.nextInt(notFilledFields.size))
+
+    if (counter % 2 == 0 && whiteCounter < maxStones) {
+      field.set(row, col, Cell("cw"))
+    } else if (blackCounter < maxStones) {
+      field.set(row, col, Cell("cb"))
     } else {
-      if (blackCounter < maxStones) {
-        blackCounter += 1
-        field.set(row, col, Cell("cb"))
-      } else if (whiteCounter < maxStones) {
-        whiteCounter += 1
-        field.set(row, col, Cell("cw"))
-      } else {
-        field
-      }
+      field
     }
   }
 }
