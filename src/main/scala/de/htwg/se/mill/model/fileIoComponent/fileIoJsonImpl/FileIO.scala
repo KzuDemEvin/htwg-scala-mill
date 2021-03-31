@@ -13,17 +13,18 @@ import scala.io.Source
 class FileIO extends FileIOInterface {
 
   override def load(filename: Option[String] = Some("field.json")): FieldInterface = {
-    var field: FieldInterface = null
-    val source: String = Source.fromFile(filename match {
+    val sourceFile = Source.fromFile(filename match {
       case Some(fn) => fn
       case None => "field.json"
-    }).getLines.mkString
+    })
+    val source: String = sourceFile.getLines.mkString
+    sourceFile.close()
     val json: JsValue = Json.parse(source)
     val roundCounter = (json \ "field" \ "roundCounter").get.toString.toInt
     val player1Mode = (json \ "field" \ "player1Mode").get.toString.replaceAll("\"", "")
     val player2Mode = (json \ "field" \ "player2Mode").get.toString.replaceAll("\"", "")
     val injector = Guice.createInjector(new MillModule)
-    field = injector.instance[FieldInterface](Names.named("normal"))
+    var field = injector.instance[FieldInterface](Names.named("normal"))
     for (index <- 0 until field.size * field.size) {
       val row = (json \\ "row")(index).as[Int]
       val col = (json \\ "col")(index).as[Int]
