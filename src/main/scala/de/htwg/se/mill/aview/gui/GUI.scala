@@ -3,8 +3,7 @@ package de.htwg.se.mill.aview.gui
 import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface}
 
 import scala.swing.FlowPanel.Alignment
-import scala.swing.event.ButtonClicked
-import scala.swing.{BorderPanel, BoxPanel, Button, Dimension, FlowPanel, Font, Frame, GridPanel, Label, MainFrame, Orientation, TextField}
+import scala.swing.{BorderPanel, BoxPanel, Dimension, FlowPanel, Font, Frame, GridPanel, MainFrame, Orientation, TextField}
 
 
 class GUI(controller: ControllerInterface) extends MainFrame {

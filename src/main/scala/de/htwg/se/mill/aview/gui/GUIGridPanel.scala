@@ -1,7 +1,8 @@
 package de.htwg.se.mill.aview.gui
 
 import de.htwg.se.mill.controller.controllerComponent.ControllerInterface
-import scala.swing.{GridPanel}
+
+import scala.swing.GridPanel
 
 class GUIGridPanel(controller: ControllerInterface, allCellPanels: Array[Array[CellPanel]]) {
   def gridPanel: GridPanel = {

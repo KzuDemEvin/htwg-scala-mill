@@ -12,8 +12,13 @@ import scala.io.Source
 
 class FileIO extends FileIOInterface {
 
-  override def load: FieldInterface = {
-    val source: String = Source.fromFile("field.json").getLines.mkString
+  override def load(filename: Option[String] = Some("field.json")): FieldInterface = {
+    val sourceFile = Source.fromFile(filename match {
+      case Some(fn) => fn
+      case None => "field.json"
+    })
+    val source: String = sourceFile.getLines.mkString
+    sourceFile.close()
     val json: JsValue = Json.parse(source)
     val roundCounter = (json \ "field" \ "roundCounter").get.toString.toInt
     val player1Mode = (json \ "field" \ "player1Mode").get.toString.replaceAll("\"", "")
@@ -31,14 +36,16 @@ class FileIO extends FileIOInterface {
       }
     }
     field.setRoundCounter(roundCounter)
-    field = field.setPlayer1Mode(player1Mode)
-    field = field.setPlayer2Mode(player2Mode)
-    field
+      .setPlayer1Mode(player1Mode)
+      .setPlayer2Mode(player2Mode)
   }
 
-  override def save(field: FieldInterface): Unit = {
+  override def save(field: FieldInterface, filename: Option[String] = Some("field.json")): Unit = {
     import java.io._
-    val pw = new PrintWriter(new File("field.json"))
+    val pw = new PrintWriter(new File(filename match {
+      case Some(fn) => fn
+      case None => "field.json"
+    }))
     pw.write(Json.prettyPrint(fieldToJson(field)))
     pw.close()
   }
@@ -57,7 +64,7 @@ class FileIO extends FileIOInterface {
             Json.obj(
               "row" -> row,
               "col" -> col,
-              "color" -> Json.toJson(field.cell(row, col).getContent.whichColor)
+              "color" -> Json.toJson(field.cell(row, col).content.color)
             )
           }
         )

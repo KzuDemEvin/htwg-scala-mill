@@ -6,9 +6,10 @@ import org.scalatest.{Matchers, WordSpec}
 
 class GUISpec extends WordSpec with Matchers {
   "A GUI" when {
-    val controller = new Controller(new Field(7))
+    val normalSize = 7
+    val controller = new Controller(new Field(normalSize))
     "created" should {
-      var gui = new GUI(controller)
+      val gui = new GUI(controller)
       "have a title" in {
         gui.title should be("Mill")
       }

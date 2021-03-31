@@ -9,7 +9,7 @@ class StoneSpec extends WordSpec with Matchers {
     "created" should {
       "be a placed white stone" in {
         val placedWhitestone = Stone("w+")
-        placedWhitestone.whichColor should be (Color.white)
+        placedWhitestone.color should be(Color.white)
         placedWhitestone.isSet should be(true)
       }
       "be a non placed white stone" in {
@@ -18,7 +18,7 @@ class StoneSpec extends WordSpec with Matchers {
       }
       "be a placed black stone" in {
         val placedBlackstone = Stone("b+")
-        placedBlackstone.whichColor should be(Color.black)
+        placedBlackstone.color should be(Color.black)
         placedBlackstone.isSet should be(true)
       }
       "be a non placed black stone" in {
@@ -27,7 +27,7 @@ class StoneSpec extends WordSpec with Matchers {
       }
       "be a non placed colorless stone" in {
         val nonPlacedColorlessstone = Stone("n")
-        nonPlacedColorlessstone.whichColor should be(Color.noColor)
+        nonPlacedColorlessstone.color should be(Color.noColor)
         nonPlacedColorlessstone.isSet should be(false)
       }
     }
