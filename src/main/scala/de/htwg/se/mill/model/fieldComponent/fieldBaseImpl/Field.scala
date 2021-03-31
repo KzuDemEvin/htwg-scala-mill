@@ -64,10 +64,7 @@ case class Field @Inject()(allCells: Matrix[Cell],
   }
 
   private def placedStonesCounter(color: Color.Value): Int = {
-    (for {
-      (x1, x2) <- this.allCells.allowedPosition
-      if !this.available(x1, x2) && this.cell(x1, x2).content.color.equals(color)
-    } yield {}).size
+    this.allCells.allowedPosition.count(x => !this.available(x._1, x._2) && this.cell(x._1, x._2).content.color.equals(color))
   }
 
   def placedStones(): Int = placedWhiteStones() + placedBlackStones()
@@ -155,7 +152,7 @@ case class Field @Inject()(allCells: Matrix[Cell],
     }
   }
 
-  def checkMillC(row: Int, col: Int)(checkAll: (Cell, Cell, Cell) => Boolean)(check: (Cell, Cell, Cell) => Boolean): Boolean = {
+  private def checkMillC(row: Int, col: Int)(checkAll: (Cell, Cell, Cell) => Boolean)(check: (Cell, Cell, Cell) => Boolean): Boolean = {
     val cell1 = cell(row, col)
     Try(millneighbours(row, col)) match {
       case Success(n) => (for {
