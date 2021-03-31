@@ -7,12 +7,11 @@ import de.htwg.se.mill.model.fieldComponent.{Cell, FieldInterface}
 import de.htwg.se.mill.model.fileIoComponent.FileIOInterface
 import net.codingwell.scalaguice.InjectorExtensions._
 
-import scala.xml.{Elem, Node, PrettyPrinter}
+import scala.xml.{Elem, PrettyPrinter}
 
 class FileIO extends FileIOInterface {
 
   override def load(filename: Option[String] = Some("field.xml")): FieldInterface = {
-    var field: FieldInterface = null
     val file = scala.xml.XML.loadFile(filename match {
       case Some(fn) => fn
       case None => "field.xml"
@@ -21,7 +20,7 @@ class FileIO extends FileIOInterface {
     val player1Mode = (file \\ "field" \ "@player1Mode").text
     val player2Mode = (file \\ "field" \ "@player2Mode").text
     val injector = Guice.createInjector(new MillModule)
-    field = injector.instance[FieldInterface](Names.named("normal"))
+    var field = injector.instance[FieldInterface](Names.named("normal"))
     val cellNodes = file \\ "cell"
     for (cell <- cellNodes) {
       val row: Int = (cell \ "@row").text.toInt
@@ -38,7 +37,7 @@ class FileIO extends FileIOInterface {
       .setPlayer2Mode(player2Mode)
   }
 
-  def save(field: FieldInterface, filename: Option[String] = Some("field.xml")): Unit = {
+  override def save(field: FieldInterface, filename: Option[String] = Some("field.xml")): Unit = {
     saveString(field, filename match {
       case Some(fn) => fn
       case None => "field.xml"

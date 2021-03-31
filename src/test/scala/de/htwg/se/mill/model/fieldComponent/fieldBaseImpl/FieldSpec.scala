@@ -74,7 +74,8 @@ class FieldSpec extends WordSpec with Matchers {
       }
       "should not move a stone to a new position" in {
         val field = new Field(normalSize).set(0, 0, Cell("cw"))
-        field.set(0, 0, Cell("cb")) should be(field)
+        val notMovedStoneField = field.moveStone(0, 0, 2, 3)
+        notMovedStoneField should be(field)
       }
       "should be able to fly with a stone to a new position" in {
         val changedfield = normalField.set(0,0, Cell("cw"))
@@ -108,6 +109,10 @@ class FieldSpec extends WordSpec with Matchers {
           changedfield = changedfield.set(0,3, Cell("cw"))
           changedfield = changedfield.set(0,6 ,Cell("cw"))
           changedfield.checkMill(0,0) should be(2)
+        }
+        "when its not even possible" in {
+          val changedField = new Field(normalSize)
+          changedField.checkMill(0, 1) should be(0)
         }
       }
       "should create a new field" in {
