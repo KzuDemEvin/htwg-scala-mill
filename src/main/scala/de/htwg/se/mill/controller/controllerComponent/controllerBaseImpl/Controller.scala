@@ -232,6 +232,7 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     flyCounter = 0
   }
 
+  def fieldToHtml: String = field.toHtml
   def cell(row:Int, col:Int):Cell = field.cell(row, col)
   def isSet(row:Int, col:Int):Boolean = field.cell(row, col).isSet
   def available(row:Int, col:Int):Boolean = field.available(row, col)

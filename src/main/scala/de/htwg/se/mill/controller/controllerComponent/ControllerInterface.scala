@@ -18,6 +18,7 @@ trait ControllerInterface extends Publisher {
   def createEmptyField(size: Int): Unit
   def createRandomField(size: Int): Unit
   def fieldToString: String
+  def fieldToHtml: String
 
   def getRoundCounter:Int
   def selectDriveCommand():ModeState

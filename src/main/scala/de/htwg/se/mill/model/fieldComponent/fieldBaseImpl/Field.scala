@@ -155,7 +155,7 @@ case class Field @Inject()(allCells: Matrix[Cell],
     }
   }
 
-  def checkMillC(row: Int, col: Int)(checkAll: (Cell, Cell, Cell) => Boolean)(check: (Cell, Cell, Cell) => Boolean): Boolean = {
+  private def checkMillC(row: Int, col: Int)(checkAll: (Cell, Cell, Cell) => Boolean)(check: (Cell, Cell, Cell) => Boolean): Boolean = {
     val cell1 = cell(row, col)
     Try(millneighbours(row, col)) match {
       case Success(n) => (for {
@@ -202,6 +202,8 @@ case class Field @Inject()(allCells: Matrix[Cell],
       }).mkString("\n")
     }\n"
   }
+
+  override def toHtml: String = "<p  style=\"font-family:'Lucida Console',monospace\"> " + toString.replace("\n","<br>") +"</p>"
 
   def setRoundCounter(counter: Int): Field = copy(savedRoundCounter = counter)
 
