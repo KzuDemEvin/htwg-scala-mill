@@ -51,6 +51,6 @@ class Tui(controller: ControllerInterface) extends Reactor {
 
   def printTui: Unit = {
     printf(s"${controller.fieldToString}\n")
-    printf(s"$GameState.state}\n")
+    printf(s"${GameState.state}\n")
   }
 }
