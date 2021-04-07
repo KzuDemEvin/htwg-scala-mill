@@ -64,10 +64,7 @@ case class Field @Inject()(allCells: Matrix[Cell],
   }
 
   private def placedStonesCounter(color: Color.Value): Int = {
-    (for {
-      (x1, x2) <- this.allCells.allowedPosition
-      if !this.available(x1, x2) && this.cell(x1, x2).content.color.equals(color)
-    } yield {}).size
+    this.allCells.allowedPosition.count(x => !this.available(x._1, x._2) && this.cell(x._1, x._2).content.color.equals(color))
   }
 
   def placedStones(): Int = placedWhiteStones() + placedBlackStones()
@@ -142,7 +139,6 @@ case class Field @Inject()(allCells: Matrix[Cell],
     (6, 0) -> Set((3, 0), (6, 3)),
     (6, 3) -> Set((6, 0), (6, 6), (5, 3)),
     (6, 6) -> Set((6, 3), (3, 6)))
-
 
   def checkMill(row: Int, col: Int): Int = {
     val checkMill: ((Cell, Cell, Cell) => Boolean) => Boolean = checkMillC(row, col)((c1, c2, c3) => checkMillSet(c1, c2, c3))
