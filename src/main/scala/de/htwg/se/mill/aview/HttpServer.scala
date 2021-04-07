@@ -20,7 +20,6 @@ class HttpServer(controller: ControllerInterface) {
       complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`,
         """<h1>
           |<a href='https://github.com/KzuDemEvin/htwg-scala-mill'>HTWG Mill</a>
-          |<button>Test</button>
         </h1>"""))
     }
     path("mill") {
