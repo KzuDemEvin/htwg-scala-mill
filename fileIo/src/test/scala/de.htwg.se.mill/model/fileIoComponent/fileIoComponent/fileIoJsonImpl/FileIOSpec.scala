@@ -1,5 +1,7 @@
 package de.htwg.se.mill.model.fileIoComponent.fileIoComponent.fileIoJsonImpl
 
+import de.htwg.se.mill.model.fieldComponent.Cell
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
 import de.htwg.se.mill.model.fileIoComponent.fileIoJsonImpl.FileIO
 import org.scalatest.{Matchers, WordSpec}
 
