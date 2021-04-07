@@ -1,4 +1,4 @@
-lazy val root = (project in file(".")).aggregate(fileio)
+lazy val root = (project in file(".")).aggregate(fileio, player)
 lazy val fileio = (project in file("fileIo"))
 lazy val player = (project in file("player"))
 
