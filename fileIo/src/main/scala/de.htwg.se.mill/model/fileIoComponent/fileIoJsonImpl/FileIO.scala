@@ -29,10 +29,10 @@ class FileIO extends FileIOInterface {
       val row = (json \\ "row")(index).as[Int]
       val col = (json \\ "col")(index).as[Int]
       val color = (json \\ "color")(index).toString().replaceAll("\"", "")
-      color match {
-        case "white" => field = field.set(row, col, Cell("cw"))
-        case "black" => field = field.set(row, col, Cell("cb"))
-        case "noColor" => field = field.set(row, col, Cell("ce"))
+      field = color match {
+        case "white" => field.set(row, col, Cell("cw"))
+        case "black" => field.set(row, col, Cell("cb"))
+        case "noColor" => field.set(row, col, Cell("ce"))
       }
     }
     field.setRoundCounter(roundCounter)

@@ -1,6 +1,3 @@
-lazy val root = (project in file(".")).aggregate(fileio)
-lazy val fileio = (project in file("fileIo"))
-
 name          := "htwg-scala-mill"
 //organization  := "de.htwg.se"
 version       := "0.13"

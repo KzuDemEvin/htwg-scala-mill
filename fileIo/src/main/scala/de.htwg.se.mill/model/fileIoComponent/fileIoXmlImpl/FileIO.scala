@@ -26,10 +26,10 @@ class FileIO extends FileIOInterface {
       val row: Int = (cell \ "@row").text.toInt
       val col: Int = (cell \ "@col").text.toInt
       val content: String = cell.text.trim
-      content match {
-        case "white" => field = field.set(row, col, Cell("cw"))
-        case "black" => field = field.set(row, col, Cell("cb"))
-        case "noColor" => field = field.set(row, col, Cell("ce"))
+      field = content match {
+        case "white" => field.set(row, col, Cell("cw"))
+        case "black" => field.set(row, col, Cell("cb"))
+        case "noColor" => field.set(row, col, Cell("ce"))
       }
     }
     field.setRoundCounter(roundCounter)
@@ -51,8 +51,7 @@ class FileIO extends FileIOInterface {
   def saveString(field: FieldInterface, filename: String): Unit = {
     import java.io._
     val pw = new PrintWriter(new File(filename))
-    val prettyPrinter = new PrettyPrinter(120, 4)
-    val xml = prettyPrinter.format(fieldToXml(field))
+    val xml = new PrettyPrinter(120, 4).format(fieldToXml(field))
     pw.write(xml)
     pw.close()
   }
