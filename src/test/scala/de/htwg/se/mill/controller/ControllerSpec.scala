@@ -66,6 +66,7 @@ class ControllerSpec extends WordSpec with Matchers {
       }
       "be able to place random stones" in {
         controller.createRandomField(normalSize)
+        controller.field.size should be(normalSize)
         controller.placedStones() should be(18)
         controller.gameState should be("New field filled with random stones")
         controller.getRoundCounter should be(18)

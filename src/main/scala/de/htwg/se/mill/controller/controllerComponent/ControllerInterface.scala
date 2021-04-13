@@ -13,7 +13,6 @@ trait ControllerInterface extends Publisher {
   var flyCounter:Int
   var gameState:String
   var millState:String
-  var winnerText:String
   def createPlayer(name: String, number: Int): Player
   def createEmptyField(size: Int): Unit
   def createRandomField(size: Int): Unit
@@ -23,7 +22,6 @@ trait ControllerInterface extends Publisher {
   def getRoundCounter:Int
   def selectDriveCommand():ModeState
   def handleClick(row: Int, column: Int): Unit
-  def stoneHasOtherColor(row:Int, col:Int, color: Color.Value):Boolean
   def undo(): Unit
   def redo(): Unit
   def checkMill(row:Int, col:Int):String

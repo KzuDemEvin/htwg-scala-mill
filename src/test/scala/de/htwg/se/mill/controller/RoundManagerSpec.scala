@@ -11,14 +11,9 @@ class RoundManagerSpec extends WordSpec with Matchers {
     "created" should {
       val roundManager = new RoundManager
       "handle the WinnerText" in {
-        roundManager.handleWinnerText(0)
-        roundManager.winnerText should be("No Winner")
-
-        roundManager.handleWinnerText(1)
-        roundManager.winnerText should be(roundManager.player1.name + " wins (White) !")
-
-        roundManager.handleWinnerText(2)
-        roundManager.winnerText should be(roundManager.player2.name + " wins (Black) !")
+        roundManager.handleWinnerText(0) should be("No Winner")
+        roundManager.handleWinnerText(1) should be(roundManager.player1.name + " wins (White) !")
+        roundManager.handleWinnerText(2) should be(roundManager.player2.name + " wins (Black) !")
       }
       "select the right drive command when both players have SetMode and its whites turn" in {
         val field = new Field(normalSize)

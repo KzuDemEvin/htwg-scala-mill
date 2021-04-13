@@ -14,33 +14,27 @@ import scala.swing.Publisher
 
 class Controller @Inject()(var field: FieldInterface) extends ControllerInterface with Publisher {
   private val undoManager = new UndoManager
-  val mgr: RoundManager = RoundManager()
+  var mgr: RoundManager = new RoundManager()
   var tmpCell: (Int, Int) = (0, 0)
   var setCounter = 0
   var moveCounter = 0
   var flyCounter = 0
   var gameState: String = GameState.handle(NewState())
   var millState: String = MillState.handle(NoMillState())
-  var winnerText: String = "No Winner"
   val injector: Injector = Guice.createInjector(new MillModule)
   val fileIo: FileIOInterface = injector.instance[FileIOInterface]
 
   def createPlayer(name: String, number: Int = 1): Player = {
     val player: Player = Player(name)
-    if (number == 1) {
-      mgr.player1 = player
-    } else {
-      mgr.player2 = player
-    }
+    mgr = this.mgr.copy().setPlayer(player, number)
     player
   }
 
   def createEmptyField(size: Int): Unit = {
     resetCounters()
-    mgr.winner = 0
-    mgr.roundCounter = 0
     field = injector.instance[FieldInterface](Names.named("normal"))
-    mgr.modeChoice(field)
+    mgr = this.mgr.copy(winner = 0, roundCounter = 0)
+      .modeChoice(field)
     gameState = GameState.handle(NewState())
     millState = MillState.handle(NoMillState())
     publish(new CellChanged)
@@ -48,10 +42,10 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
 
   def createRandomField(size: Int): Unit = {
     resetCounters()
-    mgr.winner = 0
-    mgr.roundCounter = mgr.borderToMoveMode
     field = injector.instance[FieldInterface](Names.named("random"))
-    mgr.modeChoice(field)
+    mgr = this.mgr
+      .copy(winner = 0, roundCounter = this.mgr.borderToMoveMode)
+      .modeChoice(field)
     gameState = GameState.handle(RandomState())
     publish(new CellChanged)
   }
@@ -72,11 +66,11 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
   }
 
   private def handleSet(row: Int, column: Int, counter: Int): Int = {
-    var cnt = counter
+    var cnt: Int = counter
     if (cnt >= 1) {
       if (removeStone(row, column)) {
         cnt = 0
-        mgr.roundCounter += 1
+        updateRoundCounter(mgr.roundCounter + 1)
       } else {
         cnt += 1
       }
@@ -85,10 +79,10 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
       checkMill(row, column) match {
         case "White Mill" | "Black Mill" => cnt += 1
         case "No Mill" => cnt = 0
-          mgr.roundCounter += 1
+          updateRoundCounter(mgr.roundCounter + 1)
       }
     }
-    mgr.modeChoice(field)
+    mgr = this.mgr.modeChoice(field)
     cnt
   }
 
@@ -102,22 +96,21 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
           new FlyCommand(tmpCell._1, tmpCell._2, row, column, this)
         })
       checkMill(row, column) match {
-        case "White Mill" => cnt += 1
-        case "Black Mill" => cnt += 1
+        case "White Mill" | "Black Mill" => cnt += 1
         case "No Mill" => cnt = 0
-          mgr.roundCounter += 1
+          updateRoundCounter(mgr.roundCounter + 1)
       }
     } else if (cnt >= 4) {
       if (removeStone(row, column)) {
         cnt = 0
-        mgr.roundCounter += 1
+        updateRoundCounter(mgr.roundCounter + 1)
       } else {
         checkWinner(row, column)
       }
     } else {
       tmpCell = (row, column)
     }
-    mgr.modeChoice(field)
+    mgr = mgr.modeChoice(field)
     cnt
   }
 
@@ -129,10 +122,10 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
       if (cellColor == Color.black || cellColor == Color.white) {
         undoManager.doStep(command)
       } else {
-        mgr.roundCounter -= 1
+        updateRoundCounter(mgr.roundCounter - 1)
       }
     } else {
-      mgr.roundCounter -= 1
+      updateRoundCounter(mgr.roundCounter - 1)
     }
     publish(new CellChanged)
   }
@@ -144,29 +137,30 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
       undoManager.doStep(new SetCommand(row, col, if (mgr.blackTurn()) Cell("cb") else Cell("cw"), this))
       gameState = GameState.handle(if (mgr.blackTurn()) WhiteTurnState() else BlackTurnState())
     } else {
-      mgr.roundCounter -= 1
+      updateRoundCounter(mgr.roundCounter - 1)
     }
     publish(new CellChanged)
   }
 
   def undo: Unit = {
     undoManager.undoStep()
-    if (mgr.roundCounter > 0) {
-      mgr.roundCounter -= 1
-      resetCounters()
-    }
+    step()
     gameState = GameState.handle(UndoState())
     publish(new CellChanged)
   }
 
   def redo: Unit = {
     undoManager.redoStep()
-    if (mgr.roundCounter > 0) {
-      mgr.roundCounter += 1
-      resetCounters()
-    }
+    step()
     gameState = GameState.handle(RedoState())
     publish(new CellChanged)
+  }
+
+  private def step(): Unit = {
+    if (mgr.roundCounter > 0) {
+      updateRoundCounter(mgr.roundCounter - 1)
+      resetCounters()
+    }
   }
 
   def checkMill(row: Int, col: Int): String = {
@@ -180,12 +174,12 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
 
   def removeStone(row: Int, col: Int): Boolean = {
     val r = stoneHasOtherColor(row, col, if (mgr.blackTurn()) Color.white else Color.black)
-    mgr.modeChoice(field)
+    mgr = this.mgr.copy().modeChoice(field)
     publish(new CellChanged)
     r
   }
 
-  def stoneHasOtherColor(row: Int, col: Int, color: Color.Value): Boolean = {
+  private def stoneHasOtherColor(row: Int, col: Int, color: Color.Value): Boolean = {
     var r = (field, false)
     if (cell(row, col).content.color == color) {
       r = field.removeStone(row, col)
@@ -196,13 +190,15 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
 
   def checkWinner(row: Int, column: Int): Unit = {
     if (mgr.player1.mode == ModeState.handle(FlyModeState()) && mgr.player2.mode == ModeState.handle(FlyModeState())) {
-      checkMill(row, column) match {
-        case "White Mill" => mgr.winner = 2
-          mgr.handleWinnerText(2)
-        case "Black Mill" => mgr.winner = 1
-          mgr.handleWinnerText(1)
-        case "No Mill" => mgr.winner = 0
+      val winner = checkMill(row, column) match {
+        case "White Mill" => 2
+        case "Black Mill" => 1
+        case "No Mill" => 0
       }
+      mgr = this.mgr.copy(
+        winner = winner,
+        winnerText = this.mgr.copy().handleWinnerText(winner)
+      )
     }
   }
 
@@ -219,9 +215,9 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
 
   def load: Unit = {
     field = fileIo.load(None)
-    mgr.roundCounter = field.savedRoundCounter
-    mgr.player1 = mgr.player1.changeMode(field.player1Mode)
-    mgr.player2 = mgr.player2.changeMode(field.player2Mode)
+    mgr = this.mgr.copy(roundCounter = field.savedRoundCounter)
+      .setPlayer(mgr.player1.changeMode(field.player1Mode))
+      .setPlayer(mgr.player2.changeMode(field.player2Mode), 2)
     gameState = GameState.handle(LoadState())
     publish(new CellChanged)
   }
@@ -232,15 +228,20 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     flyCounter = 0
   }
 
+  private def updateRoundCounter(roundCounter: Int): RoundManager = {
+    mgr = this.mgr.copy(roundCounter = roundCounter)
+    mgr
+  }
+
   def fieldToHtml: String = field.toHtml
-  def cell(row:Int, col:Int):Cell = field.cell(row, col)
-  def isSet(row:Int, col:Int):Boolean = field.cell(row, col).isSet
-  def available(row:Int, col:Int):Boolean = field.available(row, col)
-  def possiblePosition(row:Int, col:Int):Boolean = field.possiblePosition(row, col)
-  def placedStones():Int = field.placedStones()
-  def placedWhiteStones():Int = field.placedWhiteStones()
-  def placedBlackStones():Int = field.placedBlackStones()
-  def isNeigbour(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Boolean =
+  def cell(row: Int, col: Int): Cell = field.cell(row, col)
+  def isSet(row: Int, col: Int): Boolean = field.cell(row, col).isSet
+  def available(row: Int, col: Int): Boolean = field.available(row, col)
+  def possiblePosition(row: Int, col: Int): Boolean = field.possiblePosition(row, col)
+  def placedStones(): Int = field.placedStones()
+  def placedWhiteStones(): Int = field.placedWhiteStones()
+  def placedBlackStones(): Int = field.placedBlackStones()
+  def isNeigbour(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Boolean =
     field.isNeighbour(rowOld, colOld, rowNew, colNew)
   def fieldsize: Int = field.size
   def getRoundManager: RoundManager = mgr
