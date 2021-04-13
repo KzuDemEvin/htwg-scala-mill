@@ -1,6 +1,4 @@
-package de.htwg.se.mill.model.playerComponent
-
-import de.htwg.se.mill.controller.controllerComponent.{ModeState, SetModeState}
+package main.scala.de.htwg.se.mill.model.playerComponent
 
 trait Player {
   val name: String
@@ -14,7 +12,6 @@ private case class ClassicPlayer(override val name: String, override val mode: S
   def this(name: String) = this(name = name, mode = ModeState.handle(SetModeState()), amountStones = 9)
 
   def this(name: String, amountStones: Int) = this(name = name, mode = ModeState.handle(SetModeState()), amountStones = amountStones)
-
 
   override def changeMode(mode: String): Player = copy(mode = mode)
 

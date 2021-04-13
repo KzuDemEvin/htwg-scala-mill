@@ -1,5 +1,3 @@
-// Player
-
 name          := "htwg-scala-mill"
 //organization  := "de.htwg.se"
 version       := "0.13"
@@ -18,8 +16,8 @@ val commonDependencies = Seq(
   "com.typesafe.akka" %% "akka-http" % "10.2.4"
 )
 
-lazy val root = (project in file(".."))
-lazy val player = (project in file(".")).dependsOn(root).aggregate(root).settings(
+lazy val root = (project in file("../"))
+lazy val fileIO = (project in file(".")).dependsOn(root).aggregate(root).settings(
   name          := "htwg-scala-mill",
   //organization  := "de.htwg.se",
   version       := "0.13",

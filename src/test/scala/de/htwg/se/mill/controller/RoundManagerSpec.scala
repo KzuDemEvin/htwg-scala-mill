@@ -1,7 +1,8 @@
 package de.htwg.se.mill.controller
 
+import de.htwg.se.mill.controller.controllerBaseImpl.RoundManager
 import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, MoveModeState, SetModeState}
-import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.{Controller, RoundManager}
+import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
 import org.scalatest.{Matchers, WordSpec}
 

@@ -1,5 +1,6 @@
-package de.htwg.se.mill.model.playerComponent
+package main.scala.de.htwg.se.mill.model.playerComponent
 
+import main.scala.de.htwg.se.mill.model.playerComponent.Player
 import org.scalatest._
 
 class PlayerSpec extends WordSpec with Matchers {
