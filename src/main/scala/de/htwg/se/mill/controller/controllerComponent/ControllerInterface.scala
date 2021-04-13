@@ -1,7 +1,7 @@
 package de.htwg.se.mill.controller.controllerComponent
 
 import de.htwg.se.mill.controller.controllerBaseImpl.RoundManager
-import main.scala.de.htwg.se.mill.model.playerComponent.Player
+import de.htwg.se.mill.model.playerComponent.Player
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
 
 import scala.swing.Publisher

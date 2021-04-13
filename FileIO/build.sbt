@@ -1,10 +1,5 @@
 // FileIO
 
-name          := "htwg-scala-mill"
-//organization  := "de.htwg.se"
-version       := "0.13"
-scalaVersion  := "2.13.2"
-
 val commonDependencies = Seq(
   "org.scalactic" %% "scalactic" % "3.1.2",
   "org.scalatest" %% "scalatest" % "3.1.2" % "test",
@@ -20,7 +15,7 @@ val commonDependencies = Seq(
 
 lazy val root = (project in file(".."))
 lazy val fileIO = (project in file(".")).dependsOn(root).aggregate(root).settings(
-  name          := "htwg-scala-mill",
+  name          := "htwg-scala-fileio",
   //organization  := "de.htwg.se",
   version       := "0.13",
   scalaVersion  := "2.13.2",

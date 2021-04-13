@@ -2,7 +2,7 @@ package de.htwg.se.mill.controller.controllerBaseImpl
 
 import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, MoveModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent.FieldInterface
-import main.scala.de.htwg.se.mill.model.playerComponent.Player
+import de.htwg.se.mill.model.playerComponent.Player
 
 case class RoundManager(player1: Player,
                         player2: Player,

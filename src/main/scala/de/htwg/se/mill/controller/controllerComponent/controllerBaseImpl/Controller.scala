@@ -5,7 +5,7 @@ import com.google.inject.{Guice, Inject, Injector}
 import de.htwg.se.mill.MillModule
 import de.htwg.se.mill.controller.controllerBaseImpl.RoundManager
 import de.htwg.se.mill.controller.controllerComponent._
-import main.scala.de.htwg.se.mill.model.playerComponent.Player
+import de.htwg.se.mill.model.playerComponent.Player
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color, FieldInterface}
 import de.htwg.se.mill.model.fileIoComponent.FileIOInterface
 import de.htwg.se.mill.util.{CommandTrait, UndoManager}
