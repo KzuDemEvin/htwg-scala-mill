@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id="player [file:/C:/Users/Kevin/IdeaProjects/Softwarequalitaet/htwg-scala-mill_test/]" external.linked.project.path="$MODULE_DIR$/../../Player" external.root.project.path="$MODULE_DIR$/../.." external.system.id="SBT" type="JAVA_MODULE" version="4">
+<module external.linked.project.id="fileIO [file:/C:/Users/Kevin/IdeaProjects/Softwarequalitaet/htwg-scala-mill_test/]" external.linked.project.path="$MODULE_DIR$/../../FileIO" external.root.project.path="$MODULE_DIR$/../.." external.system.id="SBT" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_15">
-    <output url="file://$MODULE_DIR$/../../Player/target/scala-2.13/classes" />
-    <output-test url="file://$MODULE_DIR$/../../Player/target/scala-2.13/test-classes" />
+    <output url="file://$MODULE_DIR$/../../FileIO/target/scala-2.13/classes" />
+    <output-test url="file://$MODULE_DIR$/../../FileIO/target/scala-2.13/test-classes" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../Player">
-      <sourceFolder url="file://$MODULE_DIR$/../../Player/src/main/scala" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/../../Player/target" />
+    <content url="file://$MODULE_DIR$/../../FileIO">
+      <sourceFolder url="file://$MODULE_DIR$/../../FileIO/src/main/scala" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../FileIO/src/test/scala" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/../../FileIO/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -50,6 +51,6 @@
     <orderEntry type="library" name="sbt: org.scalactic:scalactic_2.13:3.1.2:jar" level="project" />
     <orderEntry type="library" scope="TEST" name="sbt: org.scalatest:scalatest_2.13:3.1.2:jar" level="project" />
     <orderEntry type="library" name="sbt: org.slf4j:slf4j-api:1.7.30:jar" level="project" />
-    <orderEntry type="module" module-name="root" exported="" />
+    <orderEntry type="module" module-name="htwg-scala-mill" exported="" />
   </component>
 </module>
