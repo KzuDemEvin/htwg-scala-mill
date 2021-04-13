@@ -1,4 +1,6 @@
-package main.scala.de.htwg.se.mill.model.playerComponent
+package de.htwg.se.mill.model.playerComponent
+
+import de.htwg.se.mill.controller.controllerComponent.{ModeState, SetModeState}
 
 trait Player {
   val name: String
