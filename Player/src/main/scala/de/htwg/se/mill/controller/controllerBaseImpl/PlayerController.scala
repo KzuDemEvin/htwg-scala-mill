@@ -1,5 +1,6 @@
 package de.htwg.se.mill.controller.controllerBaseImpl
 
+import com.google.gson.Gson
 import de.htwg.se.mill.controller.PlayerControllerInterface
 import de.htwg.se.mill.model.playerComponent.Player
 
@@ -35,5 +36,18 @@ class PlayerController extends PlayerControllerInterface {
     }
   }
 
-  override def toJson(player: Player): String = ???
+  override def deletePlayer(number: Int): Player = {
+    if (number % 2 == 0) {
+      player1 = Player(name = "No name")
+      player1
+    } else {
+      player2 = Player(name = "No name")
+      player2
+    }
+  }
+
+  override def toJson(player: Player): String = {
+    val gson = new Gson
+    gson.toJson(player)
+  }
 }
