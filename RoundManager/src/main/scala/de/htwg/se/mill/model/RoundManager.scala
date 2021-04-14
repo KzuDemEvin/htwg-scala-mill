@@ -1,4 +1,4 @@
-package de.htwg.se.mill.controller.controllerBaseImpl
+package de.htwg.se.mill.model
 
 import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, MoveModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent.FieldInterface
