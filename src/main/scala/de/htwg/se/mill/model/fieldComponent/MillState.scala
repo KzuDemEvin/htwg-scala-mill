@@ -1,4 +1,4 @@
-package de.htwg.se.mill.controller.controllerComponent
+package de.htwg.se.mill.model.fieldComponent
 
 trait MillState {
   def handle:String

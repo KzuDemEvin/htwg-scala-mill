@@ -6,7 +6,7 @@ import de.htwg.se.mill.MillModule
 import de.htwg.se.mill.controller.controllerComponent._
 import de.htwg.se.mill.model.RoundManager
 import de.htwg.se.mill.model.playerComponent.Player
-import de.htwg.se.mill.model.fieldComponent.{Cell, Color, FieldInterface}
+import de.htwg.se.mill.model.fieldComponent.{BlackMillState, Cell, Color, FieldInterface, MillState, NoMillState, WhiteMillState}
 import de.htwg.se.mill.model.fileIoComponent.FileIOInterface
 import de.htwg.se.mill.util.{CommandTrait, UndoManager}
 import net.codingwell.scalaguice.InjectorExtensions._
@@ -21,7 +21,6 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
   var moveCounter = 0
   var flyCounter = 0
   var gameState: String = GameState.handle(NewState())
-  var millState: String = MillState.handle(NoMillState())
   val injector: Injector = Guice.createInjector(new MillModule)
   val fileIo: FileIOInterface = injector.instance[FileIOInterface]
 
@@ -37,7 +36,6 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     mgr = this.mgr.copy(winner = 0, roundCounter = 0)
       .modeChoice(field)
     gameState = GameState.handle(NewState())
-    millState = MillState.handle(NoMillState())
     publish(new CellChanged)
   }
 
@@ -87,6 +85,16 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     cnt
   }
 
+  private def handleSetHelper(row: Int, col: Int): Unit = {
+    if (field.available(row, col)) {
+      undoManager.doStep(new SetCommand(row, col, if (mgr.blackTurn()) Cell("cb") else Cell("cw"), this))
+      gameState = GameState.handle(if (mgr.blackTurn()) WhiteTurnState() else BlackTurnState())
+    } else {
+      updateRoundCounter(mgr.roundCounter - 1)
+    }
+    publish(new CellChanged)
+  }
+
   private def handleMoveAndFly(row: Int, column: Int, counter: Int, mode: ModeState): Int = {
     var cnt = counter + 1
     if (cnt == 2) {
@@ -133,16 +141,6 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
 
   def selectDriveCommand(): ModeState = mgr.selectDriveCommand()
 
-  private def handleSetHelper(row: Int, col: Int): Unit = {
-    if (field.available(row, col)) {
-      undoManager.doStep(new SetCommand(row, col, if (mgr.blackTurn()) Cell("cb") else Cell("cw"), this))
-      gameState = GameState.handle(if (mgr.blackTurn()) WhiteTurnState() else BlackTurnState())
-    } else {
-      updateRoundCounter(mgr.roundCounter - 1)
-    }
-    publish(new CellChanged)
-  }
-
   def undo: Unit = {
     undoManager.undoStep()
     step()
@@ -164,14 +162,7 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     }
   }
 
-  def checkMill(row: Int, col: Int): String = {
-    millState = field.checkMill(row, col) match {
-      case 1 => MillState.handle(BlackMillState())
-      case 2 => MillState.handle(WhiteMillState())
-      case _ => MillState.handle(NoMillState())
-    }
-    millState
-  }
+  def checkMill(row: Int, col: Int): String = field.checkMill(row, col)
 
   def removeStone(row: Int, col: Int): Boolean = {
     val r = stoneHasOtherColor(row, col, if (mgr.blackTurn()) Color.white else Color.black)
@@ -246,4 +237,5 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     field.isNeighbour(rowOld, colOld, rowNew, colNew)
   def fieldsize: Int = field.size
   def getRoundManager: RoundManager = mgr
+  def getMillState: String = field.millState
 }

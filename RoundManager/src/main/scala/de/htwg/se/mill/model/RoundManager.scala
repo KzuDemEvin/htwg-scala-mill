@@ -6,6 +6,9 @@ import de.htwg.se.mill.model.playerComponent.Player
 
 case class RoundManager(player1: Player,
                         player2: Player,
+                        setCounter: Int = 0,
+                        moveCounter: Int = 0,
+                        flyCounter: Int = 0,
                         roundCounter: Int = 0,
                         borderToMoveMode: Int = 18,
                         winner: Int = 0,

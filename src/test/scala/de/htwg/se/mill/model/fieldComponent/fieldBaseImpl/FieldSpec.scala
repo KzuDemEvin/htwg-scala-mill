@@ -2,7 +2,7 @@
 
 package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
-import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
+import de.htwg.se.mill.model.fieldComponent.{BlackMillState, Cell, Color, NoMillState, WhiteMillState}
 import org.scalatest.{Matchers, WordSpec}
 
 class FieldSpec extends WordSpec with Matchers {
@@ -102,17 +102,17 @@ class FieldSpec extends WordSpec with Matchers {
           var changedfield = new Field(normalSize).set(0, 0, Cell("cb"))
           changedfield = changedfield.set(0,3, Cell("cb"))
           changedfield = changedfield.set(0,6 ,Cell("cb"))
-          changedfield.checkMill(0,0) should be(1)
+          changedfield.checkMill(0,0) should be(BlackMillState().handle)
         }
         "white mill" in {
           var changedfield = new Field(normalSize).set(0, 0, Cell("cw"))
           changedfield = changedfield.set(0,3, Cell("cw"))
           changedfield = changedfield.set(0,6 ,Cell("cw"))
-          changedfield.checkMill(0,0) should be(2)
+          changedfield.checkMill(0,0) should be(WhiteMillState().handle)
         }
         "when its not even possible" in {
           val changedField = new Field(normalSize)
-          changedField.checkMill(0, 1) should be(0)
+          changedField.checkMill(0, 1) should be(NoMillState().handle)
         }
       }
       "should create a new field" in {

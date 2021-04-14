@@ -12,7 +12,6 @@ trait ControllerInterface extends Publisher {
   var moveCounter:Int
   var flyCounter:Int
   var gameState:String
-  var millState:String
   def createPlayer(name: String, number: Int): Player
   def createEmptyField(size: Int): Unit
   def createRandomField(size: Int): Unit
@@ -38,6 +37,7 @@ trait ControllerInterface extends Publisher {
   def isNeigbour(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Boolean
   def fieldsize:Int
   def getRoundManager:RoundManager
+  def getMillState: String
 }
 
 import scala.swing.event.Event
