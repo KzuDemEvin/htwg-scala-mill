@@ -1,6 +1,6 @@
 package de.htwg.se.mill.controller.controllerComponent
 
-import de.htwg.se.mill.model.RoundManager
+import de.htwg.se.mill.controller.controllerBaseImpl.RoundManager
 import de.htwg.se.mill.model.playerComponent.Player
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
 

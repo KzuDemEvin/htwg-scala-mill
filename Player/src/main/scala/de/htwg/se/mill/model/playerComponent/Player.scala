@@ -8,13 +8,17 @@ trait Player {
   def changeMode(mode: String): Player
 }
 
-private case class ClassicPlayer(override val name: String = "DeineMudda", override val mode: String = "SetMode", override val amountStones: Int = 9) extends Player {
-  def this(name: String) = this(
-    name = name
-  )
+private case class ClassicPlayer(override val name: String, override val mode: String, override val amountStones: Int) extends Player {
+  def this(name: String) =
+    this(
+      name = name,
+      mode = "SetMode",
+      amountStones = 9
+    )
 
   def this(name: String, amountStones: Int) = this(
     name = name,
+    mode = "SetMode",
     amountStones = amountStones
   )
 
