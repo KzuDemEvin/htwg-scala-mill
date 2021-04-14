@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id="player [file:/home/josef/Documents/HTWG/Sem6/SA/htwg-scala-mill/]" external.linked.project.path="$MODULE_DIR$/../../Player" external.root.project.path="$MODULE_DIR$/../.." external.system.id="SBT" type="JAVA_MODULE" version="4">
+<module external.linked.project.id="player [file:/C:/Users/Kevin/IdeaProjects/htwg-scala-mill/]" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/.." external.system.id="SBT" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_15">
-    <output url="file://$MODULE_DIR$/../../Player/target/scala-2.13/classes" />
-    <output-test url="file://$MODULE_DIR$/../../Player/target/scala-2.13/test-classes" />
+    <output url="file://$MODULE_DIR$/target/scala-2.13/classes" />
+    <output-test url="file://$MODULE_DIR$/target/scala-2.13/test-classes" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../Player">
-      <sourceFolder url="file://$MODULE_DIR$/../../Player/src/main/scala" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../Player/src/test/scala" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/../../Player/target" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/scala" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/scala" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -18,6 +18,7 @@
     <orderEntry type="library" name="sbt: com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.4:jar" level="project" />
     <orderEntry type="library" name="sbt: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.4:jar" level="project" />
     <orderEntry type="library" name="sbt: com.google.code.findbugs:jsr305:3.0.2:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.google.code.gson:gson:2.8.6:jar" level="project" />
     <orderEntry type="library" name="sbt: com.google.errorprone:error_prone_annotations:2.2.0:jar" level="project" />
     <orderEntry type="library" name="sbt: com.google.guava:failureaccess:1.0.1:jar" level="project" />
     <orderEntry type="library" name="sbt: com.google.guava:guava:27.1-jre:jar" level="project" />
@@ -51,6 +52,6 @@
     <orderEntry type="library" name="sbt: org.scalactic:scalactic_2.13:3.1.2:jar" level="project" />
     <orderEntry type="library" scope="TEST" name="sbt: org.scalatest:scalatest_2.13:3.1.2:jar" level="project" />
     <orderEntry type="library" name="sbt: org.slf4j:slf4j-api:1.7.30:jar" level="project" />
-    <orderEntry type="module" module-name="htwg-scala-mill" exported="" />
+    <orderEntry type="module" module-name="htwg-scala" exported="" />
   </component>
 </module>

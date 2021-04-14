@@ -9,5 +9,7 @@ trait PlayerControllerInterface {
 
   def updatePlayerMode(number: Int, mode: String): Player
 
+  def deletePlayer(number: Int): Player
+
   def toJson(player: Player): String
 }
