@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id="player [file:/C:/Users/Kevin/IdeaProjects/Softwarequalitaet/htwg-scala-mill_test/]" external.linked.project.path="$MODULE_DIR$/../../Player" external.root.project.path="$MODULE_DIR$/../.." external.system.id="SBT" type="JAVA_MODULE" version="4">
+<module external.linked.project.id="player [file:/home/josef/Documents/HTWG/Sem6/SA/htwg-scala-mill/]" external.linked.project.path="$MODULE_DIR$/../../Player" external.root.project.path="$MODULE_DIR$/../.." external.system.id="SBT" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_15">
     <output url="file://$MODULE_DIR$/../../Player/target/scala-2.13/classes" />
     <output-test url="file://$MODULE_DIR$/../../Player/target/scala-2.13/test-classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../Player">
       <sourceFolder url="file://$MODULE_DIR$/../../Player/src/main/scala" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Player/src/test/scala" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/../../Player/target" />
     </content>
     <orderEntry type="inheritedJdk" />

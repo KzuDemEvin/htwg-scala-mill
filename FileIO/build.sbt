@@ -14,7 +14,8 @@ val commonDependencies = Seq(
 )
 
 lazy val root = (project in file(".."))
-lazy val fileIO = (project in file(".")).dependsOn(root).aggregate(root).settings(
+lazy val player = (project in file("../Player"))
+lazy val fileIO = (project in file(".")).dependsOn(root, player).aggregate(root, player).settings(
   name          := "htwg-scala-fileio",
   //organization  := "de.htwg.se",
   version       := "0.13",
