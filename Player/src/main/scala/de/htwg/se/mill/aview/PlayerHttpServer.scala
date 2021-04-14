@@ -25,23 +25,17 @@ case object PlayerHttpServer {
             parameters("number") {
               number => postResponse(playerController.toJson(playerController.getPlayer(number.toInt)))
             }
-          }
-        },
-        path(uriPath) {
+          } ~
           post {
             parameters("number", "name") {
               (number, name) => postResponse(playerController.toJson(playerController.createPlayer(number.toInt, name)))
             }
-          }
-        },
-        path(uriPath) {
+          } ~
           put {
             parameters("number", "mode") {
               (number, mode) => postResponse(playerController.toJson(playerController.updatePlayerMode(number.toInt, mode)))
             }
-          }
-        },
-        path(uriPath) {
+          } ~
           delete {
             parameters("number") {
               number => postResponse(playerController.toJson(playerController.deletePlayer(number.toInt)))
