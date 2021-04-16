@@ -15,7 +15,7 @@ trait FieldInterface {
   def placedStones(): Int
   def placedWhiteStones():Int
   def placedBlackStones():Int
-  def checkMill(row: Int, col: Int): String
+  def checkMill(row: Int, col: Int): FieldInterface
   def toHtml: String
 
   def createNewField:FieldInterface

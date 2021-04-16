@@ -33,30 +33,32 @@ case class RoundManager(player1: Player,
     }
   }
 
-  def modeChoice(field: FieldInterface): RoundManager = {
+  def modeChoice(placedStones: (Int, Int)): RoundManager = {
     val mgr = copy()
     var player1 = mgr.player1
     var player2 = mgr.player2
     var winner = mgr.winner
     var winnerText = mgr.winnerText
     val roundCounter = mgr.roundCounter
+    val (placedBlackStones, placedWhiteStones) = placedStones
+
     if (roundCounter < borderToMoveMode) {
       player1 = player1.changeMode(ModeState.handle(SetModeState()))
       player2 = player2.changeMode(ModeState.handle(SetModeState()))
       if (roundCounter == borderToMoveMode - 1) {
         player1 = player1.changeMode(ModeState.handle(MoveModeState()))
       }
-    } else if (field.placedBlackStones() == 2) {
+    } else if (placedBlackStones == 2) {
       winner = 1
       winnerText = handleWinnerText(winner)
-    } else if (field.placedWhiteStones() == 2) {
+    } else if (placedWhiteStones == 2) {
       winner = 2
       winnerText = handleWinnerText(winner)
-    } else if (field.placedBlackStones() == 3 || field.placedWhiteStones() == 3) {
-      if (field.placedWhiteStones() == 3) {
+    } else if (placedBlackStones == 3 || placedWhiteStones == 3) {
+      if (placedWhiteStones == 3) {
         player1 = player1.changeMode(ModeState.handle(FlyModeState()))
       }
-      if (field.placedBlackStones() == 3) {
+      if (placedBlackStones == 3) {
         player2 = player2.changeMode(ModeState.handle(FlyModeState()))
       }
     } else {

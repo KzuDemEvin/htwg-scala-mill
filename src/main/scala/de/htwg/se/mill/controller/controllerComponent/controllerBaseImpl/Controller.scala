@@ -34,7 +34,7 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     resetCounters()
     field = injector.instance[FieldInterface](Names.named("normal"))
     mgr = this.mgr.copy(winner = 0, roundCounter = 0)
-      .modeChoice(field)
+      .modeChoice(field.placedBlackStones(), field.placedWhiteStones())
     gameState = GameState.handle(NewState())
     publish(new CellChanged)
   }
@@ -44,7 +44,7 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     field = injector.instance[FieldInterface](Names.named("random"))
     mgr = this.mgr
       .copy(winner = 0, roundCounter = this.mgr.borderToMoveMode)
-      .modeChoice(field)
+      .modeChoice(field.placedBlackStones(), field.placedWhiteStones())
     gameState = GameState.handle(RandomState())
     publish(new CellChanged)
   }
@@ -81,7 +81,7 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
           updateRoundCounter(mgr.roundCounter + 1)
       }
     }
-    mgr = this.mgr.modeChoice(field)
+    mgr = this.mgr.modeChoice(field.placedBlackStones(), field.placedWhiteStones())
     cnt
   }
 
@@ -119,7 +119,7 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     } else {
       tmpCell = (row, column)
     }
-    mgr = mgr.modeChoice(field)
+    mgr = mgr.modeChoice(field.placedBlackStones(), field.placedWhiteStones())
     cnt
   }
 
@@ -162,11 +162,14 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     }
   }
 
-  def checkMill(row: Int, col: Int): String = field.checkMill(row, col)
+  def checkMill(row: Int, col: Int): String = {
+    field = field.checkMill(row, col)
+    field.millState
+  }
 
   def removeStone(row: Int, col: Int): Boolean = {
     val r = stoneHasOtherColor(row, col, if (mgr.blackTurn()) Color.white else Color.black)
-    mgr = this.mgr.copy().modeChoice(field)
+    mgr = this.mgr.copy().modeChoice(field.placedBlackStones(), field.placedWhiteStones())
     publish(new CellChanged)
     r
   }

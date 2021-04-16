@@ -59,10 +59,11 @@ case class Field @Inject()(allCells: Matrix[Cell],
   }
 
   def removeStone(row: Int, col: Int): (Field, Boolean) = {
-    if (checkMill(row, col) == NoMillState().handle) {
-      (copy().replace(row, col, Cell("ce")), true)
+    val field = checkMill(row, col)
+    if (field.millState == NoMillState().handle) {
+      (field.replace(row, col, Cell("ce")), true)
     } else {
-      (copy(), false)
+      (field, false)
     }
   }
 
@@ -143,15 +144,15 @@ case class Field @Inject()(allCells: Matrix[Cell],
     (6, 3) -> Set((6, 0), (6, 6), (5, 3)),
     (6, 6) -> Set((6, 3), (3, 6)))
 
-  def checkMill(row: Int, col: Int): String = {
+  def checkMill(row: Int, col: Int): Field = {
     val checkMill: ((Cell, Cell, Cell) => Boolean) => Boolean = checkMillC(row, col)((c1, c2, c3) => checkMillSet(c1, c2, c3))
-    if (checkMill((c1, c2, c3) => checkMillBlack(c1, c2, c3))) {
+    copy(millState = if (checkMill((c1, c2, c3) => checkMillBlack(c1, c2, c3))) {
       MillState.handle(BlackMillState())
     } else if (checkMill((c1, c2, c3) => checkMillWhite(c1, c2, c3))) {
       MillState.handle(WhiteMillState())
     } else {
       MillState.handle(NoMillState())
-    }
+    })
   }
 
   private def checkMillC(row: Int, col: Int)(checkAll: (Cell, Cell, Cell) => Boolean)(check: (Cell, Cell, Cell) => Boolean): Boolean = {
