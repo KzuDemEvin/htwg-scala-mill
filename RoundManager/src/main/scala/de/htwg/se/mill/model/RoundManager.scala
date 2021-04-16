@@ -1,13 +1,9 @@
 package de.htwg.se.mill.model
 
 import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, MoveModeState, SetModeState}
-import de.htwg.se.mill.model.fieldComponent.FieldInterface
-import de.htwg.se.mill.model.playerComponent.Player
 
 case class RoundManager(player1Mode: String = "SetMode",
                         player2Mode: String = "SetMode",
-                        player1: Player,
-                        player2: Player,
                         setCounter: Int = 0,
                         moveCounter: Int = 0,
                         flyCounter: Int = 0,
@@ -16,25 +12,9 @@ case class RoundManager(player1Mode: String = "SetMode",
                         winner: Int = 0,
                         winnerText: String = "No Winner") {
 
-  def this() {
-    this(
-      player1 = Player(name = "No Name1"),
-      player2 = Player(name = "No Name2")
-    )
-  }
-
   def blackTurn(): Boolean = roundCounter % 2 == 1
 
   def whiteTurn(): Boolean = roundCounter % 2 == 0
-
-  @deprecated
-  def setPlayer(player: Player, number: Int = 1): RoundManager = {
-    if (number == 1) {
-      copy(player1 = player)
-    } else {
-      copy(player2 = player)
-    }
-  }
 
   def setPlayerMode(playerMode: String, number: Int = 1): RoundManager = {
     if (number == 1) {
@@ -86,8 +66,8 @@ case class RoundManager(player1Mode: String = "SetMode",
   def handleWinnerText(winner: Int = winner): String = {
     winner match {
       case 0 => "No Winner"
-      case 1 => player1.name + " wins (White) !"
-      case 2 => player2.name + " wins (Black) !"
+      case 1 => "White wins!"
+      case 2 => "Black wins!"
     }
   }
 }

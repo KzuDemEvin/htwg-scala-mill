@@ -37,13 +37,8 @@ class ControllerSpec extends WordSpec with Matchers {
       "be able to create a Player" in {
         val controllerCreatePlayer = new Controller(new Field(normalSize))
 
-        val player1 = controllerCreatePlayer.createPlayer("Kevin")
-        controllerCreatePlayer.getRoundManager.player1.name should be("Kevin")
-        controllerCreatePlayer.getRoundManager.player1 should be(player1)
-
-        val player2 = controllerCreatePlayer.createPlayer("Josef", 2)
-        controllerCreatePlayer.getRoundManager.player2.name should be("Josef")
-        controllerCreatePlayer.getRoundManager.player2 should be(player2)
+        val player1 = controllerCreatePlayer.createPlayer("Kevin").name should be("Kevin")
+        val player2 = controllerCreatePlayer.createPlayer("Josef", 2).name should be("Josef")
       }
     }
     "ready to play" should {

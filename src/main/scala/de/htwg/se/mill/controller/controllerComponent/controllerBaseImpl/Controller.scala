@@ -24,9 +24,9 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
   val injector: Injector = Guice.createInjector(new MillModule)
   val fileIo: FileIOInterface = injector.instance[FileIOInterface]
 
+  @deprecated
   def createPlayer(name: String, number: Int = 1): Player = {
     val player: Player = Player(name)
-    mgr = this.mgr.copy().setPlayer(player, number)
     player
   }
 
