@@ -184,7 +184,7 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
   }
 
   def checkWinner(row: Int, column: Int): Unit = {
-    if (mgr.player1.mode == ModeState.handle(FlyModeState()) && mgr.player2.mode == ModeState.handle(FlyModeState())) {
+    if (mgr.player1Mode == ModeState.handle(FlyModeState()) && mgr.player2Mode == ModeState.handle(FlyModeState())) {
       val winner = checkMill(row, column) match {
         case "White Mill" => 2
         case "Black Mill" => 1
@@ -199,10 +199,8 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
 
   def save: Unit = {
     field = field.setRoundCounter(mgr.roundCounter)
-      .setPlayer1Mode(mgr.player1.mode)
-      .setPlayer1Name(mgr.player1.name)
-      .setPlayer2Mode(mgr.player2.mode)
-      .setPlayer2Name(mgr.player2.name)
+      .setPlayer1Mode(mgr.player1Mode)
+      .setPlayer2Mode(mgr.player2Mode)
     fileIo.save(field, None)
     gameState = GameState.handle(SaveState())
     publish(new CellChanged)
@@ -211,8 +209,8 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
   def load: Unit = {
     field = fileIo.load(None)
     mgr = this.mgr.copy(roundCounter = field.savedRoundCounter)
-      .setPlayer(mgr.player1.changeMode(field.player1Mode))
-      .setPlayer(mgr.player2.changeMode(field.player2Mode), 2)
+      .setPlayerMode(field.player1Mode)
+      .setPlayerMode(field.player2Mode, 2)
     gameState = GameState.handle(LoadState())
     publish(new CellChanged)
   }

@@ -4,7 +4,9 @@ import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, 
 import de.htwg.se.mill.model.fieldComponent.FieldInterface
 import de.htwg.se.mill.model.playerComponent.Player
 
-case class RoundManager(player1: Player,
+case class RoundManager(player1Mode: String = "SetMode",
+                        player2Mode: String = "SetMode",
+                        player1: Player,
                         player2: Player,
                         setCounter: Int = 0,
                         moveCounter: Int = 0,
@@ -25,6 +27,7 @@ case class RoundManager(player1: Player,
 
   def whiteTurn(): Boolean = roundCounter % 2 == 0
 
+  @deprecated
   def setPlayer(player: Player, number: Int = 1): RoundManager = {
     if (number == 1) {
       copy(player1 = player)
@@ -33,20 +36,28 @@ case class RoundManager(player1: Player,
     }
   }
 
+  def setPlayerMode(playerMode: String, number: Int = 1): RoundManager = {
+    if (number == 1) {
+      copy(player1Mode = playerMode)
+    } else {
+      copy(player2Mode = playerMode)
+    }
+  }
+
   def modeChoice(placedStones: (Int, Int)): RoundManager = {
     val mgr = copy()
-    var player1 = mgr.player1
-    var player2 = mgr.player2
+    var player1Mode = mgr.player1Mode
+    var player2Mode = mgr.player2Mode
     var winner = mgr.winner
     var winnerText = mgr.winnerText
     val roundCounter = mgr.roundCounter
     val (placedBlackStones, placedWhiteStones) = placedStones
 
     if (roundCounter < borderToMoveMode) {
-      player1 = player1.changeMode(ModeState.handle(SetModeState()))
-      player2 = player2.changeMode(ModeState.handle(SetModeState()))
+      player1Mode = ModeState.handle(SetModeState())
+      player2Mode = ModeState.handle(SetModeState())
       if (roundCounter == borderToMoveMode - 1) {
-        player1 = player1.changeMode(ModeState.handle(MoveModeState()))
+        player1Mode = ModeState.handle(MoveModeState())
       }
     } else if (placedBlackStones == 2) {
       winner = 1
@@ -56,20 +67,20 @@ case class RoundManager(player1: Player,
       winnerText = handleWinnerText(winner)
     } else if (placedBlackStones == 3 || placedWhiteStones == 3) {
       if (placedWhiteStones == 3) {
-        player1 = player1.changeMode(ModeState.handle(FlyModeState()))
+        player1Mode = ModeState.handle(FlyModeState())
       }
       if (placedBlackStones == 3) {
-        player2 = player2.changeMode(ModeState.handle(FlyModeState()))
+        player2Mode = ModeState.handle(FlyModeState())
       }
     } else {
-      player1 = player1.changeMode(ModeState.handle(MoveModeState()))
-      player2 = player2.changeMode(ModeState.handle(MoveModeState()))
+      player1Mode = ModeState.handle(MoveModeState())
+      player2Mode = ModeState.handle(MoveModeState())
     }
-    copy(player1 = player1, player2 = player2, winner = winner, winnerText = winnerText)
+    copy(player1Mode = player1Mode, player2Mode = player2Mode, winner = winner, winnerText = winnerText)
   }
 
   def selectDriveCommand(): ModeState = {
-    ModeState.whichState(if (blackTurn()) player2.mode else player1.mode)
+    ModeState.whichState(if (blackTurn()) player2Mode else player1Mode)
   }
 
   def handleWinnerText(winner: Int = winner): String = {

@@ -163,7 +163,7 @@ class ControllerSpec extends WordSpec with Matchers {
 
         controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
         controller.handleClick(3, 5) // remove
-        controller.mgr.player2.mode should be("FlyMode")
+        controller.mgr.player2Mode should be("FlyMode")
         controller.placedBlackStones() should be(3)
         printf(controller.fieldToString)
       }
@@ -176,7 +176,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.handleClick(4, 2)
         controller.cell(4, 2).isSet should be(false)
       }
-      "handly choosing a winner correctly" in {
+      "handle choosing a winner correctly" in {
         controller.mgr.winner should be(0) // no Winner
         controller.handleClick(3, 1) ; controller.handleClick(1, 1) // white
         controller.handleClick(0, 6) ; controller.handleClick(5, 1) // black

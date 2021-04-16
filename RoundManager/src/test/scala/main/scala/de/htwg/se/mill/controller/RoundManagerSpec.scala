@@ -75,15 +75,15 @@ class RoundManagerSpec extends WordSpec with Matchers {
           controller.handleClick(4,3) //remove
           controller.handleClick(5,3) ; controller.handleClick(6,3)
           controller.handleClick(0,0) //remove
-          controller.mgr.player1.mode should be(ModeState.handle(MoveModeState()))
-          controller.mgr.player2.mode should be(ModeState.handle(MoveModeState()))
+          controller.mgr.player1Mode should be(ModeState.handle(MoveModeState()))
+          controller.mgr.player2Mode should be(ModeState.handle(MoveModeState()))
         }
         "player 1 in flymode" in {
           controller.handleClick(1,3) ; controller.handleClick(0,3)
           controller.handleClick(6,3) ; controller.handleClick(5,3)
           controller.handleClick(0,6) //remove
-          controller.mgr.player1.mode should be(ModeState.handle(FlyModeState()))
-          controller.mgr.player2.mode should be(ModeState.handle(MoveModeState()))
+          controller.mgr.player1Mode should be(ModeState.handle(FlyModeState()))
+          controller.mgr.player2Mode should be(ModeState.handle(MoveModeState()))
         }
         "both in fly mode" in {
           controller.handleClick(0,3) ; controller.handleClick(1,3)
@@ -93,8 +93,8 @@ class RoundManagerSpec extends WordSpec with Matchers {
           controller.handleClick(3,0) ; controller.handleClick(6,0)
           controller.handleClick(0,3) ; controller.handleClick(1,3)
           controller.handleClick(6,0) //remove
-          controller.mgr.player1.mode should be(ModeState.handle(FlyModeState()))
-          controller.mgr.player2.mode should be(ModeState.handle(FlyModeState()))
+          controller.mgr.player1Mode should be(ModeState.handle(FlyModeState()))
+          controller.mgr.player2Mode should be(ModeState.handle(FlyModeState()))
         }
       }
     }
