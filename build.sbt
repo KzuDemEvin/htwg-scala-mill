@@ -30,18 +30,33 @@ lazy val fileIO =  project.in(file("FileIO")).settings(libraryDependencies ++= c
   .settings(dockerExposedPorts := Seq(8082))
   .settings(daemonUser := "sbtuser")
 
-val commonDependencies = Seq(
-  "org.scalactic" %% "scalactic" % "3.1.2",
-  "org.scalatest" %% "scalatest" % "3.1.2" % "test",
-  "org.scala-lang.modules" %% "scala-swing" % "2.1.1",
-  "com.google.inject" % "guice" % "4.2.3",
-  "net.codingwell" %% "scala-guice" % "4.2.10",
-  "org.scala-lang.modules" %% "scala-xml" % "1.2.0",
-  "com.typesafe.play" %% "play-json" % "2.9.0",
-  "com.typesafe.akka" %% "akka-actor-typed" % "2.6.8",
-  "com.typesafe.akka" %% "akka-stream" % "2.6.8",
-  "com.typesafe.akka" %% "akka-http" % "10.2.4",
-  "com.google.code.gson" % "gson" % "2.8.6"
+lazy val dependencies =
+  new {
+    val akka = "com.typesafe.akka" %% "akka-http" % "10.2.4"
+    val akkaactor = "com.typesafe.akka" %% "akka-actor-typed" % "2.6.8"
+    val akkastream = "com.typesafe.akka" %% "akka-stream" % "2.6.8"
+    val scalatest = "org.scalatest" %% "scalatest" % "3.1.2" % "test"
+    val scalactic = "org.scalactic" %% "scalactic" % "3.1.2"
+    val scalaswing = "org.scala-lang.modules" %% "scala-swing" % "2.1.1"
+    val guice = "com.google.inject" % "guice" % "4.2.3"
+    val scalaguice = "net.codingwell" %% "scala-guice" % "4.2.10"
+    val playjson = "com.typesafe.play" %% "play-json" % "2.9.0"
+    val scalaxml = "org.scala-lang.modules" %% "scala-xml" % "1.2.0"
+    val gson = "com.google.code.gson" % "gson" % "2.8.6"
+  }
+
+val commonDependencies =  Seq(
+  dependencies.akka,
+  dependencies.scalatest,
+  dependencies.scalactic,
+  dependencies.scalaswing,
+  dependencies.guice,
+  dependencies.scalaguice,
+  dependencies.playjson,
+  dependencies.scalaxml,
+  dependencies.akkaactor,
+  dependencies.akkastream,
+  dependencies.gson
 )
 
 parallelExecution in Test := false
