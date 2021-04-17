@@ -4,9 +4,9 @@ import de.htwg.se.mill.model.fileIoComponent.FileIOInterface
 
 import scala.io.Source
 
-class FileIO extends FileIOInterface {
+class FileIO {
 
-  override def load(filename: Option[String] = Some("field.json")): String = {
+  def load(filename: Option[String] = Some("field.json")): String = {
     val sourceFile = Source.fromFile(filename match {
       case Some(fn) => fn
       case None => "field.json"

@@ -294,7 +294,7 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
 
   }
 
-  def jsonToField(fieldInJson: String): Field = {
+  def jsonToField(fieldInJson: String): FieldInterface = {
     val source: String = fieldInJson
     val json: JsValue = Json.parse(source)
     val roundCounter = (json \ "field" \ "roundCounter").get.toString.toInt

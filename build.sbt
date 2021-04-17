@@ -20,9 +20,8 @@ parallelExecution in Test := false
 ThisBuild / trackInternalDependencies := TrackLevel.TrackIfMissing
 
 lazy val fileIO = (project in file("FileIO"))
-lazy val roundManager = (project in file("RoundManager"))
 lazy val player = (project in file("Player"))
-lazy val root = (project in file(".")).dependsOn(fileIO, roundManager, player).aggregate(fileIO, roundManager, player).settings(
+lazy val root = (project in file(".")).dependsOn(fileIO, player).aggregate(fileIO, player).settings(
   name := "htwg-scala-mill",
   libraryDependencies ++= commonDependencies,
   assemblyMergeStrategy in assembly := {

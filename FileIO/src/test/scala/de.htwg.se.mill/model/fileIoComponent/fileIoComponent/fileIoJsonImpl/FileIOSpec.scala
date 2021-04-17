@@ -18,12 +18,12 @@ class FileIOSpec extends WordSpec with Matchers {
         savedField = savedField.set(1, 1, Cell("cw"))
         savedField.placedWhiteStones() should be(2)
         savedField.placedBlackStones() should be(1)
-        fileIo.save(savedField, Some("field_fileIO_Spec.json"))
       }
       "Should be able to load the game" in {
         val loadedField = fileIo.load(Some("field_fileIO_Spec.json"))
-        loadedField.placedWhiteStones() should be(2)
-        loadedField.placedBlackStones() should be(1)
+        loadedField.contains("roundCounter") should be (true)
+        loadedField.contains("player1Mode") should be (true)
+        loadedField.contains("player2Mode") should be (true)
       }
     }
   }
