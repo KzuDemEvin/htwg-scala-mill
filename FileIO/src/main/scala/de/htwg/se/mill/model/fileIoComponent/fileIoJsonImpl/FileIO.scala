@@ -4,9 +4,9 @@ import de.htwg.se.mill.model.fileIoComponent.FileIOInterface
 
 import scala.io.Source
 
-class FileIO {
+class FileIO extends FileIOInterface {
 
-  def load(filename: Option[String] = Some("field.json")): String = {
+  override def load(filename: Option[String] = Some("field.json")): String = {
     val sourceFile = Source.fromFile(filename match {
       case Some(fn) => fn
       case None => "field.json"
@@ -16,7 +16,7 @@ class FileIO {
     source
   }
 
-  def save(field: String, filename: Option[String] = Some("field.json")): Unit = {
+  override def save(field: String, filename: Option[String] = Some("field.json")): Unit = {
     import java.io._
     val pw = new PrintWriter(new File(filename match {
       case Some(fn) => fn
