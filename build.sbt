@@ -1,10 +1,34 @@
-import sbt.Keys.libraryDependencies
+import sbtdocker.DockerKeys._
+
+enablePlugins(JavaAppPackaging)
+
 // ROOT
 
 name := "htwg-scala"
 organization := "de.htwg.se"
 version := "0.13"
 scalaVersion := "2.13.2"
+
+lazy val global = project.in(file(".")).settings(libraryDependencies ++= commonDependencies)
+  .settings(mainClass in Compile := Some("de.htwg.se.mill.Mill"))
+  .settings(dockerBaseImage := "hseeberger/scala-sbt:8u222_1.3.5_2.13.1")
+  .settings(dockerExposedPorts := Seq(8080))
+  .settings(daemonUser := "sbtuser")
+  .aggregate(player, fileIO)
+  .dependsOn(player,fileIO)
+  .enablePlugins(sbtdocker.DockerPlugin)
+
+lazy val player = project.in(file("Player")).settings(libraryDependencies ++= commonDependencies)
+  .enablePlugins(sbtdocker.DockerPlugin, JavaAppPackaging)
+  .settings(dockerBaseImage := "hseeberger/scala-sbt:8u222_1.3.5_2.13.1")
+  .settings(dockerExposedPorts := Seq(8081))
+  .settings(daemonUser := "sbtuser")
+
+lazy val fileIO =  project.in(file("FileIO")).settings(libraryDependencies ++= commonDependencies)
+  .enablePlugins(sbtdocker.DockerPlugin)
+  .settings(dockerBaseImage := "hseeberger/scala-sbt:8u222_1.3.5_2.13.1")
+  .settings(dockerExposedPorts := Seq(8082))
+  .settings(daemonUser := "sbtuser")
 
 val commonDependencies = Seq(
   "org.scalactic" %% "scalactic" % "3.1.2",
@@ -24,8 +48,8 @@ parallelExecution in Test := false
 
 ThisBuild / trackInternalDependencies := TrackLevel.TrackIfMissing
 
-lazy val fileIO = (project in file("FileIO"))
-lazy val player = (project in file("Player"))
+
+
 lazy val root = (project in file(".")).dependsOn(fileIO, player).aggregate(fileIO, player).settings(
   name := "htwg-scala-mill",
   libraryDependencies ++= commonDependencies,
