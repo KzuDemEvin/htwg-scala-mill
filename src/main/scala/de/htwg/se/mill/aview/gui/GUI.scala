@@ -22,7 +22,7 @@ class GUI(controller: ControllerInterface) extends MainFrame {
     font = Font("Dialog", Font.Bold, 16)
     editable = false
   }
-  val millline: TextField = new TextField(controller.millState, 7) {
+  val millline: TextField = new TextField(controller.getMillState, 7) {
     font = Font("Dialog", Font.Bold, 16)
     editable = false
   }
@@ -63,7 +63,7 @@ class GUI(controller: ControllerInterface) extends MainFrame {
       col <- 0 until controller.fieldsize
     } cells(row)(col).redraw()
     statusline.text = controller.gameState
-    millline.text = controller.millState
+    millline.text = controller.getMillState
     roundCounter.text = "Round: " + controller.getRoundCounter.toString
 
     repaint

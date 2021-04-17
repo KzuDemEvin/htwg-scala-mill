@@ -37,13 +37,8 @@ class ControllerSpec extends WordSpec with Matchers {
       "be able to create a Player" in {
         val controllerCreatePlayer = new Controller(new Field(normalSize))
 
-        val player1 = controllerCreatePlayer.createPlayer("Kevin")
-        controllerCreatePlayer.getRoundManager.player1.name should be("Kevin")
-        controllerCreatePlayer.getRoundManager.player1 should be(player1)
-
-        val player2 = controllerCreatePlayer.createPlayer("Josef", 2)
-        controllerCreatePlayer.getRoundManager.player2.name should be("Josef")
-        controllerCreatePlayer.getRoundManager.player2 should be(player2)
+        val player1 = controllerCreatePlayer.createPlayer("Kevin").name should be("Kevin")
+        val player2 = controllerCreatePlayer.createPlayer("Josef", 2).name should be("Josef")
       }
     }
     "ready to play" should {
@@ -163,7 +158,7 @@ class ControllerSpec extends WordSpec with Matchers {
 
         controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
         controller.handleClick(3, 5) // remove
-        controller.mgr.player2.mode should be("FlyMode")
+        controller.mgr.player2Mode should be("FlyMode")
         controller.placedBlackStones() should be(3)
         printf(controller.fieldToString)
       }
@@ -176,7 +171,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.handleClick(4, 2)
         controller.cell(4, 2).isSet should be(false)
       }
-      "handly choosing a winner correctly" in {
+      "handle choosing a winner correctly" in {
         controller.mgr.winner should be(0) // no Winner
         controller.handleClick(3, 1) ; controller.handleClick(1, 1) // white
         controller.handleClick(0, 6) ; controller.handleClick(5, 1) // black

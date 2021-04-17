@@ -2,7 +2,7 @@ package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
 import com.google.inject.Inject
 import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, MoveModeState, SetModeState}
-import de.htwg.se.mill.model.fieldComponent.{Cell, Color, FieldInterface}
+import de.htwg.se.mill.model.fieldComponent.{BlackMillState, Cell, Color, FieldInterface, MillState, NoMillState, WhiteMillState}
 
 import scala.util.{Failure, Success, Try}
 
@@ -11,7 +11,8 @@ case class Field @Inject()(allCells: Matrix[Cell],
                            player1Mode: String,
                            player1Name: String,
                            player2Mode: String,
-                           player2Name: String) extends FieldInterface {
+                           player2Name: String,
+                           millState: String) extends FieldInterface {
 
   def this(allCells: Matrix[Cell]) {
 
@@ -20,7 +21,9 @@ case class Field @Inject()(allCells: Matrix[Cell],
       player1Mode = ModeState.handle(SetModeState()),
       player1Name = "",
       player2Mode = ModeState.handle(SetModeState()),
-      player2Name = "")
+      player2Name = "",
+      millState = MillState.handle(NoMillState())
+    )
   }
 
   def this(size: Int) {
@@ -56,10 +59,11 @@ case class Field @Inject()(allCells: Matrix[Cell],
   }
 
   def removeStone(row: Int, col: Int): (Field, Boolean) = {
-    if (checkMill(row, col) == 0) {
-      (copy().replace(row, col, Cell("ce")), true)
+    val field = checkMill(row, col)
+    if (field.millState == NoMillState().handle) {
+      (field.replace(row, col, Cell("ce")), true)
     } else {
-      (copy(), false)
+      (field, false)
     }
   }
 
@@ -140,15 +144,15 @@ case class Field @Inject()(allCells: Matrix[Cell],
     (6, 3) -> Set((6, 0), (6, 6), (5, 3)),
     (6, 6) -> Set((6, 3), (3, 6)))
 
-  def checkMill(row: Int, col: Int): Int = {
+  def checkMill(row: Int, col: Int): Field = {
     val checkMill: ((Cell, Cell, Cell) => Boolean) => Boolean = checkMillC(row, col)((c1, c2, c3) => checkMillSet(c1, c2, c3))
-    if (checkMill((c1, c2, c3) => checkMillBlack(c1, c2, c3))) {
-      1
+    copy(millState = if (checkMill((c1, c2, c3) => checkMillBlack(c1, c2, c3))) {
+      MillState.handle(BlackMillState())
     } else if (checkMill((c1, c2, c3) => checkMillWhite(c1, c2, c3))) {
-      2
+      MillState.handle(WhiteMillState())
     } else {
-      0
-    }
+      MillState.handle(NoMillState())
+    })
   }
 
   private def checkMillC(row: Int, col: Int)(checkAll: (Cell, Cell, Cell) => Boolean)(check: (Cell, Cell, Cell) => Boolean): Boolean = {
@@ -199,7 +203,7 @@ case class Field @Inject()(allCells: Matrix[Cell],
     }\n"
   }
 
-  override def toHtml: String = "<p  style=\"font-family:'Lucida Console',monospace\"> " + toString.replace("\n","<br>") +"</p>"
+  override def toHtml: String = "<p  style=\"font-family:'Lucida Console',monospace\"> " + toString.replace("\n", "<br>") + "</p>"
 
   def setRoundCounter(counter: Int): Field = copy(savedRoundCounter = counter)
 

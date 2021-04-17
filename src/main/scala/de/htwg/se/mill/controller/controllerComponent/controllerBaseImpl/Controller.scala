@@ -5,15 +5,16 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.unmarshalling.Unmarshal
+import com.google.gson.Gson
 import com.google.inject.name.Names
 import com.google.inject.{Guice, Inject, Injector}
 import de.htwg.se.mill.MillModule
-import de.htwg.se.mill.controller.controllerBaseImpl.RoundManager
 import de.htwg.se.mill.controller.controllerComponent._
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
 import de.htwg.se.mill.model.playerComponent.Player
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color, FieldInterface}
 import de.htwg.se.mill.model.fileIoComponent.FileIOInterface
+import de.htwg.se.mill.model.playerComponent.Player
 import de.htwg.se.mill.util.{CommandTrait, UndoManager}
 import net.codingwell.scalaguice.InjectorExtensions._
 import play.api.libs.json.{JsNumber, JsString, JsValue, Json}
@@ -24,13 +25,12 @@ import scala.util.{Failure, Success}
 
 class Controller @Inject()(var field: FieldInterface) extends ControllerInterface with Publisher {
   private val undoManager = new UndoManager
-  var mgr: RoundManager = new RoundManager()
+  var mgr: RoundManager = RoundManager()
   var tmpCell: (Int, Int) = (0, 0)
   var setCounter = 0
   var moveCounter = 0
   var flyCounter = 0
   var gameState: String = GameState.handle(NewState())
-  var millState: String = MillState.handle(NoMillState())
   val injector: Injector = Guice.createInjector(new MillModule)
   val fileIo: FileIOInterface = injector.instance[FileIOInterface]
 
@@ -54,33 +54,24 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     }
 
     val player: Player = Player(name)
-    mgr = this.mgr.copy().setPlayer(player, number)
     player
   }
 
   def createEmptyField(size: Int): Unit = {
     resetCounters()
     field = injector.instance[FieldInterface](Names.named("normal"))
-    mgr = this.mgr.copy(winner = 0, roundCounter = 0)
-      .modeChoice(field)
+    mgr = this.mgr.resetRoundManager(0, placedStonesZip())
     gameState = GameState.handle(NewState())
-    millState = MillState.handle(NoMillState())
     publish(new CellChanged)
   }
 
   def createRandomField(size: Int): Unit = {
     resetCounters()
     field = injector.instance[FieldInterface](Names.named("random"))
-    mgr = this.mgr
-      .copy(winner = 0, roundCounter = this.mgr.borderToMoveMode)
-      .modeChoice(field)
+    mgr = this.mgr.resetRoundManager(this.mgr.borderToMoveMode, placedStonesZip())
     gameState = GameState.handle(RandomState())
     publish(new CellChanged)
   }
-
-  def fieldToString: String = field.toString
-
-  def getRoundCounter: Int = mgr.roundCounter
 
   def handleClick(row: Int, column: Int): Unit = {
     gameState = GameState.handle(if (mgr.blackTurn()) BlackTurnState() else WhiteTurnState())
@@ -94,28 +85,38 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
   }
 
   private def handleSet(row: Int, column: Int, counter: Int): Int = {
-    var cnt: Int = counter
-    if (cnt >= 1) {
+    var setCounter: Int = counter
+    if (setCounter >= 1) {
       if (removeStone(row, column)) {
-        cnt = 0
+        setCounter = 0
         updateRoundCounter(mgr.roundCounter + 1)
       } else {
-        cnt += 1
+        setCounter += 1
       }
     } else {
       handleSetHelper(row, column)
       checkMill(row, column) match {
-        case "White Mill" | "Black Mill" => cnt += 1
-        case "No Mill" => cnt = 0
+        case "White Mill" | "Black Mill" => setCounter += 1
+        case "No Mill" => setCounter = 0
           updateRoundCounter(mgr.roundCounter + 1)
       }
     }
-    mgr = this.mgr.modeChoice(field)
-    cnt
+    mgr = this.mgr.modeChoice(placedStonesZip())
+    setCounter
+  }
+
+  private def handleSetHelper(row: Int, col: Int): Unit = {
+    if (field.available(row, col)) {
+      undoManager.doStep(new SetCommand(row, col, if (mgr.blackTurn()) Cell("cb") else Cell("cw"), this))
+      gameState = GameState.handle(if (mgr.blackTurn()) WhiteTurnState() else BlackTurnState())
+    } else {
+      updateRoundCounter(mgr.roundCounter - 1)
+    }
+    publish(new CellChanged)
   }
 
   private def handleMoveAndFly(row: Int, column: Int, counter: Int, mode: ModeState): Int = {
-    var cnt = counter + 1
+    var cnt: Int = counter + 1
     if (cnt == 2) {
       handleMoveAndFlyHelper(tmpCell._1, tmpCell._2, row, column,
         if (mode == MoveModeState()) {
@@ -138,7 +139,7 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     } else {
       tmpCell = (row, column)
     }
-    mgr = mgr.modeChoice(field)
+    mgr = mgr.modeChoice(field.placedBlackStones(), field.placedWhiteStones())
     cnt
   }
 
@@ -159,16 +160,6 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
   }
 
   def selectDriveCommand(): ModeState = mgr.selectDriveCommand()
-
-  private def handleSetHelper(row: Int, col: Int): Unit = {
-    if (field.available(row, col)) {
-      undoManager.doStep(new SetCommand(row, col, if (mgr.blackTurn()) Cell("cb") else Cell("cw"), this))
-      gameState = GameState.handle(if (mgr.blackTurn()) WhiteTurnState() else BlackTurnState())
-    } else {
-      updateRoundCounter(mgr.roundCounter - 1)
-    }
-    publish(new CellChanged)
-  }
 
   def undo: Unit = {
     undoManager.undoStep()
@@ -192,23 +183,23 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
   }
 
   def checkMill(row: Int, col: Int): String = {
-    millState = field.checkMill(row, col) match {
-      case 1 => MillState.handle(BlackMillState())
-      case 2 => MillState.handle(WhiteMillState())
-      case _ => MillState.handle(NoMillState())
-    }
-    millState
+    field = field.checkMill(row, col)
+    field.millState
   }
 
   def removeStone(row: Int, col: Int): Boolean = {
     val r = stoneHasOtherColor(row, col, if (mgr.blackTurn()) Color.white else Color.black)
-    mgr = this.mgr.copy().modeChoice(field)
+    mgr = this.mgr.copy().modeChoice(placedStonesZip())
     publish(new CellChanged)
     r
   }
 
-  private def stoneHasOtherColor(row: Int, col: Int, color: Color.Value): Boolean = {
-    var r = (field, false)
+  def stoneHasOtherColorREST(row: Int, col: Int, color: String): String = {
+    new Gson().toJson(stoneHasOtherColor(row, col, stringToColor(color)))
+  }
+
+  def stoneHasOtherColor(row: Int, col: Int, color: Color.Value): Boolean = {
+    var r: (FieldInterface, Boolean) = (field, false)
     if (cell(row, col).content.color == color) {
       r = field.removeStone(row, col)
       field = r._1
@@ -216,8 +207,16 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     r._2
   }
 
+  private def stringToColor(color: String): Color.Value = {
+    color match {
+      case "Black" | "black" => Color.black
+      case "White" | "white" => Color.white
+      case _ => Color.noColor
+    }
+  }
+
   def checkWinner(row: Int, column: Int): Unit = {
-    if (mgr.player1.mode == ModeState.handle(FlyModeState()) && mgr.player2.mode == ModeState.handle(FlyModeState())) {
+    if (mgr.player1Mode == ModeState.handle(FlyModeState()) && mgr.player2Mode == ModeState.handle(FlyModeState())) {
       val winner = checkMill(row, column) match {
         case "White Mill" => 2
         case "Black Mill" => 1
@@ -233,10 +232,8 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
   def save: Unit = {
     // TODO
     field = field.setRoundCounter(mgr.roundCounter)
-      .setPlayer1Mode(mgr.player1.mode)
-      .setPlayer1Name(mgr.player1.name)
-      .setPlayer2Mode(mgr.player2.mode)
-      .setPlayer2Name(mgr.player2.mode)
+      .setPlayer1Mode(mgr.player1Mode)
+      .setPlayer2Mode(mgr.player2Mode)
 
     implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
     implicit val executionContext = system.executionContext
@@ -285,8 +282,8 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
             field = jsonToField(result)
             // TODO
             mgr = this.mgr.copy(roundCounter = field.savedRoundCounter)
-              .setPlayer(mgr.player1.changeMode(field.player1Mode))
-              .setPlayer(mgr.player2.changeMode(field.player2Mode), 2)
+              .setPlayerMode(field.player1Mode)
+              .setPlayerMode(field.player2Mode, 2)
             gameState = GameState.handle(LoadState())
             publish(new CellChanged)
           }
@@ -332,16 +329,35 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     mgr
   }
 
-  def fieldToHtml: String = field.toHtml
+
   def cell(row: Int, col: Int): Cell = field.cell(row, col)
+
   def isSet(row: Int, col: Int): Boolean = field.cell(row, col).isSet
+
   def available(row: Int, col: Int): Boolean = field.available(row, col)
+
   def possiblePosition(row: Int, col: Int): Boolean = field.possiblePosition(row, col)
+
   def placedStones(): Int = field.placedStones()
+
+  def placedStonesZip(): (Int, Int) = (field.placedBlackStones(), field.placedWhiteStones())
+
   def placedWhiteStones(): Int = field.placedWhiteStones()
+
   def placedBlackStones(): Int = field.placedBlackStones()
+
   def isNeigbour(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): Boolean =
     field.isNeighbour(rowOld, colOld, rowNew, colNew)
+
+  def getMillState: String = field.millState
+
   def fieldsize: Int = field.size
+
+  def fieldToHtml: String = field.toHtml
+
+  def fieldToString: String = field.toString
+
   def getRoundManager: RoundManager = mgr
+
+  def getRoundCounter: Int = mgr.roundCounter
 }
