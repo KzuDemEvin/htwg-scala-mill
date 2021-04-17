@@ -1,6 +1,6 @@
 package de.htwg.se.mill.controller.controllerComponent
 
-import de.htwg.se.mill.model.RoundManager
+import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.RoundManager
 import de.htwg.se.mill.model.playerComponent.Player
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
 
@@ -38,6 +38,8 @@ trait ControllerInterface extends Publisher {
   def fieldsize:Int
   def getRoundManager:RoundManager
   def getMillState: String
+  def stoneHasOtherColor(row: Int, col: Int, color: Color.Value): Boolean
+  def stoneHasOtherColorREST(row: Int, col: Int, color: String): String
 }
 
 import scala.swing.event.Event

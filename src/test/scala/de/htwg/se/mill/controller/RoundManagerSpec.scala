@@ -1,8 +1,7 @@
-package main.scala.de.htwg.se.mill.controller
+package de.htwg.se.mill.controller
 
-import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
+import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.{Controller, RoundManager}
 import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, MoveModeState, SetModeState}
-import de.htwg.se.mill.model.RoundManager
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
 import org.scalatest.{Matchers, WordSpec}
 
@@ -10,7 +9,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
   "A RoundManager" when {
     val normalSize = 7
     "created" should {
-      val roundManager = new RoundManager
+      val roundManager = RoundManager()
       "handle the WinnerText" in {
         roundManager.handleWinnerText(0) should be("No Winner")
         roundManager.handleWinnerText(1) should be("White wins!")

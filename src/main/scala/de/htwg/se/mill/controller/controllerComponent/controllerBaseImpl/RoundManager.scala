@@ -1,16 +1,15 @@
-package de.htwg.se.mill.model
+package de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl
 
 import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, MoveModeState, SetModeState}
 
-case class RoundManager(player1Mode: String = "SetMode",
-                        player2Mode: String = "SetMode",
-                        setCounter: Int = 0,
-                        moveCounter: Int = 0,
-                        flyCounter: Int = 0,
-                        roundCounter: Int = 0,
-                        borderToMoveMode: Int = 18,
-                        winner: Int = 0,
-                        winnerText: String = "No Winner") {
+case class RoundManager(player1Mode: String = ModeState.handle(SetModeState()),
+                                                         player2Mode: String = ModeState.handle(SetModeState()),
+                                                         roundCounter: Int = 0,
+                                                         borderToMoveMode: Int = 18,
+                                                         winner: Int = 0,
+                                                         winnerText: String = "No Winner") {
+
+  // TODO: maybe field into RoundManager?
 
   def blackTurn(): Boolean = roundCounter % 2 == 1
 
@@ -57,6 +56,11 @@ case class RoundManager(player1Mode: String = "SetMode",
       player2Mode = ModeState.handle(MoveModeState())
     }
     copy(player1Mode = player1Mode, player2Mode = player2Mode, winner = winner, winnerText = winnerText)
+  }
+
+  def resetRoundManager(roundCounter: Int, placedStones: (Int, Int)): RoundManager = {
+    copy(winner = 0, roundCounter = roundCounter)
+      .modeChoice(placedStones)
   }
 
   def selectDriveCommand(): ModeState = {
