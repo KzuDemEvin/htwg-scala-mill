@@ -32,7 +32,6 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
   var flyCounter = 0
   var gameState: String = GameState.handle(NewState())
   val injector: Injector = Guice.createInjector(new MillModule)
-  val fileIo: FileIOInterface = injector.instance[FileIOInterface]
 
   def createPlayer(name: String, number: Int = 1): Player = {
 
