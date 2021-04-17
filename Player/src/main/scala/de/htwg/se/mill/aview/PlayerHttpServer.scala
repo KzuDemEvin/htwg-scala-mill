@@ -2,17 +2,14 @@ package de.htwg.se.mill.aview
 
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.javadsl.Behaviors
-import akka.http.scaladsl.{Http, server}
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives._
-import de.htwg.se.mill.controller.controllerBaseImpl.PlayerController
+import akka.http.scaladsl.{Http, server}
+import de.htwg.se.mill.controller.PlayerControllerInterface
 
-case object PlayerHttpServer {
-  def main(args: Array[String]): Unit = {
+class PlayerHttpServer(playerController: PlayerControllerInterface) {
     implicit val system = ActorSystem(Behaviors.empty, "player")
     implicit val executionContext = system.executionContext
-
-    val playerController = new PlayerController()
 
     val interface: String = "localhost"
     val port: Int = 8081
@@ -44,10 +41,9 @@ case object PlayerHttpServer {
         }
       )
 
-    val bindingFuture = Http().newServerAt(interface, port).bind(route)
+  val bindingFuture = Http().newServerAt(interface, port).bind(route)
 
-    println(s"Players server is online at http://${interface}:${port}/${uriPath}")
-  }
+  println(s"Players server is online at http://${interface}:${port}/${uriPath}")
 
   def postResponse(player: String): server.Route = {
     complete(HttpEntity(ContentTypes.`application/json`, player))

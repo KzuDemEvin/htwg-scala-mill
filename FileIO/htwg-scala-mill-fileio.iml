@@ -18,6 +18,7 @@
     <orderEntry type="library" name="sbt: com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.4:jar" level="project" />
     <orderEntry type="library" name="sbt: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.4:jar" level="project" />
     <orderEntry type="library" name="sbt: com.google.code.findbugs:jsr305:3.0.2:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.google.code.gson:gson:2.8.6:jar" level="project" />
     <orderEntry type="library" name="sbt: com.google.errorprone:error_prone_annotations:2.2.0:jar" level="project" />
     <orderEntry type="library" name="sbt: com.google.guava:failureaccess:1.0.1:jar" level="project" />
     <orderEntry type="library" name="sbt: com.google.guava:guava:27.1-jre:jar" level="project" />

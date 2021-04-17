@@ -1,21 +1,20 @@
-package de.htwg.se.mill.model.fileIoComponent.fileIoXmlImpl
+package de.htwg.se.mill.model.fileIoComponent.fileToXmlImpl
 
-import com.google.inject.Guice
-import com.google.inject.name.Names
-import de.htwg.se.mill.MillModule
-import de.htwg.se.mill.model.fieldComponent.{Cell, FieldInterface}
+import de.htwg.se.mill.model.fieldComponent.FieldInterface
 import de.htwg.se.mill.model.fileIoComponent.FileIOInterface
-import net.codingwell.scalaguice.InjectorExtensions._
 
 import scala.xml.{Elem, PrettyPrinter}
 
 class FileIO extends FileIOInterface {
 
-  override def load(filename: Option[String] = Some("field.xml")): FieldInterface = {
+  // TODO
+  override def load(filename: Option[String] = Some("field.xml")): String = {
     val file = scala.xml.XML.loadFile(filename match {
       case Some(fn) => fn
       case None => "field.xml"
     })
+    file.toString()
+    /*
     val roundCounter = (file \\ "field" \ "@roundCounter").text.toInt
     val player1Mode = (file \\ "field" \ "@player1Mode").text
     val player2Mode = (file \\ "field" \ "@player2Mode").text
@@ -34,7 +33,7 @@ class FileIO extends FileIOInterface {
     }
     field.setRoundCounter(roundCounter)
       .setPlayer1Mode(player1Mode)
-      .setPlayer2Mode(player2Mode)
+      .setPlayer2Mode(player2Mode)*/
   }
 
   override def save(field: FieldInterface, filename: Option[String] = Some("field.xml")): Unit = {

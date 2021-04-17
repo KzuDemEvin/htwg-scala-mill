@@ -1,7 +1,5 @@
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
 import de.htwg.se.mill.model.fieldComponent.{Color, Stone, fieldBaseImpl}
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Field, Matrix}
-
-import scala.io.StdIn.readLine
 
 
 //val stone = Stones1("w")

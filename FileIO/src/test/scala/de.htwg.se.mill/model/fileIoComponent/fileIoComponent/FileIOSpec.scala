@@ -2,7 +2,7 @@ package de.htwg.se.mill.model.fileIoComponent.fileIoComponent
 
 import de.htwg.se.mill.model.fieldComponent.Cell
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
-import de.htwg.se.mill.model.fileIoComponent.fileIoXmlImpl.FileIO
+import de.htwg.se.mill.model.fileIoComponent.fileToXmlImpl.FileIO
 import org.scalatest.{Matchers, WordSpec}
 
 class FileIOSpec extends WordSpec with Matchers {
