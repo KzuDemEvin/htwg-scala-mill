@@ -16,7 +16,7 @@ case class HttpServer(controller: ControllerInterface) {
   implicit val system = ActorSystem("mill")
   implicit val executionContext = system.dispatcher
 
-  val interface: String = "localhost"
+  val interface: String = "0.0.0.0"
   val port: Int = 9000
 
   val route: Route =

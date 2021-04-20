@@ -11,7 +11,7 @@ class PlayerHttpServer(playerController: PlayerControllerInterface) {
     implicit val system = ActorSystem(Behaviors.empty, "player")
     implicit val executionContext = system.executionContext
 
-    val interface: String = "localhost"
+    val interface: String = "0.0.0.0"
     val port: Int = 9001
     val uriPath: String = "player"
 
