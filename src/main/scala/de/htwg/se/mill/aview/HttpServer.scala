@@ -22,37 +22,58 @@ case class HttpServer(controller: ControllerInterface) {
     concat(
     path("mill") {
       get {
-        gridToHtml
+        fieldToHtml
       }
     } ~
+      path("mill" / "player") {
+        get {
+          parameters("name", "number") {
+            (name, number) =>
+              controller.createPlayer(name, number.toInt)
+              fieldToHtml
+          }
+        }
+      } ~
       path("mill" / "new") {
         get {
           controller.createEmptyField(size)
-          gridToHtml
+          fieldToHtml
         }
       } ~
       path("mill" / "random") {
         get {
           controller.createRandomField(size)
-          gridToHtml
+          fieldToHtml
+        }
+      } ~
+      path("mill" / "save") {
+        get {
+          controller.save()
+          fieldToHtml
+        }
+      } ~
+      path("mill" / "load") {
+        get {
+          controller.load()
+          fieldToHtml
         }
       } ~
       path("mill" / "undo") {
         get {
           controller.undo
-          gridToHtml
+          fieldToHtml
         }
       } ~
       path("mill" / "redo") {
         get {
           controller.redo
-          gridToHtml
+          fieldToHtml
         }
       } ~
       path("mill" / Segment) { command => {
         get {
           processInputLine(command)
-          gridToHtml
+          fieldToHtml
         }
       }
       } ~
@@ -66,7 +87,7 @@ case class HttpServer(controller: ControllerInterface) {
       }
   )
 
-  def gridToHtml: StandardRoute = {
+  def fieldToHtml: StandardRoute = {
     complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, standardHtml))
   }
 
