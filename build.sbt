@@ -36,4 +36,10 @@ lazy val root =  (project in file(".")).dependsOn(player, fileIO).aggregate(play
   },
   assemblyJarName in assembly := "Mill.jar",
   mainClass in assembly := Some("de.htwg.se.mill.Mill")
-)
+).settings(dockerBaseImage := "hseeberger/scala-sbt:8u222_1.3.5_2.13.1")
+  .settings(daemonUser in Docker := "sbtuser")
+  .settings(dockerExposedPorts := Seq(9000))
+  .settings(mainClass in Compile := Some("de.htwg.se.mill.Mill"))
+  .aggregate(player, fileIO)
+  .dependsOn(player,fileIO)
+  .enablePlugins(sbtdocker.DockerPlugin, JavaAppPackaging)
