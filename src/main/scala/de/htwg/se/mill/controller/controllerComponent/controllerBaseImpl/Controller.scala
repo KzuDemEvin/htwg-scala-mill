@@ -38,7 +38,9 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
     implicit val executionContext = system.executionContext
 
-    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://localhost:8082/player?number=${number}&name=${name}"))
+    var player: Player = Player("No name")
+
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://localhost:8081/player?number=${number}&name=${name}"))
 
     responseFuture.onComplete {
       case Failure(_) => sys.error(s"Creating player ${name} went wrong")
@@ -46,13 +48,11 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
         Unmarshal(value.entity).to[String].onComplete {
           case Failure(_) => sys.error("Unmarshalling went wrong")
           case Success(result) => {
-            // TODO
+            player = Player(name)
           }
         }
       }
     }
-
-    val player: Player = Player(name)
     player
   }
 
@@ -279,7 +279,6 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
           case Failure(_) => sys.error("Unmarshalling went wrong")
           case Success(result) => {
             field = jsonToField(result)
-            // TODO
             mgr = this.mgr.copy(roundCounter = field.savedRoundCounter)
               .setPlayerMode(field.player1Mode)
               .setPlayerMode(field.player2Mode, 2)
