@@ -16,7 +16,7 @@ case class HttpServer(controller: ControllerInterface) {
   implicit val executionContext = system.dispatcher
 
   val interface: String = "0.0.0.0"
-  val port: Int = 9000
+  val port: Int = 8080
 
   val route: Route =
     concat(

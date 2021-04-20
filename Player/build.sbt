@@ -12,7 +12,7 @@ lazy val player = (project in file(".")).settings(
   .settings(dockerBaseImage := "hseeberger/scala-sbt:8u222_1.3.5_2.13.1")
   .settings(daemonUser in Docker := "sbtuser")
   .settings(mainClass in Compile := Some("de.htwg.se.mill.Player"))
-  .settings(dockerExposedPorts := Seq(9001))
+  .settings(dockerExposedPorts := Seq(8081))
 
 val commonDependencies = Seq(
   "org.scalactic" %% "scalactic" % "3.1.2",
