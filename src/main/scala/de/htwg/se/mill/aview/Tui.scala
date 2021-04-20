@@ -3,7 +3,6 @@ package de.htwg.se.mill.aview
 import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, GameState}
 
 import scala.swing.Reactor
-import scala.util.{Failure, Success, Try}
 
 
 class Tui(controller: ControllerInterface) extends Reactor {

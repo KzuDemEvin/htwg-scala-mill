@@ -6,6 +6,9 @@ import com.google.inject.name.Names
 import de.htwg.se.mill.controller.controllerComponent._
 import de.htwg.se.mill.model.fileIoComponent._
 import net.codingwell.scalaguice.ScalaModule
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.RandomStrategy
+import de.htwg.se.mill.model.fieldComponent.FieldInterface
+import de.htwg.se.mill.model.fieldComponent.fieldAdvancedImpl.Field
 
 
 class MillModule extends AbstractModule with ScalaModule {
@@ -15,9 +18,6 @@ class MillModule extends AbstractModule with ScalaModule {
   override def configure(): Unit = {
     bindConstant().annotatedWith(Names.named("DefaultSize")).to(defaultSize)
     bind[ControllerInterface].to[controllerBaseImpl.Controller]
-
-    bind[FileIOInterface].to[fileIoXmlImpl.FileIO] //XML
-    //bind[FileIOInterface].to[fileIoJsonImpl.FileIO] //JSON
   }
 
 }

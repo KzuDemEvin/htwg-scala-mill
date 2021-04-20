@@ -1,14 +1,28 @@
 package de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl
 
 import com.google.inject.{Guice, Injector}
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model._
+import akka.http.scaladsl.unmarshalling.Unmarshal
+import com.google.gson.Gson
+import com.google.inject.name.Names
+import com.google.inject.{Guice, Inject, Injector}
 import de.htwg.se.mill.MillModule
 import de.htwg.se.mill.controller.controllerComponent._
+import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
+import de.htwg.se.mill.model.playerComponent.Player
+import de.htwg.se.mill.model.fieldComponent.{Cell, Color, FieldInterface}
 import de.htwg.se.mill.model.fileIoComponent.FileIOInterface
 import de.htwg.se.mill.model.playerComponent.Player
 import de.htwg.se.mill.util.UndoManager
 import net.codingwell.scalaguice.InjectorExtensions._
+import play.api.libs.json.{JsNumber, JsString, JsValue, Json}
 
+import scala.concurrent.Future
 import scala.swing.Publisher
+import scala.util.{Failure, Success}
 
 class Controller extends ControllerInterface with Publisher {
   private val undoManager = new UndoManager
@@ -16,7 +30,26 @@ class Controller extends ControllerInterface with Publisher {
   val injector: Injector = Guice.createInjector(new MillModule)
   val fileIo: FileIOInterface = injector.instance[FileIOInterface]
 
+
   def createPlayer(name: String, number: Int = 1): Player = {
+
+    implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
+    implicit val executionContext = system.executionContext
+
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://localhost:8082/player?number=${number}&name=${name}"))
+
+    responseFuture.onComplete {
+      case Failure(_) => sys.error(s"Creating player ${name} went wrong")
+      case Success(value) => {
+        Unmarshal(value.entity).to[String].onComplete {
+          case Failure(_) => sys.error("Unmarshalling went wrong")
+          case Success(result) => {
+            // TODO
+          }
+        }
+      }
+    }
+
     val player: Player = Player(name)
     player
   }
@@ -58,14 +91,41 @@ class Controller extends ControllerInterface with Publisher {
   }
 
   def save: Unit = {
-    val field = mgr.field
-      .setRoundCounter(mgr.roundCounter)
+    // TODO
+    val field = mgr.setRoundCounter(mgr.roundCounter)
       .setPlayer1Mode(mgr.player1Mode)
       .setPlayer2Mode(mgr.player2Mode)
-    mgr = mgr.copy(field = field)
-    fileIo.save(field, None)
+
+    implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
+    implicit val executionContext = system.executionContext
+
+    val fieldJsonString = Json.prettyPrint(fieldToJson(field))
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = "http://localhost:8082/json", entity = fieldJsonString))
+
     gameState = GameState.handle(SaveState())
     publish(new CellChanged)
+  }
+
+  def fieldToJson(field: FieldInterface): JsValue = {
+    Json.obj(
+      "field" -> Json.obj(
+        "roundCounter" -> JsNumber(field.savedRoundCounter),
+        "player1Mode" -> JsString(field.player1Mode),
+        "player2Mode" -> JsString(field.player2Mode),
+        "cells" -> Json.toJson(
+          for {
+            row <- 0 until field.size
+            col <- 0 until field.size
+          } yield {
+            Json.obj(
+              "row" -> row,
+              "col" -> col,
+              "color" -> Json.toJson(field.cell(row, col).content.color)
+            )
+          }
+        )
+      )
+    )
   }
 
   def load: Unit = {
@@ -75,6 +135,54 @@ class Controller extends ControllerInterface with Publisher {
       .setPlayerMode(field.player2Mode, 2)
     gameState = GameState.handle(LoadState())
     publish(new CellChanged)
+    implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
+    implicit val executionContext = system.executionContext
+
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = "http://localhost:8082/json"))
+
+    responseFuture.onComplete {
+      case Failure(_) => sys.error("Loading game went wrong")
+      case Success(value) => {
+        Unmarshal(value.entity).to[String].onComplete {
+          case Failure(_) => sys.error("Unmarshalling went wrong")
+          case Success(result) => {
+            field = jsonToField(result)
+            // TODO
+            mgr = this.mgr.copy(roundCounter = field.savedRoundCounter)
+              .setPlayerMode(field.player1Mode)
+              .setPlayerMode(field.player2Mode, 2)
+            gameState = GameState.handle(LoadState())
+            publish(new CellChanged)
+          }
+        }
+      }
+    }
+
+
+  }
+
+  def jsonToField(fieldInJson: String): FieldInterface = {
+    val source: String = fieldInJson
+    val json: JsValue = Json.parse(source)
+    val roundCounter = (json \ "field" \ "roundCounter").get.toString.toInt
+    val player1Mode = (json \ "field" \ "player1Mode").get.toString.replaceAll("\"", "")
+    val player2Mode = (json \ "field" \ "player2Mode").get.toString.replaceAll("\"", "")
+    val injector = Guice.createInjector(new MillModule)
+    var field = injector.instance[FieldInterface](Names.named("normal"))
+    for (index <- 0 until field.size * field.size) {
+      val row = (json \\ "row")(index).as[Int]
+      val col = (json \\ "col")(index).as[Int]
+      val color = (json \\ "color")(index).toString().replaceAll("\"", "")
+      field = color match {
+        case "white" => field.set(row, col, Cell("cw"))
+        case "black" => field.set(row, col, Cell("cb"))
+        case "noColor" => field.set(row, col, Cell("ce"))
+      }
+    }
+    field.setRoundCounter(roundCounter)
+      .setPlayer1Mode(player1Mode)
+      .setPlayer2Mode(player2Mode)
+    field
   }
 
   def cell(row: Int, col: Int): String = mgr.field.cell(row, col)
