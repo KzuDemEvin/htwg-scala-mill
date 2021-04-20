@@ -2,7 +2,7 @@ package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
 import com.google.inject.Inject
 import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, MoveModeState, SetModeState}
-import de.htwg.se.mill.model.fieldComponent.{BlackMillState, Cell, Color, FieldInterface, MillState, NoMillState, WhiteMillState}
+import de.htwg.se.mill.model.fieldComponent._
 
 import scala.util.{Failure, Success, Try}
 

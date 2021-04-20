@@ -1,11 +1,10 @@
 package de.htwg.se.mill.aview
 
 import akka.actor.ActorSystem
-import akka.http.scaladsl.{Http, ServerBuilder}
+import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Route, StandardRoute}
-import akka.stream.ActorMaterializer
 import de.htwg.se.mill.controller.controllerComponent.ControllerInterface
 
 import scala.concurrent.Future
