@@ -24,15 +24,15 @@ class FileIO extends FileIOInterface {
     val player1Mode = (json \ "field" \ "player1Mode").get.toString.replaceAll("\"", "")
     val player2Mode = (json \ "field" \ "player2Mode").get.toString.replaceAll("\"", "")
     val injector = Guice.createInjector(new MillModule)
-    var field = injector.instance[FieldInterface](Names.named("normal"))
+    var field: FieldInterface = injector.instance[FieldInterface](Names.named("normal"))
     for (index <- 0 until field.size * field.size) {
       val row = (json \\ "row")(index).as[Int]
       val col = (json \\ "col")(index).as[Int]
       val color = (json \\ "color")(index).toString().replaceAll("\"", "")
       field = color match {
-        case "white" => field.set(row, col, Cell("cw"))
-        case "black" => field.set(row, col, Cell("cb"))
-        case "noColor" => field.set(row, col, Cell("ce"))
+        case "white" => field.set(row, col, Cell("cw"))._1
+        case "black" => field.set(row, col, Cell("cb"))._1
+        case "noColor" => field.set(row, col, Cell("ce"))._1
       }
     }
     field.setRoundCounter(roundCounter)

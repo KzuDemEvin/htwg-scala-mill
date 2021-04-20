@@ -14,9 +14,9 @@ object Mill {
   val controller: ControllerInterface = injector.getInstance(classOf[ControllerInterface])
   val tui = new Tui(controller)
   if (!GraphicsEnvironment.isHeadless) {
-    val gui = new GUI(controller)
+    new GUI(controller)
   }
-  val webserver = new HttpServer(controller)
+  val webserver: HttpServer = HttpServer(controller)
   var input: String = ""
   controller.createEmptyField(defaultSize)
 

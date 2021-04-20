@@ -1,7 +1,6 @@
 package de.htwg.se.mill.aview.gui
 
 import de.htwg.se.mill.controller.controllerComponent.ControllerInterface
-import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
 
 import javax.swing.ImageIcon
 import scala.swing._
@@ -13,7 +12,7 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
 
   val sizeDim = new Dimension(100, 100)
 
-  def myCell: Cell = controller.cell(row, column)
+  def myCell = controller.cell(row, column)
 
   //upperLeft, upperRight, bottomRight, bottomLeft, Middle, HoriTop, HoriBottom, SideLeft, SideRight
   val imagesPerPosition = Map(List((0,0), (1,1), (2,2)) -> new ImageIcon("src/assets/media/AvailableCellTopLeft.png"),

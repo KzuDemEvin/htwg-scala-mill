@@ -27,9 +27,9 @@ class FileIO extends FileIOInterface {
       val col: Int = (cell \ "@col").text.toInt
       val content: String = cell.text.trim
       field = content match {
-        case "white" => field.set(row, col, Cell("cw"))
-        case "black" => field.set(row, col, Cell("cb"))
-        case "noColor" => field.set(row, col, Cell("ce"))
+        case "white" => field.set(row, col, Cell("cw"))._1
+        case "black" => field.set(row, col, Cell("cb"))._1
+        case "noColor" => field.set(row, col, Cell("ce"))._1
       }
     }
     field.setRoundCounter(roundCounter)

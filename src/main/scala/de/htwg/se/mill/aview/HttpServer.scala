@@ -56,14 +56,6 @@ case class HttpServer(controller: ControllerInterface) {
           gridToHtml
         }
       }
-      } ~
-      path("mill" / "removeStone") {
-        get {
-          parameters("row", "col", "color") {
-            (row, col, color) =>
-              complete(HttpEntity(ContentTypes.`application/json`, controller.stoneHasOtherColorREST(row.toInt, col.toInt, color)))
-          }
-        }
       }
   )
 
