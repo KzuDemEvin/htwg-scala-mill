@@ -12,7 +12,7 @@ class FileIOHttpServer(controller: FileIOControllerInterface) {
   implicit val executionContext = system.executionContext
 
   val interface: String = "localhost"
-  val port: Int = 8082
+  val port: Int = 9002
   val uriPath: String = "json"
 
   val route =

@@ -12,7 +12,7 @@ class PlayerHttpServer(playerController: PlayerControllerInterface) {
     implicit val executionContext = system.executionContext
 
     val interface: String = "localhost"
-    val port: Int = 8081
+    val port: Int = 9001
     val uriPath: String = "player"
 
     val route =
