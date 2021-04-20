@@ -8,11 +8,8 @@ services:
 env:
   - DISPLAY=:99.0
 
-before_script:
-  - curl --create-dirs -L -o $HOME/.sbt/launchers/0.13.10/sbt-launch.jar https://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.10/sbt-launch.jar
-
 script:
-  - sbt clean coverage test coverageReport
+  - sbt -sbt-launch-repo https://repo1.maven.org/maven2 ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
 
 after_success:
   - sbt coverageReport coveralls
