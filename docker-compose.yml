@@ -20,3 +20,6 @@ services:
     depends_on:
       - player
       - fileio
+    environment:
+      - PLAYERHTTPSERVER=player:8081
+      - FILEIOHTTPSERVER=fileio:8082

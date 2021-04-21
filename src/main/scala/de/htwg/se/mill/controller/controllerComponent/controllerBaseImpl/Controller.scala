@@ -33,6 +33,9 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
   var gameState: String = GameState.handle(NewState())
   val injector: Injector = Guice.createInjector(new MillModule)
 
+  val playerHttpServer: String = sys.env.getOrElse("PLAYERHTTPSERVER", "localhost:8081")
+  val fileIOHttpServer: String = sys.env.getOrElse("FILEIOHTTPSERVER", "localhost:8082")
+
   def createPlayer(name: String, number: Int = 1): Player = {
 
     implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
@@ -40,7 +43,7 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
 
     var player: Player = Player("No name")
 
-    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://localhost:8081/player?number=${number}&name=${name}"))
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://${playerHttpServer}/player?number=${number}&name=${name}"))
 
     responseFuture.onComplete {
       case Failure(_) => sys.error(s"Creating player ${name} went wrong")
@@ -238,7 +241,7 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     implicit val executionContext = system.executionContext
 
     val fieldJsonString = Json.prettyPrint(fieldToJson(field))
-    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = "http://localhost:8082/json", entity = fieldJsonString))
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://${fileIOHttpServer}/json", entity = fieldJsonString))
 
     gameState = GameState.handle(SaveState())
     publish(new CellChanged)
@@ -270,7 +273,7 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
     implicit val executionContext = system.executionContext
 
-    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = "http://localhost:8082/json"))
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = s"http://${fileIOHttpServer}/json"))
 
     responseFuture.onComplete {
       case Failure(_) => sys.error("Loading game went wrong")
