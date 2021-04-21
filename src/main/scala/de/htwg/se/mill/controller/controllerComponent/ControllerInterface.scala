@@ -1,13 +1,11 @@
 package de.htwg.se.mill.controller.controllerComponent
 
-import play.api.libs.json.JsValue
-
 import scala.swing.Publisher
 import scala.swing.event.Event
 
 trait ControllerInterface extends Publisher {
   var gameState:String
-  var cachedField: Option[JsValue]
+  // var cachedField: Option[JsValue]
   def createPlayer(name: String, number: Int): String
   def createEmptyField(size: Int): Unit
   def createRandomField(size: Int): Unit

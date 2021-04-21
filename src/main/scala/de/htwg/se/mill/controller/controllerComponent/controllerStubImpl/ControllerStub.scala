@@ -1,11 +1,10 @@
 package de.htwg.se.mill.controller.controllerComponent.controllerStubImpl
 
 import de.htwg.se.mill.controller.controllerComponent.ControllerInterface
-import play.api.libs.json.JsValue
 
 class ControllerStub extends ControllerInterface{
   override var gameState: String = _
-  override var cachedField: Option[JsValue] = _
+  // override var cachedField: Option[JsValue] = _
 
   var roundCounter: Int = 0
   var color: Int = 1
