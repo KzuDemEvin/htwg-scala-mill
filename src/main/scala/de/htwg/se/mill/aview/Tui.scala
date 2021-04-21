@@ -34,13 +34,13 @@ class Tui(controller: ControllerInterface) extends Reactor {
         "valid command: " + input
       case _ =>
         input.toList.filter(p => p != ' ').filter(_.isDigit).map(p => p.toString.toInt) match {
-        case row :: column :: Nil =>
-          controller.handleClick(row, column)
-          println(controller.getMillState)
-          "valid command: " + input
-        case _ =>
-          "Wrong input: " + input
-      }
+          case row :: column :: Nil =>
+            controller.handleClick(row, column)({ case Some(_) => {}})
+            println(controller.getMillState)
+            "valid command: " + input
+          case _ =>
+            "Wrong input: " + input
+        }
     }
   }
 

@@ -17,14 +17,14 @@ class CellPanelSpec extends WordSpec with Matchers {
       }
     }
     "placed a white stone within it" should {
-      controller.handleClick(0, 3)
+      controller.handleClick(0, 3)({ case Some(_) => {} })
       val blackCellPanel = new CellPanel(0, 3, controller)
       "have the cellType 'available'" in {
         blackCellPanel.cellType(0, 3) should be(0)
       }
     }
     "placed a black stone within it" should {
-      controller.handleClick(0, 6)
+      controller.handleClick(0, 6)({ case Some(_) => {} })
       val whiteCellPanel = new CellPanel(0, 6, controller)
       "have the cellType 'available'" in {
         whiteCellPanel.cellType(0, 6) should be (1)

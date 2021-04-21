@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import com.google.inject.name.Names
 import com.google.inject.{Guice, Inject, Injector}
 import de.htwg.se.mill.RoundManagerModule
-import de.htwg.se.mill.model.fieldComponent.{Cell, FieldInterface}
+import de.htwg.se.mill.model.fieldComponent.{Cell, Color, FieldInterface}
 import de.htwg.se.mill.model.roundManagerComponent.RoundManager
 import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
 import play.api.libs.json.{JsNumber, JsString, Json}
@@ -34,7 +34,12 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
   def winnerText(): String = new Gson().toJson(mgr.winnerText)
   def cell(row: Int, col: Int): Cell = mgr.field.cell(row, col)
   def isSet(row: Int, col: Int): String = new Gson().toJson(cell(row, col).isSet)
-  def color(row: Int, col: Int): String = new Gson().toJson(cell(row, col).content.color.toString)
+  def color(row: Int, col: Int): String = {
+    new Gson().toJson(cell(row, col).content.color match {
+      case Color.black => 1
+      case Color.white => 0
+    })
+  }
   def possiblePosition(row: Int, col: Int): String = new Gson().toJson(mgr.field.possiblePosition(row, col))
   def millState(): String = new Gson().toJson(mgr.field.millState)
 

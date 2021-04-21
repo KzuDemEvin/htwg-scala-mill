@@ -21,43 +21,43 @@ case class HttpServer(controller: ControllerInterface) {
 
   val route: Route =
     concat(
-    path("mill") {
-      get {
-        gridToHtml
-      }
-    } ~
-      path("mill" / "new") {
+      path("mill") {
         get {
-          controller.createEmptyField(size)
           gridToHtml
         }
       } ~
-      path("mill" / "random") {
-        get {
-          controller.createRandomField(size)
-          gridToHtml
+        path("mill" / "new") {
+          get {
+            controller.createEmptyField(size)
+            gridToHtml
+          }
+        } ~
+        path("mill" / "random") {
+          get {
+            controller.createRandomField(size)
+            gridToHtml
+          }
+        } ~
+        path("mill" / "undo") {
+          get {
+            controller.undo
+            gridToHtml
+          }
+        } ~
+        path("mill" / "redo") {
+          get {
+            controller.redo
+            gridToHtml
+          }
+        } ~
+        path("mill" / Segment) { command => {
+          get {
+            processInputLine(command)
+            gridToHtml
+          }
         }
-      } ~
-      path("mill" / "undo") {
-        get {
-          controller.undo
-          gridToHtml
         }
-      } ~
-      path("mill" / "redo") {
-        get {
-          controller.redo
-          gridToHtml
-        }
-      } ~
-      path("mill" / Segment) { command => {
-        get {
-          processInputLine(command)
-          gridToHtml
-        }
-      }
-      }
-  )
+    )
 
   def gridToHtml: StandardRoute = {
     complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, standardHtml))
@@ -131,7 +131,7 @@ case class HttpServer(controller: ControllerInterface) {
 
   def processInputLine(input: String): Unit = {
     input.toList.filter(p => p != ' ').filter(_.isDigit).map(p => p.toString.toInt) match {
-      case row :: column :: Nil => controller.handleClick(row, column)
+      case row :: column :: Nil => controller.handleClick(row, column)({ case Some(_) => })
       case _ =>
     }
   }

@@ -12,14 +12,14 @@ trait ControllerInterface extends Publisher {
   def fieldToHtml: String
 
   def getRoundCounter:Int
-  def handleClick(row: Int, column: Int): Unit
+  def handleClick(row: Int, column: Int)(oncomplete: Option[String] => Unit): Unit
   def undo(): Unit
   def redo(): Unit
   def save(): Unit
   def load(): Unit
-  def color(row: Int, col: Int): String
-  def isSet(row:Int, col:Int):Boolean
-  def possiblePosition(row:Int, col:Int):Boolean
+  def color(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit
+  def isSet(row:Int, col:Int)(oncomplete: Option[String] => Unit): Unit
+  def possiblePosition(row:Int, col:Int)(oncomplete: Option[String] => Unit): Unit
   def fieldsize:Int
   def getWinner: Int
   def getWinnerText: String

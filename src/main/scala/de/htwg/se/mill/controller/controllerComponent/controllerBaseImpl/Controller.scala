@@ -15,29 +15,33 @@ import scala.util.{Failure, Success, Try}
 
 class Controller extends ControllerInterface with Publisher {
   // private val undoManager = new UndoManager
+  implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
+  implicit val executionContext: ExecutionContextExecutor = system.executionContext
   var gameState: String = GameState.handle(NewState())
   var cachedPossiblePositions: scala.collection.mutable.Map[(Int, Int), Boolean] = scala.collection.mutable.Map[(Int, Int), Boolean]()
   var cachedField: Option[JsValue] = None
 
   def createPlayer(name: String, number: Int = 1): String = {
-    sendRequest(s"http://localhost:8082/player?number=${number}&name=${name}", POST, s"Creating player ${name} went wrong.") match {
+    /* sendRequest(s"http://localhost:8082/player?number=${number}&name=${name}", POST, s"Creating player ${name} went wrong.") match {
       case Some(player) => player
       case None => ""
-    }
+    } */
+    ""
   }
 
   def createEmptyField(size: Int): Unit = {
-    sendRequest(s"http://localhost:8083/field/createField?size=${size}", POST, s"Creating field of size ${size} went wrong.") match {
+    /*sendRequest(s"http://localhost:8083/field/createField?size=${size}", POST, s"Creating field of size ${size} went wrong.") match {
       case Some(field) =>
         publish(new DataArrived)
         cachedField = Some(Json.parse(field))
       case None => cachedField = None
     }
     gameState = GameState.handle(NewState())
-    publish(new CellChanged)
+    publish(new CellChanged)*/
   }
 
   def createRandomField(size: Int): Unit = {
+    /*
     sendRequest(s"http://localhost:8083/field/createRandomField?size=${size}", POST, s"Creating random field of size ${size} went wrong.") match {
       case Some(field) =>
         publish(new DataArrived)
@@ -46,49 +50,55 @@ class Controller extends ControllerInterface with Publisher {
     }
     gameState = GameState.handle(RandomState())
     publish(new CellChanged)
+    */
   }
 
-  def handleClick(row: Int, col: Int): Unit = {
-    sendRequest(s"http://localhost:8083/handleClick?row=${row}&col=${col}", POST, s"Handling move at row ${row} and col ${col} failed.") match {
-      case Some(field) =>
-        publish(new DataArrived)
-        cachedField = Some(Json.parse(field))
-      case None => cachedField = None
-    }
-
-    gameState = GameState.whichState(turn()).handle
-    publish(new CellChanged)
+  def handleClick(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = {
+    sendRequest(s"http://localhost:8083/handleClick?row=${row}&col=${col}", POST).onComplete({
+      case Failure(_) => sys.error("handleClick failed.")
+      case Success(value) => unmarshal(value)(oncomplete)
+    })
   }
 
   def turn(): String = {
+    /*
     sendRequest(s"http://localhost:8083/turn", GET) match {
       case Some(color) =>
         publish(new DataArrived)
         color
       case None => ""
     }
+
+     */
+    ""
   }
 
 
   def undo: Unit = {
+    /*
     cachedField = sendRequest(s"http://localhost:8083/undo", POST, "Undo failed.") match {
       case Some(field) => Some(Json.parse(field))
       case None => None
     }
     gameState = GameState.handle(UndoState())
     publish(new CellChanged)
+     */
   }
 
   def redo: Unit = {
+    /*
     cachedField = sendRequest(s"http://localhost:8083/redo", POST, "Redo failed.") match {
       case Some(field) => Some(Json.parse(field))
       case None => None
     }
     gameState = GameState.handle(RedoState())
     publish(new CellChanged)
+
+     */
   }
 
   def save: Unit = {
+    /*
     cachedField = sendRequest("http://localhost:8083/field", GET, "Getting field went wrong.") match {
       case Some(fieldAsString) => Some(Json.parse(fieldAsString))
       case None => None
@@ -104,9 +114,12 @@ class Controller extends ControllerInterface with Publisher {
     }
     gameState = GameState.handle(SaveState())
     publish(new CellChanged)
+
+     */
   }
 
   def load: Unit = {
+    /*
     gameState = GameState.handle(LoadState())
     cachedField = sendRequest("http://localhost:8082/json", GET, "Loading game went wrong") match {
       case Some(fieldAsString) =>
@@ -126,85 +139,84 @@ class Controller extends ControllerInterface with Publisher {
 
     gameState = GameState.handle(LoadState())
     publish(new CellChanged)
+
+     */
   }
 
-  def isSet(row: Int, col: Int): Boolean = {
-    sendRequest(s"http://localhost:8083/field/isSet?row=${row}&col=${col}", GET) match {
-      case Some(isSet) => isSet.toBoolean
-      case None => false
-    }
+  def isSet(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = {
+    sendRequest(s"http://localhost:8083/field/isSet?row=${row}&col=${col}", GET).onComplete({
+      case Failure(_) => sys.error("isSet failed.")
+      case Success(value) => unmarshal(value)(oncomplete)
+    })
   }
 
-  def color(row: Int, col: Int): String = {
-    sendRequest(s"http://localhost:8083/field/color?row=${row}&col=${col}", GET) match {
-      case Some(color) => color
-      case None => ""
-    }
+  def color(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = {
+    sendRequest(s"http://localhost:8083/field/color?row=${row}&col=${col}", GET).onComplete({
+      case Failure(_) => sys.error("Possible Position failed.")
+      case Success(value) => unmarshal(value)(oncomplete)
+    })
   }
 
-  def possiblePosition(row: Int, col: Int): Boolean = {
-    var possiblePosition: Boolean = false
-    if (cachedPossiblePositions.isDefinedAt((row, col))) {
-      possiblePosition = cachedPossiblePositions((row, col))
-    } else {
-      possiblePosition = sendRequest(s"http://localhost:8083/field/possiblePosition?row=${row}&col=${col}", GET) match {
-        case Some(possiblePosition) => Try(possiblePosition.toBoolean) match {
-          case Success(possiblePosition) =>
-            cachedPossiblePositions.addOne((row, col), possiblePosition)
-            possiblePosition
-          case Failure(_) => false
-        }
-        case None => false
-      }
-    }
-    print(possiblePosition)
-    possiblePosition
+  def possiblePosition(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = {
+    sendRequest(s"http://localhost:8083/field/possiblePosition?row=${row}&col=${col}", GET).onComplete({
+      case Failure(_) => sys.error("Possible Position failed.")
+      case Success(value) => unmarshal(value)(oncomplete)
+    })
   }
 
   def getMillState: String = {
+    /*
     sendRequest(s"http://localhost:8083/field/millState", GET) match {
       case Some(millState) => millState
       case None => ""
-    }
+    }*/
+    ""
   }
 
   def fieldsize: Int = 7
 
   def fieldToHtml: String = {
+    /*
     sendRequest(s"http://localhost:8083/field/html", GET) match {
       case Some(fieldAsHtml) => fieldAsHtml
       case None => ""
-    }
+    } */
+    ""
   }
 
   def fieldToString: String = {
+    /*
     sendRequest(s"http://localhost:8083/field/string", GET) match {
       case Some(fieldAsString) => fieldAsString
       case None => ""
-    }
+    } */
+    ""
   }
 
   def getRoundCounter: Int = {
+    /*
     sendRequest(s"http://localhost:8083/roundCounter", GET) match {
       case Some(counter) => counter.toInt
       case None => 0
-    }
+    }*/ 0
   }
 
   override def getWinner: Int = {
+    /*
     sendRequest(s"http://localhost:8083/winner", GET) match {
       case Some(winner) => winner.toInt
       case None => -1
-    }
+    }*/ 0
   }
 
   override def getWinnerText: String = {
+    /*
     sendRequest(s"http://localhost:8083/winnerText", GET) match {
       case Some(winnerText) =>
         publish(new DataArrived)
         winnerText
       case None => ""
-    }
+    }*/ ""
   }
 
   /* private def futureHandler[T1, T2](future: Future[T1])(onSuccess: Try[T1] => Future[T2]): Unit = {
@@ -228,8 +240,6 @@ class Controller extends ControllerInterface with Publisher {
         sys.error("Unmarshalling went wrong")
         oncomplete(None)
       case Success(s) =>
-        print("Yeah")
-        publish(new DataArrived)
         oncomplete(Some(s))
     }
   }
