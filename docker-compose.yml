@@ -3,22 +3,20 @@ version: "3.9"
 services:
   player:
     build:
-      context: .
-      dockerfile: Player/Dockerfile
+      context: ./Player
     ports:
-    - "9001:9001"
+    - "8081:8081"
   fileio:
     build:
-      context: .
-      dockerfile: FileIO/Dockerfile
+      context: ./FileIO
     ports:
-    - "9002:9002"
+    - "8082:8082"
     volumes:
     - .:/gameSaves
   root:
     build: .
     ports:
-    - "9000:9000"
+    - "8080:8080"
     depends_on:
       - player
       - fileio
