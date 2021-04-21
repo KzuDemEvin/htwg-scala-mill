@@ -1,6 +1,6 @@
 package de.htwg.se.mill.aview.gui
 
-import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, DataArrived}
+import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, FieldChanged}
 
 import scala.swing.FlowPanel.Alignment
 import scala.swing.{BorderPanel, BoxPanel, Dimension, FlowPanel, Font, Frame, GridPanel, MainFrame, Orientation, TextField}
@@ -58,6 +58,7 @@ class GUI(controller: ControllerInterface) extends MainFrame {
 
   reactions += {
     case _: CellChanged => updateField(false)
+    case _: FieldChanged => updateField()
   }
 
   def updateField(repaintField: Boolean = true): Unit = {

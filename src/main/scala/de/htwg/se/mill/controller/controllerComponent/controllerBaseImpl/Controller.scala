@@ -37,7 +37,7 @@ class Controller extends ControllerInterface with Publisher {
         case Some(field) =>
           cachedField = Some(Json.parse(field))
           gameState = GameState.handle(NewState())
-          publish(new CellChanged)
+          publish(new FieldChanged)
         case None =>
       })
     })
@@ -49,8 +49,8 @@ class Controller extends ControllerInterface with Publisher {
       case Success(value) => unmarshal(value)({
         case Some(field) =>
           gameState = GameState.handle(RandomState())
-          publish(new CellChanged)
           cachedField = Some(Json.parse(field))
+          publish(new FieldChanged)
         case None =>
       })
     })
