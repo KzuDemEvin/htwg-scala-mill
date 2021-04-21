@@ -34,12 +34,6 @@ class ControllerSpec extends WordSpec with Matchers {
         controllerUndoRedo.field.cell(0, 0).content.color should be(Color.white)
         controllerUndoRedo.gameState should be("Redo")
       }
-      "be able to create a Player" in {
-        val controllerCreatePlayer = new Controller(new Field(normalSize))
-
-        val player1 = controllerCreatePlayer.createPlayer("Kevin").name should be("Kevin")
-        val player2 = controllerCreatePlayer.createPlayer("Josef", 2).name should be("Josef")
-      }
     }
     "ready to play" should {
       val field = new Field(normalSize)
