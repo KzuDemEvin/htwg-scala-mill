@@ -1,8 +1,8 @@
 package de.htwg.se.mill.model.roundManagerComponent
 
-import de.htwg.se.mill.model.{FlyModeState, ModeState, MoveModeState, RemoveModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
 import de.htwg.se.mill.model.fieldComponent.{Color, _}
+import de.htwg.se.mill.model._
 
 case class RoundManager(field: FieldInterface,
                         player1Mode: String = ModeState.handle(SetModeState()),
