@@ -6,6 +6,7 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpMethods.{GET, POST}
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.unmarshalling.Unmarshal
+import de.htwg.se.mill.Mill.controller.gameState
 import de.htwg.se.mill.controller.controllerComponent._
 import play.api.libs.json.{JsValue, Json}
 
@@ -30,49 +31,42 @@ class Controller extends ControllerInterface with Publisher {
   }
 
   def createEmptyField(size: Int): Unit = {
-    /*sendRequest(s"http://localhost:8083/field/createField?size=${size}", POST, s"Creating field of size ${size} went wrong.") match {
-      case Some(field) =>
-        publish(new DataArrived)
-        cachedField = Some(Json.parse(field))
-      case None => cachedField = None
-    }
-    gameState = GameState.handle(NewState())
-    publish(new CellChanged)*/
-  }
-
-  def createRandomField(size: Int): Unit = {
-    /*
-    sendRequest(s"http://localhost:8083/field/createRandomField?size=${size}", POST, s"Creating random field of size ${size} went wrong.") match {
-      case Some(field) =>
-        publish(new DataArrived)
-        cachedField = Some(Json.parse(field))
-      case None => cachedField = None
-    }
-    gameState = GameState.handle(RandomState())
-    publish(new CellChanged)
-    */
-  }
-
-  def handleClick(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = {
-    sendRequest(s"http://localhost:8083/handleClick?row=${row}&col=${col}", POST).onComplete({
-      case Failure(_) => sys.error("handleClick failed.")
-      case Success(value) => unmarshal(value)(oncomplete)
+    sendRequest(s"http://localhost:8083/field/createField?size=${size}", POST, s"Creating field of size ${size} went wrong.").onComplete({
+      case Failure(_) => sys.error("createEmptyField failed.")
+      case Success(value) => unmarshal(value)({
+        case Some(field) =>
+          cachedField = Some(Json.parse(field))
+          gameState = GameState.handle(NewState())
+          publish(new CellChanged)
+        case None =>
+      })
     })
   }
 
-  def turn(): String = {
-    /*
-    sendRequest(s"http://localhost:8083/turn", GET) match {
-      case Some(color) =>
-        publish(new DataArrived)
-        color
-      case None => ""
-    }
-
-     */
-    ""
+  def createRandomField(size: Int): Unit = {
+    sendRequest(s"http://localhost:8083/field/createRandomField?size=${size}", POST, s"Creating random field of size ${size} went wrong.").onComplete({
+      case Failure(_) => sys.error("createRandomField failed.")
+      case Success(value) => unmarshal(value)({
+        case Some(field) =>
+          gameState = GameState.handle(RandomState())
+          publish(new CellChanged)
+          cachedField = Some(Json.parse(field))
+        case None =>
+      })
+    })
   }
 
+  def handleClick(row: Int, col: Int)(oncomplete: Option[String] => Unit = {
+    case Some(_) => {}
+  }): Unit = {
+    sendRequest(s"http://localhost:8083/handleClick?row=${row}&col=${col}", POST).onComplete({
+      case Failure(_) => sys.error("handleClick failed.")
+      case Success(value) => unmarshal(value)(value => {
+        publish(new CellChanged)
+        oncomplete(value)
+      })
+    })
+  }
 
   def undo: Unit = {
     /*
@@ -152,71 +146,67 @@ class Controller extends ControllerInterface with Publisher {
 
   def color(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = {
     sendRequest(s"http://localhost:8083/field/color?row=${row}&col=${col}", GET).onComplete({
-      case Failure(_) => sys.error("Possible Position failed.")
+      case Failure(_) => sys.error("color failed.")
       case Success(value) => unmarshal(value)(oncomplete)
     })
   }
 
   def possiblePosition(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = {
     sendRequest(s"http://localhost:8083/field/possiblePosition?row=${row}&col=${col}", GET).onComplete({
+      case Failure(_) => sys.error("possiblePosition failed.")
+      case Success(value) => unmarshal(value)(oncomplete)
+    })
+  }
+
+  def getMillState(oncomplete: Option[String] => Unit): Unit = {
+    sendRequest(s"http://localhost:8083/field/millState", GET).onComplete({
+      case Failure(_) => sys.error("getMillState failed.")
+      case Success(value) => unmarshal(value)(oncomplete)
+    })
+  }
+
+  def fieldsize: Int = 7
+
+  def fieldToHtml(oncomplete: Option[String] => Unit): Unit = {
+    sendRequest(s"http://localhost:8083/field/html", GET).onComplete({
+      case Failure(_) => sys.error("fieldToHtml failed.")
+      case Success(value) => unmarshal(value)(oncomplete)
+    })
+}
+
+  def fieldToString(oncomplete: Option[String] => Unit): Unit = {
+    sendRequest(s"http://localhost:8083/field/string", GET).onComplete({
+      case Failure(_) => sys.error("fieldToString failed.")
+      case Success(value) => unmarshal(value)(oncomplete)
+    })
+  }
+
+  def fieldToJson(oncomplete: Option[String] => Unit): Unit = {
+    sendRequest(s"http://localhost:8083/field/json", GET).onComplete({
+      case Failure(_) => sys.error("fieldToJson failed.")
+      case Success(value) => unmarshal(value)(oncomplete)
+    })
+  }
+
+  def getRoundCounter(oncomplete: Option[String] => Unit): Unit = {
+    sendRequest(s"http://localhost:8083/roundCounter", GET).onComplete({
+      case Failure(_) => sys.error("RoundCounter failed.")
+      case Success(value) => unmarshal(value)(oncomplete)
+    })
+  }
+
+  def getWinner(oncomplete: Option[String] => Unit): Unit = {
+    sendRequest(s"http://localhost:8083/winner", GET).onComplete({
       case Failure(_) => sys.error("Possible Position failed.")
       case Success(value) => unmarshal(value)(oncomplete)
     })
   }
 
-  def getMillState: String = {
-    /*
-    sendRequest(s"http://localhost:8083/field/millState", GET) match {
-      case Some(millState) => millState
-      case None => ""
-    }*/
-    ""
-  }
-
-  def fieldsize: Int = 7
-
-  def fieldToHtml: String = {
-    /*
-    sendRequest(s"http://localhost:8083/field/html", GET) match {
-      case Some(fieldAsHtml) => fieldAsHtml
-      case None => ""
-    } */
-    ""
-  }
-
-  def fieldToString: String = {
-    /*
-    sendRequest(s"http://localhost:8083/field/string", GET) match {
-      case Some(fieldAsString) => fieldAsString
-      case None => ""
-    } */
-    ""
-  }
-
-  def getRoundCounter: Int = {
-    /*
-    sendRequest(s"http://localhost:8083/roundCounter", GET) match {
-      case Some(counter) => counter.toInt
-      case None => 0
-    }*/ 0
-  }
-
-  override def getWinner: Int = {
-    /*
-    sendRequest(s"http://localhost:8083/winner", GET) match {
-      case Some(winner) => winner.toInt
-      case None => -1
-    }*/ 0
-  }
-
-  override def getWinnerText: String = {
-    /*
-    sendRequest(s"http://localhost:8083/winnerText", GET) match {
-      case Some(winnerText) =>
-        publish(new DataArrived)
-        winnerText
-      case None => ""
-    }*/ ""
+  def getWinnerText(oncomplete: Option[String] => Unit): Unit = {
+    sendRequest(s"http://localhost:8083/winnerText", GET).onComplete({
+      case Failure(_) => sys.error("Possible Position failed.")
+      case Success(value) => unmarshal(value)(oncomplete)
+    })
   }
 
   /* private def futureHandler[T1, T2](future: Future[T1])(onSuccess: Try[T1] => Future[T2]): Unit = {
@@ -240,7 +230,7 @@ class Controller extends ControllerInterface with Publisher {
         sys.error("Unmarshalling went wrong")
         oncomplete(None)
       case Success(s) =>
-        oncomplete(Some(s))
+        oncomplete(Some(s.stripPrefix(s"${'"'}").stripSuffix(s"${'"'}")))
     }
   }
 

@@ -14,6 +14,25 @@ for {
   (row, rowIndex) <- field.allCells.allRows.zipWithIndex
   (cell, colIndex) <- row.zipWithIndex
 } yield ((rowIndex, colIndex), cell)
+
+val fieldAsString =
+  """
+    | o  -  -  o  -  -  o
+    | -  o  -  o  -  o  -
+    | -  -  o  o  o  -  -
+    | o  o  o  -  o  o  o
+    | -  -  o  o  o  -  -
+    | -  o  -  o  -  o  -
+    | o  -  -  o  -  -  o
+    |""".stripMargin
+print(fieldAsString
+  .split("\n")
+  .toList
+)
+
+
+
+print(field)
 /*
 field = field.set(0,0, Cell(true, Stone("b+")))
 field = field.set(0,3, fieldBaseImpl.Cell(true, Stone("b+")))
@@ -58,11 +77,7 @@ field.toString
 
 
 
-
-
-
-
-val mill = field.checkMill()
+// val mill = field.checkMill()
 ////1 dimensional
 //case class FieldEasy[T](field:Vector[T]){
 //  def this(size:Int, filling:T) = this(Vector.tabulate(size){ _ => filling})
@@ -94,4 +109,4 @@ val mill = field.checkMill()
 //val v = Vector.tabulate(3, 3, 3) { (x1, x2, x3) => (x1,x2,x3) }
 //val v2 = Vector.tabulate(2,2) { (x1,x2) => (x1,x2)}
 //val v3 = Vector(Vector.tabulate(2,2) { (x1, x2) => (x1,x2)})
-val mill = field.checkMill()
+// val mill = field.checkMill()

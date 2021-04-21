@@ -111,27 +111,18 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
     btn.icon = cellIcon(row, column)
   }
 
-  def createCell(): BoxPanel = new BoxPanel(Orientation.Vertical) {
-    contents += (if (cellType < 3) {
-      setButton
-    } else {
-      notValidButton
-    })
+  val cell: BoxPanel = new BoxPanel(Orientation.Vertical) {
+    contents += setButton
     preferredSize = sizeDim
 
     listenTo(controller)
     listenTo(setButton)
     reactions += {
-      case ButtonClicked(component) if component == setButton =>
+      case ButtonClicked(component) =>
         controller.handleClick(row, column)({
-          case Some(field) => {
-            print(field)
-            redraw()
-          }
+          case Some(_) => redraw()
         })
-        if (controller.getWinner != 0) {
-          winnerDialog()
-        }
+        controller.getWinner({ case Some(winner) => if (winner.toInt != 0) winnerDialog() })
     }
   }
 
@@ -142,12 +133,15 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
       val exitGame = new Button("Exit Game")
       listenTo(newGame)
       listenTo(exitGame)
-      contents = new BoxPanel(Orientation.Vertical) {
-        val label = new Label(controller.getWinnerText)
-        label.font = Font("Impact", Font.Bold, 30)
-        contents += new FlowPanel(label)
-        contents += new FlowPanel(newGame, exitGame)
+      controller.getWinnerText({ case Some(winnerText) => {
+        contents = new BoxPanel(Orientation.Vertical) {
+          val label = new Label(winnerText)
+          label.font = Font("Impact", Font.Bold, 30)
+          contents += new FlowPanel(label)
+          contents += new FlowPanel(newGame, exitGame)
+        }
       }
+      })
       reactions += {
         case ButtonClicked(component) if component == newGame => controller.createEmptyField(7)
           dispose()
@@ -170,7 +164,7 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
     setButton.icon = cellIcon(row, column)
     notValidButton.background = unavailableColor
     notValidButton.icon = cellIcon(row, column)
-    contents += createCell()
+    contents += cell
     repaint
   }
 }

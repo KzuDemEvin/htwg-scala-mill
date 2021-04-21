@@ -36,7 +36,7 @@ class Tui(controller: ControllerInterface) extends Reactor {
         input.toList.filter(p => p != ' ').filter(_.isDigit).map(p => p.toString.toInt) match {
           case row :: column :: Nil =>
             controller.handleClick(row, column)({ case Some(_) => {}})
-            println(controller.getMillState)
+            controller.getMillState({ case Some(state) => println(state)})
             "valid command: " + input
           case _ =>
             "Wrong input: " + input
@@ -49,7 +49,7 @@ class Tui(controller: ControllerInterface) extends Reactor {
   }
 
   def printTui: Unit = {
-    printf(s"${controller.fieldToString}\n")
-    printf(s"${GameState.state}\n")
+    controller.fieldToString({ case Some(field) => print(s"${field}\n")})
+    print(s"${GameState.state}\n")
   }
 }

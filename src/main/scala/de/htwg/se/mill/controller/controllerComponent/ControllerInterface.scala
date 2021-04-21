@@ -1,17 +1,21 @@
 package de.htwg.se.mill.controller.controllerComponent
 
+import play.api.libs.json.JsValue
+
 import scala.swing.Publisher
 import scala.swing.event.Event
 
 trait ControllerInterface extends Publisher {
   var gameState:String
+  var cachedField: Option[JsValue]
   def createPlayer(name: String, number: Int): String
   def createEmptyField(size: Int): Unit
   def createRandomField(size: Int): Unit
-  def fieldToString: String
-  def fieldToHtml: String
+  def fieldToString(oncomplete: Option[String] => Unit): Unit
+  def fieldToHtml(oncomplete: Option[String] => Unit): Unit
+  def fieldToJson(oncomplete: Option[String] => Unit): Unit
 
-  def getRoundCounter:Int
+  def getRoundCounter(oncomplete: Option[String] => Unit): Unit
   def handleClick(row: Int, column: Int)(oncomplete: Option[String] => Unit): Unit
   def undo(): Unit
   def redo(): Unit
@@ -21,9 +25,9 @@ trait ControllerInterface extends Publisher {
   def isSet(row:Int, col:Int)(oncomplete: Option[String] => Unit): Unit
   def possiblePosition(row:Int, col:Int)(oncomplete: Option[String] => Unit): Unit
   def fieldsize:Int
-  def getWinner: Int
-  def getWinnerText: String
-  def getMillState: String
+  def getWinner(oncomplete: Option[String] => Unit): Unit
+  def getWinnerText(oncomplete: Option[String] => Unit): Unit
+  def getMillState(oncomplete: Option[String] => Unit): Unit
 }
 
 class DataArrived extends Event
