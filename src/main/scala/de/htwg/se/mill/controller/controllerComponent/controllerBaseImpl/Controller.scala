@@ -302,21 +302,19 @@ class Controller @Inject()(var field: FieldInterface) extends ControllerInterfac
     val player1Mode = (json \ "field" \ "player1Mode").get.toString.replaceAll("\"", "")
     val player2Mode = (json \ "field" \ "player2Mode").get.toString.replaceAll("\"", "")
     val injector = Guice.createInjector(new MillModule)
-    var field = injector.instance[FieldInterface](Names.named("normal"))
-    for (index <- 0 until field.size * field.size) {
+    var newField = injector.instance[FieldInterface](Names.named("normal"))
+    for (index <- 0 until newField.size * newField.size) {
       val row = (json \\ "row")(index).as[Int]
       val col = (json \\ "col")(index).as[Int]
       val color = (json \\ "color")(index).toString().replaceAll("\"", "")
-      field = color match {
-        case "white" => field.set(row, col, Cell("cw"))
-        case "black" => field.set(row, col, Cell("cb"))
-        case "noColor" => field.set(row, col, Cell("ce"))
+      newField = color match {
+        case "white" => newField.set(row, col, Cell("cw"))
+        case "black" => newField.set(row, col, Cell("cb"))
+        case "noColor" => newField.set(row, col, Cell("ce"))
       }
     }
-    field.setRoundCounter(roundCounter)
-      .setPlayer1Mode(player1Mode)
-      .setPlayer2Mode(player2Mode)
-    field
+    newField = newField.setRoundCounter(roundCounter).setPlayer1Mode(player1Mode).setPlayer2Mode(player2Mode)
+    newField
   }
 
   def resetCounters(): Unit = {
