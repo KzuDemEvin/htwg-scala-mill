@@ -1,14 +1,11 @@
 package de.htwg.se.mill.controller.controllerComponent
 
-import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.RoundManager
-import de.htwg.se.mill.model.playerComponent.Player
-import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
-
 import scala.swing.Publisher
+import scala.swing.event.Event
 
 trait ControllerInterface extends Publisher {
   var gameState:String
-  def createPlayer(name: String, number: Int): Player
+  def createPlayer(name: String, number: Int): String
   def createEmptyField(size: Int): Unit
   def createRandomField(size: Int): Unit
   def fieldToString: String
@@ -18,18 +15,17 @@ trait ControllerInterface extends Publisher {
   def handleClick(row: Int, column: Int): Unit
   def undo(): Unit
   def redo(): Unit
-  def checkMill(row:Int, col:Int):String
   def save(): Unit
   def load(): Unit
-  def cell(row:Int, col:Int):String
+  def color(row: Int, col: Int): String
   def isSet(row:Int, col:Int):Boolean
   def possiblePosition(row:Int, col:Int):Boolean
   def fieldsize:Int
-  def getRoundManager:RoundManager
+  def getWinner: Int
+  def getWinnerText: String
   def getMillState: String
 }
 
-import scala.swing.event.Event
-
+class DataArrived extends Event
 class CellChanged extends Event
 class StoneRemoved extends Event

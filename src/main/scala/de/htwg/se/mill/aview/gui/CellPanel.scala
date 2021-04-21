@@ -8,11 +8,11 @@ import scala.swing.event._
 
 class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends FlowPanel {
 
+  var possiblePosition = controller.possiblePosition(row, column)
+
   val unavailableColor = new Color(238, 238, 238) // backgroundcolor
 
   val sizeDim = new Dimension(100, 100)
-
-  def myCell = controller.cell(row, column)
 
   //upperLeft, upperRight, bottomRight, bottomLeft, Middle, HoriTop, HoriBottom, SideLeft, SideRight
   val imagesPerPosition = Map(List((0,0), (1,1), (2,2)) -> new ImageIcon("src/assets/media/AvailableCellTopLeft.png"),
@@ -24,8 +24,6 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
                               List((2,3), (6,3)) -> new ImageIcon("src/assets/media/AvailableCellHorizontalBottom.png"),
                               List((3,0), (3,4)) -> new ImageIcon("src/assets/media/AvailableCellVerticalLeft.png"),
                               List((3,2), (3,6)) -> new ImageIcon("src/assets/media/AvailableCellVerticalRight.png"))
-
-
 
   val horizontalCells = List((0, 1), (0, 2), (0, 4), (0,5),
                                 (1, 2),(1, 4),
@@ -40,12 +38,14 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
   // 0 = white, 1 = black, 2 = availableCell, 3 = notValidHorizontal, 4 = notValidVertical, 5 = middle
   def cellType(row: Int, col: Int): Int = {
     var cellType = 5
-    if (controller.possiblePosition(row, col)) {
+    if (possiblePosition) {
       if (controller.isSet(row, col)) {
-        if (controller.cell(row, col).content.color == Color.white) {
-          cellType = 0
+        val color = controller.color(row, col)
+        print(color)
+        cellType = if (color == "White") {
+          0
         } else {
-          cellType = 1
+          1
         }
       } else {
         cellType = 2
@@ -115,7 +115,7 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
     reactions += {
       case ButtonClicked(component) if component == setButton =>
         controller.handleClick(row, column)
-        if (controller.getRoundManager.winner != 0) {
+        if (controller.getWinner != 0) {
           winnerDialog()
         }
     }
@@ -129,7 +129,7 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
       listenTo(newGame)
       listenTo(exitGame)
       contents = new BoxPanel(Orientation.Vertical) {
-        val label = new Label(controller.getRoundManager.winnerText)
+        val label = new Label(controller.getWinnerText)
         label.font = Font("Impact", Font.Bold, 30)
         contents += new FlowPanel(label)
         contents += new FlowPanel(newGame, exitGame)

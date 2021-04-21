@@ -1,4 +1,4 @@
-// Player
+// RoundManager
 
 val commonDependencies = Seq(
   "org.scalactic" %% "scalactic" % "3.1.2",
@@ -14,10 +14,9 @@ val commonDependencies = Seq(
   "com.google.code.gson" % "gson" % "2.8.6"
 )
 
-lazy val root = (project in file(".."))
-lazy val player = (project in file(".")).dependsOn(root).aggregate(root).settings(
-  name          := "htwg-scala-mill-player",
-  //organization  := "de.htwg.se",
+lazy val roundManager = (project in file(".")).settings(
+  name          := "htwg-scala-mill-roundmanager",
+  organization  := "de.htwg.se",
   version       := "0.13",
   scalaVersion  := "2.13.2",
   libraryDependencies ++= commonDependencies

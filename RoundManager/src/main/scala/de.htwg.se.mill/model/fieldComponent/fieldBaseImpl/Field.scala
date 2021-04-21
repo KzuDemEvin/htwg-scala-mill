@@ -1,9 +1,8 @@
 package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
 import com.google.inject.Inject
-import de.htwg.se.mill.model.{ModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent._
-import de.htwg.se.mill.model.roundManagerComponent.SetModeState
+import de.htwg.se.mill.model.{ModeState, SetModeState}
 
 import scala.util.{Failure, Success, Try}
 

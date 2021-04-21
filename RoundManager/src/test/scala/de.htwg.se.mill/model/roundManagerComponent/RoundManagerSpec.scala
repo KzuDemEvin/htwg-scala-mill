@@ -1,8 +1,8 @@
-package de.htwg.se.mill.model
+package de.htwg.se.mill.model.roundManagerComponent
 
-import de.htwg.se.mill.controller.controllerBaseImpl.RoundManagerController
+import de.htwg.se.mill.controller.controllerRoundManager.RoundManagerController
+import de.htwg.se.mill.model.{FlyModeState, ModeState, MoveModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
-import de.htwg.se.mill.model.roundManagerComponent._
 import org.scalatest.{Matchers, WordSpec}
 
 class RoundManagerSpec extends WordSpec with Matchers {
@@ -32,7 +32,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
           controller.handleClick(0,3)
           controller.handleClick(6,3)
           controller.handleClick(0,6)
-          controller.getMillState should be("White Mill")
+          controller.mgr.field.millState should be("White Mill")
 
           controller.handleClick(6,3) // white Remove
           controller.handleClick(6,3)

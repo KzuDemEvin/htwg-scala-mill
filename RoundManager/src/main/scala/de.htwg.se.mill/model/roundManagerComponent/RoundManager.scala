@@ -15,9 +15,7 @@ case class RoundManager(field: FieldInterface,
                         winnerText: String = "No Winner") {
 
   def this() {
-    this(
-      field = new Field(size = 7)
-    )
+    this(field = new Field(size = 7))
   }
 
   def blackTurn(): Boolean = roundCounter % 2 == 1
@@ -113,6 +111,8 @@ case class RoundManager(field: FieldInterface,
   }
 
   private def checkIfCanMove(): Boolean = {
+    // checks if the player has a cell where it can move to
+    // if not it returns false
     if ((whiteTurn() && player1Mode == "MoveMode") || (blackTurn() && player2Mode == "MoveMode")) {
       val playerColor: Color.Value = if (blackTurn()) Color.black else Color.white
       field.cellsWithIndex

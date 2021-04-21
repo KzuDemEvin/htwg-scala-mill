@@ -1,23 +1,12 @@
 package de.htwg.se.mill
 
-
 import com.google.inject.AbstractModule
-import com.google.inject.name.Names
-import de.htwg.se.mill.controller.controllerComponent._
-import de.htwg.se.mill.model.fileIoComponent._
+import de.htwg.se.mill.controller.controllerComponent.ControllerInterface
 import net.codingwell.scalaguice.ScalaModule
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.RandomStrategy
-import de.htwg.se.mill.model.fieldComponent.FieldInterface
-import de.htwg.se.mill.model.fieldComponent.fieldAdvancedImpl.Field
-
 
 class MillModule extends AbstractModule with ScalaModule {
 
-  val defaultSize:Int = 7
-
   override def configure(): Unit = {
-    bindConstant().annotatedWith(Names.named("DefaultSize")).to(defaultSize)
-    bind[ControllerInterface].to[controllerBaseImpl.Controller]
+    bind[ControllerInterface].to[controller.controllerComponent.controllerBaseImpl.Controller]
   }
-
 }

@@ -14,8 +14,7 @@ val commonDependencies = Seq(
   "com.google.code.gson" % "gson" % "2.8.6"
 )
 
-lazy val root = (project in file(".."))
-lazy val player = (project in file(".")).dependsOn(root).aggregate(root).settings(
+lazy val player = (project in file(".")).settings(
   name          := "htwg-scala-mill-player",
   //organization  := "de.htwg.se",
   version       := "0.13",

@@ -39,5 +39,4 @@ trait FieldInterface {
   val player2Name: String
 
   val millState: String
-
 }

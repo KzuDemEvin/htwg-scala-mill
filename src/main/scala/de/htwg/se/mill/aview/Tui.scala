@@ -1,6 +1,6 @@
 package de.htwg.se.mill.aview
 
-import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, GameState}
+import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, DataArrived, GameState}
 
 import scala.swing.Reactor
 
@@ -45,7 +45,7 @@ class Tui(controller: ControllerInterface) extends Reactor {
   }
 
   reactions += {
-    case event: CellChanged => printTui
+    case _: CellChanged => printTui
   }
 
   def printTui: Unit = {

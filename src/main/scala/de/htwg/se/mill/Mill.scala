@@ -1,8 +1,8 @@
 package de.htwg.se.mill
 
 import com.google.inject.{Guice, Injector}
-import de.htwg.se.mill.aview.{HttpServer, Tui}
 import de.htwg.se.mill.aview.gui.GUI
+import de.htwg.se.mill.aview.{HttpServer, Tui}
 import de.htwg.se.mill.controller.controllerComponent.ControllerInterface
 
 import java.awt.GraphicsEnvironment
@@ -14,7 +14,7 @@ object Mill {
   val controller: ControllerInterface = injector.getInstance(classOf[ControllerInterface])
   val tui = new Tui(controller)
   if (!GraphicsEnvironment.isHeadless) {
-    new GUI(controller)
+    val gui = new GUI(controller)
   }
   val webserver: HttpServer = HttpServer(controller)
   var input: String = ""
