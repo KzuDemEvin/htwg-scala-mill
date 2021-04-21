@@ -13,6 +13,7 @@ trait ControllerInterface extends Publisher {
   def createRandomField(size: Int): Unit
   def fieldToString(oncomplete: Option[String] => Unit): Unit
   def fieldToHtml(oncomplete: Option[String] => Unit): Unit
+  def fieldToHtmlSync: String
   def fieldToJson(oncomplete: Option[String] => Unit): Unit
 
   def getRoundCounter(oncomplete: Option[String] => Unit): Unit

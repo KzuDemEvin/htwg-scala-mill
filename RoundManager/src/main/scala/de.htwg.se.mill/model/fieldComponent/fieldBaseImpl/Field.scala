@@ -39,7 +39,13 @@ case class Field @Inject()(allCells: Matrix[Cell],
 
   def available(row: Int, col: Int): Boolean = possiblePosition(row, col) && !cell(row, col).isSet
 
-  def set(row: Int, col: Int, c: Cell): Field = if (available(row, col)) replace(row, col, c) else copy()
+  def set(row: Int, col: Int, c: Cell): (Field, Boolean) = {
+    if (available(row, col)) {
+      (replace(row, col, c), true)
+    } else {
+      (copy(), false)
+    }
+  }
 
   def replace(row: Int, col: Int, c: Cell): Field = copy(allCells.replaceCell(row, col, c))
 

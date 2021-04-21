@@ -135,7 +135,7 @@ case class HttpServer(controller: ControllerInterface) {
        |   <label for="input"/>
        |   <input id="input" type="text" placeholder="Enter command" />
        |   <button id="confirm" onclick="process()">Confirm</button>
-       |    ${controller.fieldToHtml({ case Some(field) => field})}
+       |    ${controller.fieldToHtmlSync}
        | </div>
        |</body>
        |""".stripMargin
