@@ -9,7 +9,7 @@ class ControllerSpec extends WordSpec with Matchers {
   val normalSize = 7
   "A Controller" when {
     "new" should {
-      /*val field = new Field(normalSize)
+      /*
       val controllerUndoRedo = new Controller
        "handle undo/redo correctly on an empty undo-stack" in {
         controllerUndoRedo.cell(0, 0).isSet should be(false)
@@ -32,22 +32,13 @@ class ControllerSpec extends WordSpec with Matchers {
         controllerUndoRedo.cell(0, 0).content.color should be(Color.white)
         controllerUndoRedo.gameState should be("Redo")
       } */
-      "be able to create a Player" in {
-        val controllerCreatePlayer = new Controller
-        controllerCreatePlayer.createPlayer("Kevin") should be("Kevin")
-        controllerCreatePlayer.createPlayer("Josef", 2) should be("Josef")
-      }
     }
-    /* "ready to play" should {
-      val field = new Field(normalSize)
-      val controller = new Controller(field)
+    "ready to play" should {
+      val controller = new Controller
       "return valid values with its methods" in {
-        controller.cell(0, 0).content.color should be(Color.noColor)
-        controller.isSet(0, 0) should be(false)
-        controller.mgr.field.available(6, 6) should be(true)
-        controller.possiblePosition(0, 1) should be(false)
-        controller.mgr.field.placedStones() should be(0)
-        controller.mgr.field.placedWhiteStones() should be(0)
+        controller.color(0, 0)({ case Some(c) => c should be("noColor") })
+        controller.isSet(0, 0)({ case Some(isSet) => isSet.toBoolean should be(false) })
+        controller.possiblePosition(0, 1)({ case Some(possiblePosition) => possiblePosition.toBoolean should be(false) })
         controller.fieldsize should be(normalSize)
       }
       "be able to save its current state" in {
@@ -58,242 +49,219 @@ class ControllerSpec extends WordSpec with Matchers {
       }
       "be able to place random stones" in {
         controller.createRandomField(normalSize)
-        controller.mgr.field.size should be(normalSize)
-        controller.mgr.field.placedStones() should be(18)
+        controller.fieldsize should be(normalSize)
         controller.gameState should be("New field filled with random stones")
-        controller.getRoundCounter should be(18)
+        controller.getRoundCounter({ case Some(rc) => rc should be(18) })
       }
       "be able to reset its field" in {
         controller.createEmptyField(7)
-        controller.mgr.field.placedStones() should be(0)
         controller.gameState should be("New field")
-        controller.getRoundCounter should be(0)
-      }
-      "be able to return look in a string" in {
-        controller.fieldToString should be(field.toString)
+        controller.getRoundCounter({ case Some(rc) => rc should be(0) })
       }
       "return a correct roundCounter" in {
-        controller.getRoundCounter should be(0)
+        controller.getRoundCounter({ case Some(rc) => rc should be(0) })
       }
       "handle setting stones correctly" in {
-        controller.handleClick(0, 0)
-        controller.cell(0, 0).isSet should be(true)
-        controller.cell(0, 0).content.color should be(Color.white)
-        controller.handleClick(0, 6)
-        controller.cell(0, 6).isSet should be(true)
-        controller.cell(0, 6).content.color should be(Color.black)
-        controller.mgr.field.placedStones() should be(2)
+        controller.createEmptyField(normalSize)
+        controller.handleClick(0, 0)()
+        controller.isSet(0, 0)({ case Some(isSet) => isSet.toBoolean should be(true) })
+        controller.handleClick(0, 6)()
+        controller.isSet(0, 6)({ case Some(isSet) => isSet.toBoolean should be(true) })
+        controller.color(0, 6)({ case Some(color) => color should be("black") })
         controller.gameState should be("White's turn")
       }
       "handle white mills correctly" in {
-        controller.handleClick(3, 0)
-        controller.handleClick(3, 6)
-        controller.handleClick(6, 0)
-        controller.checkMill(6, 0) should be("White Mill")
+        controller.createEmptyField(normalSize)
+        controller.handleClick(0, 0)() // w
+        controller.handleClick(0, 6)() // b
+        controller.handleClick(3, 0)() // w
+        controller.handleClick(3, 6)() // b
+        controller.handleClick(6, 0)() // w
+        controller.getMillState({ case Some(millState) => millState should be("White Mill") })
       }
       "handle removing stones correctly" in {
-        controller.handleClick(6, 0) // remove, not possible, same color + mill
-        controller.cell(6, 0).isSet should be(true)
-        controller.cell(6, 0).content.color should be(Color.white)
-        controller.mgr.field.placedStones() should be(5)
-        controller.handleClick(3, 6) // remove, possible
-        controller.cell(3, 6).isSet should be(false)
-        controller.cell(3, 6).content.color should be(Color.noColor)
-        controller.mgr.field.placedStones() should be(4)
-        controller.mgr.roundCounter should be(5)
+        controller.createEmptyField(normalSize)
+        controller.handleClick(0, 0)() // w
+        controller.handleClick(0, 6)() // b
+        controller.handleClick(3, 0)() // w
+        controller.handleClick(3, 6)() // b
+        controller.handleClick(6, 0)() // w
+        controller.handleClick(6, 0)() // remove, not possible, same color + mill
+        controller.isSet(6, 0)({ case Some(isSet) => isSet.toBoolean should be(true) })
+        controller.color(6, 0)({ case Some(color) => color should be("black") })
+        controller.handleClick(3, 6)() // remove, possible
+        controller.isSet(3, 6)({ case Some(isSet) => isSet.toBoolean should be(false) })
+        controller.color(3, 6)({ case Some(color) => color should be("noColor") })
+        controller.getRoundCounter({ case Some(rc) => rc.toInt should be(3) })
       }
       "handle black mills correctly" in {
-        controller.handleClick(3, 6) // set
-        controller.handleClick(1, 1) // set
-        controller.handleClick(6, 6) // set
-        controller.checkMill(6, 6) should be("Black Mill")
-      }
-      "not remove a stone when its in a mill" in {
-        controller.handleClick(0, 6) // remove, not possible
-        controller.cell(0, 6).isSet should be(true)
-        println(controller.fieldToString)
-        controller.handleClick(1, 1) // remove
-      }
-      "handle move correctly" in {
-        controller.handleClick(1, 1) ; controller.handleClick(1, 5) // set
-        controller.handleClick(3, 1) ; controller.handleClick(3, 5) // set
-        controller.handleClick(4, 2) ; controller.handleClick(5, 1) // set
-        controller.handleClick(5, 5) ; controller.handleClick(2, 2) // set
-        controller.handleClick(2, 4) ; controller.handleClick(4, 4) // set
-        controller.handleClick(3, 1) ; controller.handleClick(3, 2) // move, possible
-        controller.cell(3, 1).isSet should be(false)
-        controller.cell(3, 2).isSet should be(true)
-        controller.getRoundCounter should be(19)
-        controller.gameState should be("Black's turn")
-        controller.handleClick(6, 6) ; controller.handleClick(6, 3) // move, possible
-        controller.mgr.roundCounter should be(20)
-      }
-      "change to fly mode" in {
-        controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
-        controller.handleClick(2, 2) // remove
-        controller.handleClick(0, 6) ; controller.handleClick(0, 3) // black
-        controller.handleClick(3, 1) ; controller.handleClick(1, 1) // white
-        controller.handleClick(0, 3) ; controller.handleClick(0, 6) // black
-
-        controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
-        controller.handleClick(5, 1) // remove
-        controller.handleClick(0, 6) ; controller.handleClick(0, 3) // black
-        controller.handleClick(3, 1) ; controller.handleClick(1, 1) // white
-        controller.handleClick(0, 3) ; controller.handleClick(0, 6) // black
-
-        controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
-        controller.handleClick(6, 3) // remove
-        controller.handleClick(0, 6) ; controller.handleClick(0, 3) // black
-        controller.handleClick(3, 1) ; controller.handleClick(1, 1) // white
-        controller.handleClick(0, 3) ; controller.handleClick(0, 6) // black
-
-        controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
-        controller.handleClick(4, 4) // remove
-        controller.handleClick(0, 6) ; controller.handleClick(0, 3) // black
-        controller.handleClick(3, 1) ; controller.handleClick(1, 1) // white
-        controller.handleClick(0, 3) ; controller.handleClick(0, 6) // black
-
-        controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
-        controller.handleClick(3, 5) // remove
-        controller.mgr.player2Mode should be("FlyMode")
-        controller.mgr.field.placedBlackStones() should be(3)
-        printf(controller.fieldToString)
-      }
-      "handle fly correctly" in {
-        controller.handleClick(1, 5) ; controller.handleClick(6, 6)
-        controller.cell(1, 5).isSet should be(false)
-        controller.cell(6, 6).isSet should be (true)
-      }
-      "handle remove in flymode correctly" in {
-        controller.handleClick(4, 2)
-        controller.cell(4, 2).isSet should be(false)
-      }
-      "handle choosing a winner correctly" in {
-        controller.mgr.winner should be(0) // no Winner
-        controller.handleClick(3, 1) ; controller.handleClick(1, 1) // white
-        controller.handleClick(0, 6) ; controller.handleClick(5, 1) // black
-        controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
-        controller.handleClick(5, 1) // remove
-        controller.mgr.winner should be(1) // white winner
+        controller.createEmptyField(normalSize)
+        controller.handleClick(0, 6)() // w
+        controller.handleClick(0, 0)() // b
+        controller.handleClick(3, 6)() // w
+        controller.handleClick(6, 0)() // b
+        controller.handleClick(1, 1)() // w
+        controller.handleClick(3, 0)() // b
+        controller.getMillState({ case Some(millState) => millState should be("Black Mill") })
       }
       "check if at the end a player is choosing a stone in a mill to remove and to win" should {
         "black wins" in {
-          val field = new Field(7)
-          val controller = new Controller(field)
-          controller.handleClick(0, 0)
-          controller.handleClick(6, 0)
-          controller.handleClick(0, 3)
-          controller.handleClick(6, 3)
-          controller.handleClick(0, 6)
-          controller.handleClick(6, 3) //Remove
-          controller.handleClick(6, 3)
-          controller.handleClick(1, 1)
-          controller.handleClick(6, 6)
-          controller.handleClick(1, 1) //Remove
-          controller.handleClick(1, 1)
-          controller.handleClick(5, 1)
-          controller.handleClick(1, 3)
-          controller.handleClick(5, 3)
-          controller.handleClick(1, 5)
-          controller.handleClick(5, 3) //remove
-          controller.handleClick(5, 3)
-          controller.handleClick(2, 2)
-          controller.handleClick(5, 5)
-          controller.handleClick(2, 2) //remove
-          controller.handleClick(2, 2)
-          controller.handleClick(4, 2)
-          controller.handleClick(2, 2); controller.handleClick(2, 3)
-          controller.handleClick(4, 2)
-          controller.handleClick(5, 3); controller.handleClick(4, 3)
-          controller.handleClick(2, 3); controller.handleClick(2, 2)
-          controller.handleClick(4, 3); controller.handleClick(5, 3)
-          controller.handleClick(2, 2) //remove
-          controller.handleClick(1, 3); controller.handleClick(2, 3)
-          controller.handleClick(5, 3); controller.handleClick(4, 3)
-          controller.handleClick(2, 3); controller.handleClick(2, 2)
-          controller.handleClick(6, 3); controller.handleClick(5, 3)
-          controller.handleClick(2, 2) //remove
-          controller.handleClick(0, 3); controller.handleClick(1, 3)
-          controller.handleClick(4, 3) //remove
-          controller.handleClick(5, 3); controller.handleClick(6, 3)
-          controller.handleClick(0, 0) //remove
-          controller.handleClick(1, 3); controller.handleClick(0, 3)
-          controller.handleClick(6, 3); controller.handleClick(5, 3)
-          controller.handleClick(0, 6) //remove
-          controller.handleClick(0, 3); controller.handleClick(1, 3)
-          controller.handleClick(6, 6) //remove
-          controller.handleClick(6, 0); controller.handleClick(3, 0)
+          val controller = new Controller
+          controller.handleClick(0, 0)()
+          controller.handleClick(6, 0)()
+          controller.handleClick(0, 3)()
+          controller.handleClick(6, 3)()
+          controller.handleClick(0, 6)()
+          controller.handleClick(6, 3)() //Remove
+          controller.handleClick(6, 3)()
+          controller.handleClick(1, 1)()
+          controller.handleClick(6, 6)()
+          controller.handleClick(1, 1)() //Remove
+          controller.handleClick(1, 1)()
+          controller.handleClick(5, 1)()
+          controller.handleClick(1, 3)()
+          controller.handleClick(5, 3)()
+          controller.handleClick(1, 5)()
+          controller.handleClick(5, 3)() //remove
+          controller.handleClick(5, 3)()
+          controller.handleClick(2, 2)()
+          controller.handleClick(5, 5)()
+          controller.handleClick(2, 2)() //remove
+          controller.handleClick(2, 2)()
+          controller.handleClick(4, 2)()
+          controller.handleClick(2, 2)();
+          controller.handleClick(2, 3)()
+          controller.handleClick(4, 2)()
+          controller.handleClick(5, 3)();
+          controller.handleClick(4, 3)()
+          controller.handleClick(2, 3)();
+          controller.handleClick(2, 2)()
+          controller.handleClick(4, 3)();
+          controller.handleClick(5, 3)()
+          controller.handleClick(2, 2)() //remove
+          controller.handleClick(1, 3)();
+          controller.handleClick(2, 3)()
+          controller.handleClick(5, 3)();
+          controller.handleClick(4, 3)()
+          controller.handleClick(2, 3)();
+          controller.handleClick(2, 2)()
+          controller.handleClick(6, 3)();
+          controller.handleClick(5, 3)()
+          controller.handleClick(2, 2)() //remove
+          controller.handleClick(0, 3)();
+          controller.handleClick(1, 3)()
+          controller.handleClick(4, 3)() //remove
+          controller.handleClick(5, 3)();
+          controller.handleClick(6, 3)()
+          controller.handleClick(0, 0)() //remove
+          controller.handleClick(1, 3)();
+          controller.handleClick(0, 3)()
+          controller.handleClick(6, 3)();
+          controller.handleClick(5, 3)()
+          controller.handleClick(0, 6)() //remove
+          controller.handleClick(0, 3)();
+          controller.handleClick(1, 3)()
+          controller.handleClick(6, 6)() //remove
+          controller.handleClick(6, 0)();
+          controller.handleClick(3, 0)()
 
-          controller.handleClick(1, 3); controller.handleClick(0, 3)
-          controller.handleClick(5, 3); controller.handleClick(6, 3)
+          controller.handleClick(1, 3)();
+          controller.handleClick(0, 3)()
+          controller.handleClick(5, 3)();
+          controller.handleClick(6, 3)()
 
-          controller.handleClick(0, 3); controller.handleClick(1, 3)
-          controller.handleClick(3, 0) //remove
-          controller.handleClick(6, 3); controller.handleClick(5, 3)
-          controller.handleClick(1, 1) //remove
-          controller.mgr.winner should be(2)
+          controller.handleClick(0, 3)();
+          controller.handleClick(1, 3)()
+          controller.handleClick(3, 0)() //remove
+          controller.handleClick(6, 3)();
+          controller.handleClick(5, 3)()
+          controller.handleClick(1, 1)() //remove
+          controller.getWinner({ case Some(winner) => winner.toInt should be(2) })
         }
         "white wins" in {
-          val field = new Field(7)
-          val controller = new Controller(field)
-          controller.handleClick(0, 0)
-          controller.handleClick(6, 0)
-          controller.handleClick(0, 3)
-          controller.handleClick(6, 3)
-          controller.handleClick(0, 6)
-          controller.handleClick(6, 3) //Remove
-          controller.handleClick(6, 3)
-          controller.handleClick(1, 1)
-          controller.handleClick(6, 6)
-          controller.handleClick(1, 1) //Remove
-          controller.handleClick(1, 1)
-          controller.handleClick(5, 1)
-          controller.handleClick(1, 3)
-          controller.handleClick(5, 3)
-          controller.handleClick(1, 5)
-          controller.handleClick(5, 3) //remove
-          controller.handleClick(5, 3)
-          controller.handleClick(2, 2)
-          controller.handleClick(5, 5)
-          controller.handleClick(2, 2) //remove
-          controller.handleClick(2, 2)
-          controller.handleClick(4, 2)
-          controller.handleClick(2, 2); controller.handleClick(2, 3)
-          controller.handleClick(4, 2)
-          controller.handleClick(5, 3); controller.handleClick(4, 3)
-          controller.handleClick(2, 3); controller.handleClick(2, 2)
-          controller.handleClick(4, 3); controller.handleClick(5, 3)
-          controller.handleClick(2, 2) //remove
-          controller.handleClick(1, 3); controller.handleClick(2, 3)
-          controller.handleClick(5, 3); controller.handleClick(4, 3)
-          controller.handleClick(2, 3); controller.handleClick(2, 2)
-          controller.handleClick(6, 3); controller.handleClick(5, 3)
-          controller.handleClick(2, 2) //remove
-          controller.handleClick(0, 3); controller.handleClick(1, 3)
-          controller.handleClick(4, 3) //remove
-          controller.handleClick(5, 3); controller.handleClick(6, 3)
-          controller.handleClick(0, 0) //remove
-          controller.handleClick(1, 3); controller.handleClick(0, 3)
-          controller.handleClick(6, 0); controller.handleClick(3, 0)
-          controller.handleClick(0, 3); controller.handleClick(1, 3)
-          controller.handleClick(3, 0) //remove
-          controller.handleClick(6, 6); controller.handleClick(3, 6)
-          controller.handleClick(1, 3); controller.handleClick(0, 3)
-          controller.handleClick(3, 6); controller.handleClick(6, 6)
-          controller.handleClick(0, 3); controller.handleClick(1, 3)
-          controller.handleClick(6, 6) //remove
-          controller.handleClick(6, 3); controller.handleClick(6, 6)
-          controller.handleClick(0, 6); controller.handleClick(3, 6)
-          controller.handleClick(6, 6); controller.handleClick(6, 3)
-          controller.handleClick(1, 3); controller.handleClick(0, 3)
-          controller.handleClick(6, 3); controller.handleClick(5, 3)
-          controller.handleClick(3, 6) //remove
-          controller.handleClick(0, 3); controller.handleClick(1, 3)
-          controller.handleClick(0, 0) //remove
-          controller.mgr.winner should be(0)
-          controller.handleClick(5, 3) //remove
-          controller.mgr.winner should be(1)
+          val controller = new Controller
+          controller.handleClick(0, 0)()
+          controller.handleClick(6, 0)()
+          controller.handleClick(0, 3)()
+          controller.handleClick(6, 3)()
+          controller.handleClick(0, 6)()
+          controller.handleClick(6, 3)() //Remove
+          controller.handleClick(6, 3)()
+          controller.handleClick(1, 1)()
+          controller.handleClick(6, 6)()
+          controller.handleClick(1, 1)() //Remove
+          controller.handleClick(1, 1)()
+          controller.handleClick(5, 1)()
+          controller.handleClick(1, 3)()
+          controller.handleClick(5, 3)()
+          controller.handleClick(1, 5)()
+          controller.handleClick(5, 3)() //remove
+          controller.handleClick(5, 3)()
+          controller.handleClick(2, 2)()
+          controller.handleClick(5, 5)()
+          controller.handleClick(2, 2)() //remove
+          controller.handleClick(2, 2)()
+          controller.handleClick(4, 2)()
+          controller.handleClick(2, 2)();
+          controller.handleClick(2, 3)()
+          controller.handleClick(4, 2)()
+          controller.handleClick(5, 3)();
+          controller.handleClick(4, 3)()
+          controller.handleClick(2, 3)();
+          controller.handleClick(2, 2)()
+          controller.handleClick(4, 3)();
+          controller.handleClick(5, 3)()
+          controller.handleClick(2, 2)() //remove
+          controller.handleClick(1, 3)();
+          controller.handleClick(2, 3)()
+          controller.handleClick(5, 3)();
+          controller.handleClick(4, 3)()
+          controller.handleClick(2, 3)();
+          controller.handleClick(2, 2)()
+          controller.handleClick(6, 3)();
+          controller.handleClick(5, 3)()
+          controller.handleClick(2, 2)() //remove
+          controller.handleClick(0, 3)();
+          controller.handleClick(1, 3)()
+          controller.handleClick(4, 3)() //remove
+          controller.handleClick(5, 3)();
+          controller.handleClick(6, 3)()
+          controller.handleClick(0, 0)() //remove
+          controller.handleClick(1, 3)();
+          controller.handleClick(0, 3)()
+          controller.handleClick(6, 0)();
+          controller.handleClick(3, 0)()
+          controller.handleClick(0, 3)();
+          controller.handleClick(1, 3)()
+          controller.handleClick(3, 0)() //remove
+          controller.handleClick(6, 6)();
+          controller.handleClick(3, 6)()
+          controller.handleClick(1, 3)();
+          controller.handleClick(0, 3)()
+          controller.handleClick(3, 6)();
+          controller.handleClick(6, 6)()
+          controller.handleClick(0, 3)();
+          controller.handleClick(1, 3)()
+          controller.handleClick(6, 6)() //remove
+          controller.handleClick(6, 3)();
+          controller.handleClick(6, 6)()
+          controller.handleClick(0, 6)();
+          controller.handleClick(3, 6)()
+          controller.handleClick(6, 6)();
+          controller.handleClick(6, 3)()
+          controller.handleClick(1, 3)();
+          controller.handleClick(0, 3)()
+          controller.handleClick(6, 3)();
+          controller.handleClick(5, 3)()
+          controller.handleClick(3, 6)() //remove
+          controller.handleClick(0, 3)();
+          controller.handleClick(1, 3)()
+          controller.handleClick(0, 0)() //remove
+          controller.getWinner({ case Some(winner) => winner.toInt should be(0) })
+          controller.handleClick(5, 3)() //remove
+          controller.getWinner({ case Some(winner) => winner.toInt should be(1) })
         }
-      }*/
+      }
+    }
   }
 }

@@ -56,7 +56,10 @@ class Controller extends ControllerInterface with Publisher {
     })
   }
 
-  def handleClick(row: Int, col: Int)(oncomplete: Option[String] => Unit = {case Some(_) => {}}): Unit = {
+  def handleClick(row: Int, col: Int)(oncomplete: Option[String] => Unit = {
+    case Some(_) => {}
+    case None => {}
+  }): Unit = {
     sendRequest(s"http://localhost:8083/handleClick?row=${row}&col=${col}", POST).onComplete({
       case Failure(_) => sys.error("handleClick failed.")
       case Success(value) => unmarshalAsync(value)(value => {
