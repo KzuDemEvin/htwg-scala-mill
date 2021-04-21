@@ -1,6 +1,6 @@
 package de.htwg.se.mill.aview
 
-import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, DataArrived, GameState}
+import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, GameState}
 
 import scala.swing.Reactor
 
