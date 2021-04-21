@@ -15,7 +15,7 @@ val commonDependencies = Seq(
 
 lazy val fileIO = (project in file(".")).settings(
   name          := "htwg-scala-mill-fileio",
-  //organization  := "de.htwg.se",
+  organization  := "de.htwg.se",
   version       := "0.13",
   scalaVersion  := "2.13.2",
   libraryDependencies ++= commonDependencies

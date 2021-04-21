@@ -238,20 +238,6 @@ class Controller extends ControllerInterface with Publisher {
   private def sendRequest(uri: String, method: HttpMethod, errMsg: String = "Something went wrong."): Future[HttpResponse] = {
     implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
     implicit val executionContext: ExecutionContextExecutor = system.executionContext
-
-    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = method, uri = uri))
-    /* responseFuture.onComplete {
-      case Failure(_) => sys.error(errMsg)
-      case Success(value) =>
-        print(value)
-        Unmarshal(value.entity).to[String].onComplete {
-          case Failure(_) => sys.error("Unmarshalling went wrong")
-          case Success(s) =>
-            print("Yeah")
-            publish(new DataArrived)
-            unpacked = Some(s)
-        }
-    }*/
-    responseFuture
+    Http().singleRequest(HttpRequest(method = method, uri = uri))
   }
 }

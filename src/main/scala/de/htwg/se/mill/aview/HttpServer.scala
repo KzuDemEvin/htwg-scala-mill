@@ -1,11 +1,10 @@
 package de.htwg.se.mill.aview
 
 import akka.actor.ActorSystem
-import akka.http.scaladsl.{Http, ServerBuilder}
+import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Route, StandardRoute}
-import akka.stream.ActorMaterializer
 import de.htwg.se.mill.controller.controllerComponent.ControllerInterface
 
 import scala.concurrent.Future
@@ -21,45 +20,66 @@ case class HttpServer(controller: ControllerInterface) {
 
   val route: Route =
     concat(
-      path("mill") {
+    path("mill") {
+      get {
+        fieldToHtml
+      }
+    } ~
+      path("mill" / "player") {
         get {
-          gridToHtml
+          parameters("name", "number") {
+            (name, number) =>
+              controller.createPlayer(name, number.toInt)
+              fieldToHtml
+          }
         }
       } ~
-        path("mill" / "new") {
-          get {
-            controller.createEmptyField(size)
-            gridToHtml
-          }
-        } ~
-        path("mill" / "random") {
-          get {
-            controller.createRandomField(size)
-            gridToHtml
-          }
-        } ~
-        path("mill" / "undo") {
-          get {
-            controller.undo
-            gridToHtml
-          }
-        } ~
-        path("mill" / "redo") {
-          get {
-            controller.redo
-            gridToHtml
-          }
-        } ~
-        path("mill" / Segment) { command => {
-          get {
-            processInputLine(command)
-            gridToHtml
-          }
+      path("mill" / "new") {
+        get {
+          controller.createEmptyField(size)
+          fieldToHtml
         }
+      } ~
+      path("mill" / "random") {
+        get {
+          controller.createRandomField(size)
+          fieldToHtml
         }
+      } ~
+      path("mill" / "save") {
+        get {
+          controller.save()
+          fieldToHtml
+        }
+      } ~
+      path("mill" / "load") {
+        get {
+          controller.load()
+          fieldToHtml
+        }
+      } ~
+      path("mill" / "undo") {
+        get {
+          controller.undo
+          fieldToHtml
+        }
+      } ~
+      path("mill" / "redo") {
+        get {
+          controller.redo
+          fieldToHtml
+        }
+      } ~
+      path("mill" / Segment) { command => {
+        get {
+          processInputLine(command)
+          fieldToHtml
+        }
+      }
+      }
     )
 
-  def gridToHtml: StandardRoute = {
+  def fieldToHtml: StandardRoute = {
     complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, standardHtml))
   }
 

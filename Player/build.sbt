@@ -16,7 +16,7 @@ val commonDependencies = Seq(
 
 lazy val player = (project in file(".")).settings(
   name          := "htwg-scala-mill-player",
-  //organization  := "de.htwg.se",
+  organization  := "de.htwg.se",
   version       := "0.13",
   scalaVersion  := "2.13.2",
   libraryDependencies ++= commonDependencies

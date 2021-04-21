@@ -8,8 +8,8 @@ import scala.util.{Failure, Success, Try}
 
 case class Field @Inject()(allCells: Matrix[Cell],
                            savedRoundCounter: Int,
-                           @deprecated player1Mode: String,
-                           @deprecated player1Name: String,
+                           player1Mode: String,
+                           player1Name: String,
                            player2Mode: String,
                            player2Name: String,
                            millState: String) extends FieldInterface {
@@ -39,13 +39,7 @@ case class Field @Inject()(allCells: Matrix[Cell],
 
   def available(row: Int, col: Int): Boolean = possiblePosition(row, col) && !cell(row, col).isSet
 
-  def set(row: Int, col: Int, c: Cell): (Field, Boolean) = {
-    if (available(row, col)) {
-      (replace(row, col, c), true)
-    } else {
-      (copy(), false)
-    }
-  }
+  def set(row: Int, col: Int, c: Cell): Field = if (available(row, col)) replace(row, col, c) else copy()
 
   def replace(row: Int, col: Int, c: Cell): Field = copy(allCells.replaceCell(row, col, c))
 
