@@ -5,7 +5,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 class TuiSpec extends WordSpec with Matchers {
 
-  "A Mill Tui" should {
+  /* "A Mill Tui" should {
     val controller = new Controller
     val tui = new Tui(controller)
     "create an empty Mill on input 'new'" in {
@@ -45,5 +45,5 @@ class TuiSpec extends WordSpec with Matchers {
       tui.execInput("random")
       // controller.mgr.field.placedStones() should be(18)
     }
-  }
+  } */
 }

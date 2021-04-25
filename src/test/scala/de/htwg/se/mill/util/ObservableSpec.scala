@@ -3,6 +3,7 @@ package de.htwg.se.mill.util
 import org.scalatest.{Matchers, WordSpec}
 
 class ObservableSpec extends WordSpec with Matchers {
+  /*
   "An Observable" should {
     val observable = new Observable
     val observer = new Observer {
@@ -24,6 +25,6 @@ class ObservableSpec extends WordSpec with Matchers {
       observable.subscribers should not contain (observer)
     }
 
-  }
+  }*/
 
 }

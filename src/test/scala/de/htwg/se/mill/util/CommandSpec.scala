@@ -3,7 +3,7 @@ package de.htwg.se.mill.util
 import org.scalatest.{Matchers, WordSpec}
 
 class incrCommand extends CommandTrait {
-  var state:Int =0
+  /* var state:Int =0
   override def doStep: Unit = state+=1
 
   override def undoStep: Unit = state-=1
@@ -41,5 +41,5 @@ class CommandSpec extends WordSpec with Matchers {
       command.redoStep
       command.state should be(1)
     }
-  }
+  } */
 }
