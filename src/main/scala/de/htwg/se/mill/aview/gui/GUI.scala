@@ -62,7 +62,7 @@ class GUI(controller: ControllerInterface) extends MainFrame {
     case _: FieldChanged => updateField()
   }
 
-  def updateField(repaintField: Boolean = true): Unit = {
+  private def updateField(repaintField: Boolean = true): Unit = {
     if (repaintField) {
       for {
         row <- 0 until controller.fieldsize

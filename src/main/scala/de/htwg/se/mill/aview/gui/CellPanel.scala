@@ -38,23 +38,21 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
   // 0 = white, 1 = black, 2 = availableCell, 3 = notValidHorizontal, 4 = notValidVertical, 5 = middle
   def cellType(row: Int, col: Int): Unit = {
     controller.possiblePosition(row, column)({
-      case Some(possiblePosition) => {
+      case Some(possiblePosition) =>
         if (possiblePosition.toBoolean) {
           controller.isSet(row, col)({
-            case Some(isSet) => {
+            case Some(isSet) =>
               val isSetBool = isSet.toBoolean
               if (isSetBool) {
                 controller.color(row, col)({
-                  case Some(color) => {
+                  case Some(color) =>
                     cellType = color.toInt
                     redraw(false)
-                  }
                 })
               } else {
                 cellType = 2
                 redraw(false)
               }
-            }
             case None => cellType = 2
           })
         } else {
@@ -70,7 +68,6 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
           }
         }
         redraw(false)
-      }
     })
   }
 
@@ -133,14 +130,13 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
       val exitGame = new Button("Exit Game")
       listenTo(newGame)
       listenTo(exitGame)
-      controller.getWinnerText({ case Some(winnerText) => {
+      controller.getWinnerText({ case Some(winnerText) =>
         contents = new BoxPanel(Orientation.Vertical) {
           val label = new Label(winnerText)
           label.font = Font("Impact", Font.Bold, 30)
           contents += new FlowPanel(label)
           contents += new FlowPanel(newGame, exitGame)
         }
-      }
       })
       reactions += {
         case ButtonClicked(component) if component == newGame => controller.createEmptyField(7)
