@@ -42,5 +42,6 @@ class CommandSpec extends WordSpec with Matchers {
       command.redoStep
       command.state should be(1)
     }
-  } */
+  }
 }
+*/
