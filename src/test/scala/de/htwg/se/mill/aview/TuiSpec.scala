@@ -5,26 +5,26 @@ import org.scalatest.{Matchers, WordSpec}
 
 class TuiSpec extends WordSpec with Matchers {
 
-  /* "A Mill Tui" should {
+  "A Mill Tui" should {
     val controller = new Controller
     val tui = new Tui(controller)
     "create an empty Mill on input 'new'" in {
       tui.execInput("new")
-      // controller.mgr.field.placedStones() should be(0)
+      controller.fieldsize should be(7)
     }
-    "set a black stone on input '00'" in {
+    "set a white stone on input '00'" in {
       val row = 0
       val col = 0
       tui.execInput(s"$row$col")
-      // controller.mgr.field.available(row, col) should be(false)
-      // controller.color(row, col) should be("White")
+      controller.isSet(row, col)({ case Some(isSet) => isSet should be(true)})
+      controller.color(row, col)({ case Some(color) => color should be("White")})
     }
-    "set a white stone on input '03" in {
+    "set a black stone on input '03" in {
       val row = 0
       val col = 3
       tui.execInput(s"$row$col")
-      // controller.mgr.field.available(row, col) should be(false)
-      // controller.color(row, col) should be("Black")
+      controller.isSet(row, col)({ case Some(isSet) => isSet should be(true)})
+      controller.color(row, col)({ case Some(color) => color should be("Black")})
     }
     "undo on input 'undo'" in {
       val row = 6
@@ -45,5 +45,5 @@ class TuiSpec extends WordSpec with Matchers {
       tui.execInput("random")
       // controller.mgr.field.placedStones() should be(18)
     }
-  } */
+  }
 }
