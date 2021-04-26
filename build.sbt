@@ -20,7 +20,9 @@ val commonDependencies = Seq(
   "com.google.code.gson" % "gson" % "2.8.6"
 )
 
+fork in run := true
 parallelExecution in Test := false
+javaOptions += "-Dscala.concurrent.context.maxThreads=2"
 
 ThisBuild / trackInternalDependencies := TrackLevel.TrackIfMissing
 

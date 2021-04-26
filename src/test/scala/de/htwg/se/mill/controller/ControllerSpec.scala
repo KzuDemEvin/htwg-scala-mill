@@ -1,11 +1,12 @@
 package de.htwg.se.mill.controller
 
 import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.language.reflectiveCalls
 
-class ControllerSpec extends WordSpec with Matchers {
+class ControllerSpec extends AnyWordSpec with Matchers {
   val normalSize = 7
   "A Controller" when {
     "new" should {
@@ -65,10 +66,9 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.createEmptyFieldSync(normalSize)
         controller.handleClickSync(0, 0)
         controller.isSet(0, 0)({ case Some(isSet) => isSet.toBoolean should be(true) })
-        controller.handleClickSync(0, 6)
+        controller.handleClick(0, 6)({ case Some(_) => controller.gameState should be("Black's turn")})
         controller.isSet(0, 6)({ case Some(isSet) => isSet.toBoolean should be(true) })
         controller.color(0, 6)({ case Some(color) => color should be("black") })
-        controller.gameState should be("Black's turn")
       }
       "handle white mills correctly" in {
         controller.createEmptyField(normalSize)
