@@ -4,6 +4,7 @@ import de.htwg.se.mill.controller.controllerComponent.controllerStubImpl.Control
 import org.scalatest.{Matchers, WordSpec}
 
 class CellPanelSpec extends WordSpec with Matchers {
+  /*
   "A CellPanel" when {
     "created" should {
       val controller: ControllerStub = new ControllerStub
@@ -59,5 +60,5 @@ class CellPanelSpec extends WordSpec with Matchers {
       }
     }
   }
-
+  */
 }

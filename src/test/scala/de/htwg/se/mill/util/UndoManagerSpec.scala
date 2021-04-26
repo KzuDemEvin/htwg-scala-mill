@@ -3,8 +3,7 @@ package de.htwg.se.mill.util
 import org.scalatest.{Matchers, WordSpec}
 
 class UndoManagerSpec extends WordSpec with Matchers{
-
-  /* "An UndoManager" should {
+  "An UndoManager" should {
     val undoManager = new UndoManager
     "have a do, undo and redo" in {
       val command = new incrCommand
@@ -30,5 +29,5 @@ class UndoManagerSpec extends WordSpec with Matchers{
       undoManager.redoStep
       command.state should be(1)
     }
-  } */
+  }
 }

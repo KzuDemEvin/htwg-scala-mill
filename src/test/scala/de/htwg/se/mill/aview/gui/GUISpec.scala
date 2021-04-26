@@ -5,6 +5,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 class GUISpec extends AnyWordSpec with Matchers {
+  /*
   "A GUI" when {
     val controller = new Controller
     "created" should {
@@ -16,5 +17,5 @@ class GUISpec extends AnyWordSpec with Matchers {
         gui.updateField()
       }*/
     }
-  }
+  }*/
 }

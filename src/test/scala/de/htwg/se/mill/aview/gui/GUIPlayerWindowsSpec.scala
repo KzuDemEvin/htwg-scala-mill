@@ -4,6 +4,7 @@ import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Control
 import org.scalatest.{Matchers, WordSpec}
 
 class GUIPlayerWindowsSpec extends WordSpec with Matchers {
+  /*
   "A GUIPlayerWindowsSpec" when {
     val controller = new Controller
     "created" should {
@@ -12,6 +13,5 @@ class GUIPlayerWindowsSpec extends WordSpec with Matchers {
         guiPlayerWindow.nextPlayer()
       }
     }
-  }
-
+  }*/
 }
