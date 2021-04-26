@@ -16,14 +16,14 @@ class TuiSpec extends WordSpec with Matchers {
       val row = 0
       val col = 0
       tui.execInput(s"$row$col")
-      controller.isSet(row, col)({ case Some(isSet) => isSet should be(true)})
+      controller.isSet(row, col)({ case Some(isSet) => isSet.toBoolean should be(true)})
       controller.color(row, col)({ case Some(color) => color should be("White")})
     }
     "set a black stone on input '03" in {
       val row = 0
       val col = 3
       tui.execInput(s"$row$col")
-      controller.isSet(row, col)({ case Some(isSet) => isSet should be(true)})
+      controller.isSet(row, col)({ case Some(isSet) => isSet.toBoolean should be(true)})
       controller.color(row, col)({ case Some(color) => color should be("Black")})
     }
     "undo on input 'undo'" in {
