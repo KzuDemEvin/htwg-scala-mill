@@ -3,7 +3,6 @@ package de.htwg.se.mill.aview
 import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, GameState}
 
 import scala.swing.Reactor
-import scala.util.{Failure, Success, Try}
 
 
 class Tui(controller: ControllerInterface) extends Reactor {
@@ -37,7 +36,7 @@ class Tui(controller: ControllerInterface) extends Reactor {
         input.toList.filter(p => p != ' ').filter(_.isDigit).map(p => p.toString.toInt) match {
         case row :: column :: Nil =>
           controller.handleClick(row, column)
-          println(controller.millState)
+          println(controller.getMillState)
           "valid command: " + input
         case _ =>
           "Wrong input: " + input

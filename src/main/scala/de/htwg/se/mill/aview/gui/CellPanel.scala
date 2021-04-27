@@ -104,11 +104,11 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
   }
 
   val cell: BoxPanel = new BoxPanel(Orientation.Vertical) {
-    if (cellType(row, column) < 3) {
-      contents += setButton
+    contents += (if (cellType(row, column) < 3) {
+      setButton
     } else {
-      contents += notValidButton
-    }
+      notValidButton
+    })
     preferredSize = sizeDim
 
     listenTo(controller)

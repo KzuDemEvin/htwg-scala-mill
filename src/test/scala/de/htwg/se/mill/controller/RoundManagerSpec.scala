@@ -1,7 +1,7 @@
 package de.htwg.se.mill.controller
 
-import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, MoveModeState, SetModeState}
 import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.{Controller, RoundManager}
+import de.htwg.se.mill.controller.controllerComponent.{FlyModeState, ModeState, MoveModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
 import org.scalatest.{Matchers, WordSpec}
 
@@ -9,32 +9,32 @@ class RoundManagerSpec extends WordSpec with Matchers {
   "A RoundManager" when {
     val normalSize = 7
     "created" should {
-      val roundManager = new RoundManager
+      val roundManager = RoundManager()
       "handle the WinnerText" in {
         roundManager.handleWinnerText(0) should be("No Winner")
-        roundManager.handleWinnerText(1) should be(roundManager.player1.name + " wins (White) !")
-        roundManager.handleWinnerText(2) should be(roundManager.player2.name + " wins (Black) !")
+        roundManager.handleWinnerText(1) should be("White wins!")
+        roundManager.handleWinnerText(2) should be("Black wins!")
       }
       "select the right drive command when both players have SetMode and its whites turn" in {
         val field = new Field(normalSize)
         val controller = new Controller(field)
         //controller.handleClick(0,0)
-        roundManager.player1.mode should be(ModeState.handle(SetModeState()))
+        roundManager.player1Mode should be(ModeState.handle(SetModeState()))
         roundManager.selectDriveCommand() should be(ModeState.whichState(SetModeState().handle))
       }
       "select the right drive command when both players have SetMode and its's blacks turn" in {
         val field = new Field(normalSize)
         val controller = new Controller(field)
         controller.handleClick(0,0)
-        roundManager.player2.mode should be(ModeState.handle(SetModeState()))
+        roundManager.player2Mode should be(ModeState.handle(SetModeState()))
         roundManager.selectDriveCommand() should be(ModeState.whichState(SetModeState().handle))
       }
       "choose the correct mode per player" should {
         val field = new Field(normalSize)
         val controller = new Controller(field)
         "both should be in Set Mode" in {
-          controller.mgr.player1.mode should be(ModeState.handle(SetModeState()))
-          controller.mgr.player2.mode should be(ModeState.handle(SetModeState()))
+          controller.mgr.player1Mode should be(ModeState.handle(SetModeState()))
+          controller.mgr.player2Mode should be(ModeState.handle(SetModeState()))
         }
         "both should be in Move Mode" in {
           controller.handleClick(0,0)
@@ -74,15 +74,15 @@ class RoundManagerSpec extends WordSpec with Matchers {
           controller.handleClick(4,3) //remove
           controller.handleClick(5,3) ; controller.handleClick(6,3)
           controller.handleClick(0,0) //remove
-          controller.mgr.player1.mode should be(ModeState.handle(MoveModeState()))
-          controller.mgr.player2.mode should be(ModeState.handle(MoveModeState()))
+          controller.mgr.player1Mode should be(ModeState.handle(MoveModeState()))
+          controller.mgr.player2Mode should be(ModeState.handle(MoveModeState()))
         }
         "player 1 in flymode" in {
           controller.handleClick(1,3) ; controller.handleClick(0,3)
           controller.handleClick(6,3) ; controller.handleClick(5,3)
           controller.handleClick(0,6) //remove
-          controller.mgr.player1.mode should be(ModeState.handle(FlyModeState()))
-          controller.mgr.player2.mode should be(ModeState.handle(MoveModeState()))
+          controller.mgr.player1Mode should be(ModeState.handle(FlyModeState()))
+          controller.mgr.player2Mode should be(ModeState.handle(MoveModeState()))
         }
         "both in fly mode" in {
           controller.handleClick(0,3) ; controller.handleClick(1,3)
@@ -92,8 +92,8 @@ class RoundManagerSpec extends WordSpec with Matchers {
           controller.handleClick(3,0) ; controller.handleClick(6,0)
           controller.handleClick(0,3) ; controller.handleClick(1,3)
           controller.handleClick(6,0) //remove
-          controller.mgr.player1.mode should be(ModeState.handle(FlyModeState()))
-          controller.mgr.player2.mode should be(ModeState.handle(FlyModeState()))
+          controller.mgr.player1Mode should be(ModeState.handle(FlyModeState()))
+          controller.mgr.player2Mode should be(ModeState.handle(FlyModeState()))
         }
       }
     }

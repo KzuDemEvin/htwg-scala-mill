@@ -34,7 +34,7 @@ object Mill {
           input = ""
         }
       } while (input != "exit")
-      webserver.unbind
+      webserver.unbind()
     }
   }
 }

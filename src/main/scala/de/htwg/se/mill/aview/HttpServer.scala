@@ -5,50 +5,90 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Route, StandardRoute}
-import akka.stream.ActorMaterializer
 import de.htwg.se.mill.controller.controllerComponent.ControllerInterface
 
-class HttpServer(controller: ControllerInterface) {
+import scala.concurrent.Future
+
+case class HttpServer(controller: ControllerInterface) {
   val size: Int = 7
 
   implicit val system = ActorSystem("mill")
-  implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
 
-  val route: Route = get {
-    pathSingleSlash {
-      complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`,
-        """<h1>
-          |<a href='https://github.com/KzuDemEvin/htwg-scala-mill'>HTWG Mill</a>
-        </h1>"""))
-    }
-    path("mill") {
-      gridToHtml
-    } ~
-      path("mill" / "new") {
-        controller.createEmptyField(size)
-        gridToHtml
-      } ~
-      path("mill" / "random") {
-        controller.createRandomField(size)
-        gridToHtml
-      } ~
-      path("mill" / "undo") {
-        controller.undo
-        gridToHtml
-      } ~
-      path("mill" / "redo") {
-        controller.redo
-        gridToHtml
-      } ~
-      path("mill" / Segment) { command => {
-        processInputLine(command)
-        gridToHtml
-      }
-      }
-  }
+  val interface: String = "0.0.0.0"
+  val port: Int = 8080
+  val uriPath: String = "mill"
 
-  def gridToHtml: StandardRoute = {
+  val route: Route =
+    concat(
+    path(uriPath) {
+      get {
+        fieldToHtml
+      }
+    } ~
+      path(uriPath / "player") {
+        get {
+          parameters("name", "number") {
+            (name, number) =>
+              controller.createPlayer(name, number.toInt)
+              fieldToHtml
+          }
+        }
+      } ~
+      path(uriPath / "new") {
+        get {
+          controller.createEmptyField(size)
+          fieldToHtml
+        }
+      } ~
+      path(uriPath / "random") {
+        get {
+          controller.createRandomField(size)
+          fieldToHtml
+        }
+      } ~
+      path(uriPath / "save") {
+        get {
+          controller.save()
+          fieldToHtml
+        }
+      } ~
+      path(uriPath / "load") {
+        get {
+          controller.load()
+          fieldToHtml
+        }
+      } ~
+      path(uriPath / "undo") {
+        get {
+          controller.undo
+          fieldToHtml
+        }
+      } ~
+      path(uriPath / "redo") {
+        get {
+          controller.redo
+          fieldToHtml
+        }
+      } ~
+      path(uriPath / Segment) { command => {
+        get {
+          processInputLine(command)
+          fieldToHtml
+        }
+      }
+      } ~
+      path("mill" / "removeStone") {
+        get {
+          parameters("row", "col", "color") {
+            (row, col, color) =>
+              complete(HttpEntity(ContentTypes.`application/json`, controller.stoneHasOtherColorREST(row.toInt, col.toInt, color)))
+          }
+        }
+      }
+  )
+
+  def fieldToHtml: StandardRoute = {
     complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, standardHtml))
   }
 
@@ -104,15 +144,17 @@ class HttpServer(controller: ControllerInterface) {
        |   <label for="input"/>
        |   <input id="input" type="text" placeholder="Enter command" />
        |   <button id="confirm" onclick="process()">Confirm</button>
-       |    ${ controller.fieldToHtml }
+       |    ${controller.fieldToHtml}
        | </div>
        |</body>
        |""".stripMargin
   }
 
-  val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
+  val bindingFuture: Future[Http.ServerBinding] = Http().newServerAt(interface, port).bind(route)
 
-  def unbind = {
+  println(s"Mill server is online at http://${interface}:${port}/${uriPath}")
+
+  def unbind(): Unit = {
     bindingFuture
       .flatMap(_.unbind()) // trigger unbinding from the port
       .onComplete(_ => system.terminate()) // and shutdown when done
