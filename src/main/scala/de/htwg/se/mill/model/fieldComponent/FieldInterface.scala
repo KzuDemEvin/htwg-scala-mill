@@ -15,7 +15,8 @@ trait FieldInterface {
   def placedStones(): Int
   def placedWhiteStones():Int
   def placedBlackStones():Int
-  def checkMill(row: Int, col: Int): Int
+  def checkMill(row: Int, col: Int): FieldInterface
+  def toHtml: String
 
   def createNewField:FieldInterface
 
@@ -33,5 +34,7 @@ trait FieldInterface {
 
   def setPlayer2Name(name: String): FieldInterface
   val player2Name: String
+
+  val millState: String
 
 }
