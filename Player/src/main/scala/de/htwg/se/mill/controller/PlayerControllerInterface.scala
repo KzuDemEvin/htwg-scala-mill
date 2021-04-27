@@ -11,5 +11,13 @@ trait PlayerControllerInterface {
 
   def deletePlayer(number: Int): Player
 
+  def save(number: Int): Unit
+
+  def load(id: Int): Player
+
+  def load(): Map[Int, Player]
+
   def toJson(player: Player): String
+
+  def toJson(players: Map[Int, Player]): String
 }

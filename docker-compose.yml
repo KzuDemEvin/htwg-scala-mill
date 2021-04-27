@@ -1,22 +1,63 @@
 version: "3.9"
 
 services:
+  playerdb:
+    image: mysql
+    restart: always
+    ports:
+      - "3306:3307"
+    environment:
+      MYSQL_ROOT_PASSWORD: PLAYER
+      MYSQL_DATABASE: player
+      MYSQL_USER: player
+      MYSQL_PASSWORD: player
+    volumes:
+      - .:/var/lib/player
+
   player:
     build:
       context: ./Player
     ports:
-    - "8081:8081"
+      - "8081:8081"
+
+  fileiodb:
+    image: mysql
+    restart: always
+    ports:
+      - "3306:3308"
+    environment:
+      MYSQL_ROOT_PASSWORD: FILEIO
+      MYSQL_DATABASE: fileio
+      MYSQL_USER: fileio
+      MYSQL_PASSWORD: fileio
+    volumes:
+      - .:/var/lib/fileio
+
   fileio:
     build:
       context: ./FileIO
     ports:
-    - "8082:8082"
+      - "8082:8082"
     volumes:
-    - .:/gameSaves
+      - .:/gameSaves
+
+  rootdb:
+    image: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ROOT
+      MYSQL_DATABASE: root
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    volumes:
+      - .:/var/lib/root
+
   root:
     build: .
     ports:
-    - "8080:8080"
+      - "8080:8080"
     depends_on:
       - player
       - fileio

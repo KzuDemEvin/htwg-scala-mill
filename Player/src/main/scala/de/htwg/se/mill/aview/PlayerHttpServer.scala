@@ -38,7 +38,23 @@ class PlayerHttpServer(playerController: PlayerControllerInterface) {
               number => postResponse(playerController.toJson(playerController.deletePlayer(number.toInt)))
             }
           }
-        }
+        } ~
+          path(uriPath / "sqldb") {
+            get {
+              parameters("id") {
+                id => postResponse(playerController.toJson(playerController.load(id.toInt)))
+              } ~
+                postResponse(playerController.toJson(playerController.load()))
+            } ~
+              post {
+                parameters("number") {
+                  number => {
+                    playerController.save(number.toInt)
+                    postResponse("")
+                  }
+                }
+              }
+          }
       )
 
   val bindingFuture = Http().newServerAt(interface, port).bind(route)
