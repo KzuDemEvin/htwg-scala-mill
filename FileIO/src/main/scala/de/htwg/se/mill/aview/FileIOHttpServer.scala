@@ -27,7 +27,21 @@ class FileIOHttpServer(controller: FileIOControllerInterface) {
             complete("")
           }
         }
-      }
+      } ~
+        path(uriPath / "sqldb") {
+          get {
+            parameters("id") {
+              id => complete(HttpEntity(ContentTypes.`application/json`, controller.loadSqlDb(id.toInt)))
+            } ~
+              complete(HttpEntity(ContentTypes.`application/json`, controller.toJson(controller.loadSqlDb())))
+          } ~
+          post {
+            entity(as[String]) { fieldInJson =>
+              controller.saveSqlDb(fieldInJson)
+              complete("")
+            }
+          }
+        }
     )
   val bindingFuture = Http().newServerAt(interface, port).bind(route)
 
