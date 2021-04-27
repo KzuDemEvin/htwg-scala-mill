@@ -21,6 +21,8 @@ val commonDependencies = Seq(
 )
 
 parallelExecution in Test := false
+coverageExcludedPackages := "<empty>;.*aview.*;.*Mill"
+coverageEnabled.in(Test, test) := true
 
 ThisBuild / trackInternalDependencies := TrackLevel.TrackIfMissing
 
