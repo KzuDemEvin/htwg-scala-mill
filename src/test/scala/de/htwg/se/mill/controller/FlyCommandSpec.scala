@@ -14,17 +14,17 @@ class FlyCommandSpec extends WordSpec with Matchers {
       "Be able to fly a white stone" in {
         controller.handleClick(0, 0) // placing a white stone
         command.doStep
-        controller.cell(6, 6).getContent.whichColor should be (Color.white)
+        controller.cell(6, 6).content.color should be (Color.white)
       }
       "Be able to undo a step" in {
         command.undoStep
-        controller.cell(6, 6).getContent.whichColor should be (Color.noColor)
-        controller.cell(0, 0).getContent.whichColor should be (Color.white)
+        controller.cell(6, 6).content.color should be (Color.noColor)
+        controller.cell(0, 0).content.color should be (Color.white)
       }
       "Be able to redo a step" in {
         command.redoStep
-        controller.cell(6, 6).getContent.whichColor should be (Color.white)
-        controller.cell(0, 0).getContent.whichColor should be (Color.noColor)
+        controller.cell(6, 6).content.color should be (Color.white)
+        controller.cell(0, 0).content.color should be (Color.noColor)
       }
     }
     "new can move black stones" should {
@@ -37,17 +37,17 @@ class FlyCommandSpec extends WordSpec with Matchers {
       "Be able to fly a black stone" in {
         controller.handleClick(1, 1) // placing a black stone
         commandblack.doStep
-        controller.cell(6, 0).getContent.whichColor should be (Color.black)
+        controller.cell(6, 0).content.color should be (Color.black)
       }
       "Be able to undo a black step" in {
         commandblack.undoStep
-        controller.cell(6, 0).getContent.whichColor should be (Color.noColor)
-        controller.cell(1, 1).getContent.whichColor should be (Color.black)
+        controller.cell(6, 0).content.color should be (Color.noColor)
+        controller.cell(1, 1).content.color should be (Color.black)
       }
       "Be able to redo a step" in {
         commandblack.redoStep
-        controller.cell(6, 0).getContent.whichColor should be (Color.black)
-        controller.cell(1, 1).getContent.whichColor should be (Color.noColor)
+        controller.cell(6, 0).content.color should be (Color.black)
+        controller.cell(1, 1).content.color should be (Color.noColor)
       }
     }
   }

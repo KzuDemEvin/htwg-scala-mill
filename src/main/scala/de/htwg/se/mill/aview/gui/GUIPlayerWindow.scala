@@ -1,7 +1,6 @@
 package de.htwg.se.mill.aview.gui
 
 import de.htwg.se.mill.controller.controllerComponent.ControllerInterface
-import de.htwg.se.mill.model.playerComponent.Player
 
 import scala.swing.FlowPanel.Alignment
 import scala.swing.event.ButtonClicked
@@ -20,18 +19,14 @@ class GUIPlayerWindow(controller:ControllerInterface) extends MainFrame {
   listenTo(createbtn1)
   listenTo(createbtn2)
 
-  contents = new BoxPanel(Orientation.Vertical) {
-    contents += new FlowPanel(Alignment.Center)(label)
-    contents += new FlowPanel(Alignment.Center)(inputtxt)
-    contents += new FlowPanel(Alignment.Center)(createbtn1)
-  }
+  contents = createBoxPanel(label, inputtxt, createbtn1)
 
   reactions += {
     case ButtonClicked(component) if component == createbtn1 =>
-      controller.getRoundManager.player1 = Player(inputtxt.text)
+      controller.createPlayer(inputtxt.text, 1)
       contents = nextPlayer()
     case ButtonClicked(component) if component == createbtn2 =>
-      controller.getRoundManager.player2 = Player(inputtxt.text)
+      controller.createPlayer(inputtxt.text, 2)
       dispose()
   }
 
@@ -41,11 +36,14 @@ class GUIPlayerWindow(controller:ControllerInterface) extends MainFrame {
   def nextPlayer():BoxPanel = {
     label.text = "Name von Player2 eingeben: "
     inputtxt.text = ""
-    val boxpanel = new BoxPanel(Orientation.Vertical) {
+    createBoxPanel(label, inputtxt, createbtn2)
+  }
+
+  private def createBoxPanel(label: Label, inputtxt: TextField, createbtn: Button): BoxPanel = {
+    new BoxPanel(Orientation.Vertical) {
       contents += new FlowPanel(Alignment.Center)(label)
       contents += new FlowPanel(Alignment.Center)(inputtxt)
-      contents += new FlowPanel(Alignment.Center)(createbtn2)
+      contents += new FlowPanel(Alignment.Center)(createbtn)
     }
-    boxpanel
   }
 }

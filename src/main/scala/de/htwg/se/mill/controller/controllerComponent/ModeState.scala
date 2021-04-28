@@ -21,24 +21,20 @@ case class FlyModeState() extends ModeState {
 }
 
 object ModeState {
-  var modeState = SetModeState().handle
-  var cmd = MoveModeState().whichState
 
   def handle(e:ModeState):String = {
     e match {
-      case SetModeState() => modeState = SetModeState().handle
-      case MoveModeState() => modeState = MoveModeState().handle
-      case FlyModeState() => modeState = FlyModeState().handle
+      case MoveModeState() => MoveModeState().handle
+      case FlyModeState() => FlyModeState().handle
+      case _ => SetModeState().handle
     }
-    modeState
   }
 
   def whichState(s:String):ModeState = {
     s match {
-      case "SetMode" => cmd = SetModeState().whichState
-      case "MoveMode" => cmd = MoveModeState().whichState
-      case "FlyMode" => cmd = FlyModeState().whichState
+      case "SetMode" => SetModeState().whichState
+      case "FlyMode" => FlyModeState().whichState
+      case _ => MoveModeState().whichState
     }
-    cmd
   }
 }

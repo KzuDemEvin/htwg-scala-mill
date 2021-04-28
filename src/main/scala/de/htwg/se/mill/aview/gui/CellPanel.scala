@@ -1,9 +1,9 @@
 package de.htwg.se.mill.aview.gui
 
-import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface}
+import de.htwg.se.mill.controller.controllerComponent.ControllerInterface
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
-import javax.swing.ImageIcon
 
+import javax.swing.ImageIcon
 import scala.swing._
 import scala.swing.event._
 
@@ -43,7 +43,7 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
     var cellType = 5
     if (controller.possiblePosition(row, col)) {
       if (controller.isSet(row, col)) {
-        if (controller.cell(row, col).getContent.whichColor == Color.white) {
+        if (controller.cell(row, col).content.color == Color.white) {
           cellType = 0
         } else {
           cellType = 1
@@ -104,11 +104,11 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
   }
 
   val cell: BoxPanel = new BoxPanel(Orientation.Vertical) {
-    if (cellType(row, column) < 3) {
-      contents += setButton
+    contents += (if (cellType(row, column) < 3) {
+      setButton
     } else {
-      contents += notValidButton
-    }
+      notValidButton
+    })
     preferredSize = sizeDim
 
     listenTo(controller)

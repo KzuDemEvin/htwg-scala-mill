@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  player:
+    build:
+      context: ./Player
+    ports:
+    - "8081:8081"
+  fileio:
+    build:
+      context: ./FileIO
+    ports:
+    - "8082:8082"
+    volumes:
+    - .:/gameSaves
+  root:
+    build: .
+    ports:
+    - "8080:8080"
+    depends_on:
+      - player
+      - fileio
+    environment:
+      DISPLAY: host.docker.internal:0
+      PLAYERHTTPSERVER: player:8081
+      FILEIOHTTPSERVER: fileio:8082

@@ -11,7 +11,7 @@ class ControllerSpec extends WordSpec with Matchers {
   val normalSize = 7
   "A Controller" when {
     "new" should {
-      val field = new Field(7)
+      val field = new Field(normalSize)
       val controllerUndoRedo = new Controller(field)
       "handle undo/redo correctly on an empty undo-stack" in {
         controllerUndoRedo.field.cell(0, 0).isSet should be(false)
@@ -25,27 +25,27 @@ class ControllerSpec extends WordSpec with Matchers {
       "handle undo/redo of setting a cell correctly" in {
         controllerUndoRedo.handleClick(0, 0)
         controllerUndoRedo.field.cell(0, 0).isSet should be(true)
-        controllerUndoRedo.field.cell(0, 0).getContent.whichColor should be(Color.white)
+        controllerUndoRedo.field.cell(0, 0).content.color should be(Color.white)
         controllerUndoRedo.undo
         controllerUndoRedo.field.cell(0, 0).isSet should be(false)
-        controllerUndoRedo.field.cell(0, 0).getContent.whichColor should be(Color.noColor)
+        controllerUndoRedo.field.cell(0, 0).content.color should be(Color.noColor)
         controllerUndoRedo.redo
         controllerUndoRedo.field.cell(0, 0).isSet should be(true)
-        controllerUndoRedo.field.cell(0, 0).getContent.whichColor should be(Color.white)
+        controllerUndoRedo.field.cell(0, 0).content.color should be(Color.white)
         controllerUndoRedo.gameState should be("Redo")
       }
-  }
+    }
     "ready to play" should {
       val field = new Field(normalSize)
       val controller = new Controller(field)
       "return valid values with its methods" in {
-        controller.cell(0, 0).getContent.whichColor should be (Color.noColor)
-        controller.isSet(0, 0) should be (false)
-        controller.available(6, 6) should be (true)
+        controller.cell(0, 0).content.color should be(Color.noColor)
+        controller.isSet(0, 0) should be(false)
+        controller.available(6, 6) should be(true)
         controller.possiblePosition(0, 1) should be(false)
-        controller.placedStones() should be (0)
-        controller.placedWhiteStones() should be (0)
-        controller.fieldsize should be (normalSize)
+        controller.placedStones() should be(0)
+        controller.placedWhiteStones() should be(0)
+        controller.fieldsize should be(normalSize)
       }
       "be able to save its current state" in {
         controller.save
@@ -55,6 +55,7 @@ class ControllerSpec extends WordSpec with Matchers {
       }
       "be able to place random stones" in {
         controller.createRandomField(normalSize)
+        controller.field.size should be(normalSize)
         controller.placedStones() should be(18)
         controller.gameState should be("New field filled with random stones")
         controller.getRoundCounter should be(18)
@@ -74,10 +75,10 @@ class ControllerSpec extends WordSpec with Matchers {
       "handle setting stones correctly" in {
         controller.handleClick(0, 0)
         controller.cell(0, 0).isSet should be(true)
-        controller.cell(0, 0).getContent.whichColor should be(Color.white)
+        controller.cell(0, 0).content.color should be(Color.white)
         controller.handleClick(0, 6)
         controller.cell(0, 6).isSet should be(true)
-        controller.cell(0, 6).getContent.whichColor should be(Color.black)
+        controller.cell(0, 6).content.color should be(Color.black)
         controller.placedStones() should be(2)
         controller.gameState should be("White's turn")
       }
@@ -90,11 +91,11 @@ class ControllerSpec extends WordSpec with Matchers {
       "handle removing stones correctly" in {
         controller.handleClick(6, 0) // remove, not possible, same color + mill
         controller.cell(6, 0).isSet should be(true)
-        controller.cell(6, 0).getContent.whichColor should be(Color.white)
+        controller.cell(6, 0).content.color should be(Color.white)
         controller.placedStones() should be(5)
         controller.handleClick(3, 6) // remove, possible
         controller.cell(3, 6).isSet should be(false)
-        controller.cell(3, 6).getContent.whichColor should be(Color.noColor)
+        controller.cell(3, 6).content.color should be(Color.noColor)
         controller.placedStones() should be(4)
         controller.mgr.roundCounter should be(5)
       }
@@ -151,7 +152,7 @@ class ControllerSpec extends WordSpec with Matchers {
 
         controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
         controller.handleClick(3, 5) // remove
-        controller.mgr.player2.mode should be("FlyMode")
+        controller.mgr.player2Mode should be("FlyMode")
         controller.placedBlackStones() should be(3)
         printf(controller.fieldToString)
       }
@@ -164,7 +165,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.handleClick(4, 2)
         controller.cell(4, 2).isSet should be(false)
       }
-      "handly choosing a winner correctly" in {
+      "handle choosing a winner correctly" in {
         controller.mgr.winner should be(0) // no Winner
         controller.handleClick(3, 1) ; controller.handleClick(1, 1) // white
         controller.handleClick(0, 6) ; controller.handleClick(5, 1) // black

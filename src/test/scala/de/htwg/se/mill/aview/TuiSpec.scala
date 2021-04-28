@@ -15,25 +15,33 @@ class TuiSpec extends WordSpec with Matchers {
       controller.field.placedStones() should be(0)
     }
     "set a black stone on input '00'" in {
-      tui.execInput("00")
-      controller.field.available(0, 0) should be(false)
-      controller.cell(0, 0).getContent.whichColor should be(Color.white)
+      val row = 0
+      val col = 0
+      tui.execInput(s"$row$col")
+      controller.field.available(row, col) should be(false)
+      controller.cell(row, col).content.color should be(Color.white)
     }
     "set a white stone on input '03" in {
-      tui.execInput("03")
-      controller.field.available(0, 3) should be(false)
-      controller.field.cell(0, 3).getContent.whichColor should be(Color.black)
+      val row = 0
+      val col = 3
+      tui.execInput(s"$row$col")
+      controller.field.available(row, col) should be(false)
+      controller.field.cell(row, col).content.color should be(Color.black)
     }
     "undo on input 'undo'" in {
-      tui.execInput("66")
+      val row = 6
+      val col = 6
+      tui.execInput(s"$row$col")
       tui.execInput("undo")
-      controller.cell(6, 6).isSet should be (false)
+      controller.cell(row, col).isSet should be (false)
     }
     "redo on input 'redo'" in {
-      tui.execInput("00")
+      val row = 0
+      val col = 0
+      tui.execInput(s"$row$col")
       tui.execInput("undo")
       tui.execInput("redo")
-      controller.cell(0,0).isSet should be(true)
+      controller.cell(row,col).isSet should be(true)
     }
     "place 18 random stones" in {
       tui.execInput("random")
