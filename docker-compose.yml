@@ -5,7 +5,7 @@ services:
     image: mysql
     restart: always
     ports:
-      - "3306:3307"
+      - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: PLAYER
       MYSQL_DATABASE: player
@@ -19,12 +19,14 @@ services:
       context: ./Player
     ports:
       - "8081:8081"
+    depends_on:
+      - playerdb
 
   fileiodb:
     image: mysql
     restart: always
     ports:
-      - "3306:3308"
+      - "3308:3306"
     environment:
       MYSQL_ROOT_PASSWORD: FILEIO
       MYSQL_DATABASE: fileio
@@ -38,6 +40,8 @@ services:
       context: ./FileIO
     ports:
       - "8082:8082"
+    depends_on:
+      - fileiodb
     volumes:
       - .:/gameSaves
 
@@ -59,6 +63,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
+      - rootdb
       - player
       - fileio
     environment:
