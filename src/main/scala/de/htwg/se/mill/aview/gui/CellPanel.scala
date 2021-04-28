@@ -37,38 +37,30 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
 
   // 0 = white, 1 = black, 2 = availableCell, 3 = notValidHorizontal, 4 = notValidVertical, 5 = middle
   def cellType(row: Int, col: Int): Unit = {
-    controller.possiblePosition(row, column)({
-      case Some(possiblePosition) =>
-        if (possiblePosition.toBoolean) {
-          controller.isSet(row, col)({
-            case Some(isSet) =>
-              val isSetBool = isSet.toBoolean
-              if (isSetBool) {
-                controller.color(row, col)({
-                  case Some(color) =>
-                    cellType = color.toInt
-                    redraw(false)
-                })
-              } else {
-                cellType = 2
+    if (controller.possiblePosition(row, column)) {
+      controller.isSet(row, col)({
+        case Some(isSet) =>
+          val isSetBool = isSet.toBoolean
+          if (isSetBool) {
+            controller.color(row, col)({
+              case Some(color) =>
+                cellType = color.toInt
                 redraw(false)
-              }
-            case None => cellType = 2
-          })
-        } else {
-          for (x <- horizontalCells) {
-            if (x._1 == row && x._2 == col) {
-              cellType = 3
-            }
+            })
+          } else {
+            cellType = 2
+            redraw(false)
           }
-          for (x <- verticalCells) {
-            if (x._1 == row && x._2 == col) {
-              cellType = 4
-            }
-          }
-        }
-        redraw(false)
-    })
+        case None => cellType = 2
+      })
+    } else {
+      if (horizontalCells.contains((row, col))) {
+        cellType = 3
+      } else {
+        cellType = 4
+      }
+    }
+    redraw(false)
   }
 
   def cellIcon(row: Int, col: Int): ImageIcon = {

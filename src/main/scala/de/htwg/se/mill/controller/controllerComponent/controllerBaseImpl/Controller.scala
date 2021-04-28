@@ -64,12 +64,15 @@ class Controller extends ControllerInterface with Publisher {
     field
   }
 
-  def handleClick(row: Int, col: Int)(oncomplete: Option[String] => Unit = {case Some(_) => case None =>}): Unit =
+  def handleClick(row: Int, col: Int)(oncomplete: Option[String] => Unit = {
+    case Some(_) =>
+    case None =>
+  }): Unit =
     asyncRequest(s"http://${roundManagerHttpServer}/handleClick?row=$row&col=$col", POST)(value => {
       oncomplete(value)
       turn()
       publish(new CellChanged)
-  })
+    })
 
   def handleClickSync(row: Int, col: Int): String = {
     val field = blockRequest(s"http://${roundManagerHttpServer}/handleClick?row=$row&col=$col", POST)
@@ -112,7 +115,11 @@ class Controller extends ControllerInterface with Publisher {
 
   def color(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://${roundManagerHttpServer}/field/color?row=$row&col=$col")(oncomplete)
 
-  def possiblePosition(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://${roundManagerHttpServer}/field/possiblePosition?row=$row&col=$col")(oncomplete)
+  def possiblePosition(row: Int, col: Int): Boolean = {
+    val horizontalCells = List((0, 1), (0, 2), (0, 4), (0, 5), (1, 2), (1, 4), (5, 2), (5, 4), (6, 1), (6, 2), (6, 4), (6, 5))
+    val verticalCells = List((1, 0), (1, 6), (2, 0), (2, 1), (2, 5), (2, 6), (4, 0), (4, 1), (4, 5), (4, 6), (5, 0), (5, 6))
+    !horizontalCells.contains((row, col)) && !verticalCells.contains((row, col))
+  }
 
   def getMillState(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://${roundManagerHttpServer}/field/millState")(oncomplete)
 

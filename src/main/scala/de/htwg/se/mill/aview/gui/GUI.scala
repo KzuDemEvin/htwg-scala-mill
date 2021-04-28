@@ -13,6 +13,7 @@ class GUI(controller: ControllerInterface) extends MainFrame {
 
   title = "Mill"
   val cells: Array[Array[CellPanel]] = Array.ofDim[CellPanel](controller.fieldsize, controller.fieldsize)
+  var drawUnusedCells: Boolean = true
 
 
   menuBar = new GUIMenuBar(controller).menuBar
@@ -67,8 +68,10 @@ class GUI(controller: ControllerInterface) extends MainFrame {
       for {
         row <- 0 until controller.fieldsize
         col <- 0 until controller.fieldsize
+        if drawUnusedCells || controller.possiblePosition(row, col)
       } cells(row)(col).redraw()
     }
+    drawUnusedCells = false
     controller.getMillState({ case Some(millState) => millline.text = millState })
     controller.getRoundCounter({ case Some(rc) => roundCounter.text = "Round: " + rc })
     repaint

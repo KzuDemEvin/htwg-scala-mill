@@ -39,7 +39,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
       "return valid values with its methods" in {
         controller.color(0, 0)({ case Some(c) => c should be("noColor") })
         controller.isSet(0, 0)({ case Some(isSet) => isSet.toBoolean should be(false) })
-        controller.possiblePosition(0, 1)({ case Some(possiblePosition) => possiblePosition.toBoolean should be(false) })
+        controller.possiblePosition(0, 1) should be(false)
         controller.fieldsize should be(normalSize)
       }
       "be able to place random stones" in {

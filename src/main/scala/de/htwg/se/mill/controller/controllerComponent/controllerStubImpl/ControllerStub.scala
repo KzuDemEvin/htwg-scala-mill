@@ -29,7 +29,7 @@ class ControllerStub extends ControllerInterface{
   override def load(): Unit = {}
   override def color(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = oncomplete(Some(color.toString))
   override def isSet(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = oncomplete(Some(isSet.toString))
-  override def possiblePosition(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = oncomplete(Some(possiblePosition.toString))
+  override def possiblePosition(row: Int, col: Int): Boolean = possiblePosition
   override def fieldsize: Int = 7
   override def getWinner(oncomplete: Option[String] => Unit): Unit = oncomplete(Some(winner.toString))
   override def getWinnerText(oncomplete: Option[String] => Unit): Unit = oncomplete(Some(winnerText))

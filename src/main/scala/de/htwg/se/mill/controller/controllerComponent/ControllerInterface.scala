@@ -22,7 +22,7 @@ trait ControllerInterface extends Publisher {
   def load(): Unit
   def color(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit
   def isSet(row:Int, col:Int)(oncomplete: Option[String] => Unit): Unit
-  def possiblePosition(row:Int, col:Int)(oncomplete: Option[String] => Unit): Unit
+  def possiblePosition(row:Int, col:Int): Boolean
   def fieldsize:Int
   def getWinner(oncomplete: Option[String] => Unit): Unit
   def getWinnerText(oncomplete: Option[String] => Unit): Unit
