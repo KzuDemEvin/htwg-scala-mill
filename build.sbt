@@ -46,6 +46,6 @@ lazy val root =  (project in file(".")).dependsOn(player, fileIO, roundManager).
   .settings(daemonUser in Docker := "sbtuser")
   .settings(dockerExposedPorts := Seq(8080))
   .settings(mainClass in Compile := Some("de.htwg.se.mill.Mill"))
-  .aggregate(player, fileIO)
-  .dependsOn(player,fileIO)
+  .aggregate(player, fileIO, roundManager)
+  .dependsOn(player,fileIO, roundManager)
   .enablePlugins(sbtdocker.DockerPlugin, JavaAppPackaging)

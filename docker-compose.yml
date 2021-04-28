@@ -1,25 +1,32 @@
-version: "3.9"
+version: "3.8"
 
 services:
   player:
     build:
       context: ./Player
     ports:
-    - "8081:8081"
+      - "8081:8081"
   fileio:
     build:
       context: ./FileIO
     ports:
-    - "8082:8082"
+      - "8082:8082"
     volumes:
-    - .:/gameSaves
+      - .:/gameSaves
+  roundmanager:
+    build:
+      context: ./RoundManager
+    ports:
+      - "8083:8083"
   root:
     build: .
     ports:
-    - "8080:8080"
+      - "8080:8080"
     depends_on:
+      - roundmanager
       - player
       - fileio
     environment:
       - PLAYERHTTPSERVER=player:8081
       - FILEIOHTTPSERVER=fileio:8082
+      - ROUNDMANAGERHTTPSERVER=fileio:8083
