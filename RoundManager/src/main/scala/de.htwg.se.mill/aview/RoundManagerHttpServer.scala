@@ -14,7 +14,7 @@ class RoundManagerHttpServer(roundManagerController: RoundManagerControllerInter
   implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "roundmanager")
   implicit val executionContext: ExecutionContextExecutor = system.executionContext
 
-  val interface: String = "localhost"
+  val interface: String = "0.0.0.0"
   val port: Int = 8083
 
   val route: Route =

@@ -23,10 +23,10 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - roundmanager
       - player
       - fileio
+      - roundmanager
     environment:
       - PLAYERHTTPSERVER=player:8081
       - FILEIOHTTPSERVER=fileio:8082
-      - ROUNDMANAGERHTTPSERVER=fileio:8083
+      - ROUNDMANAGERHTTPSERVER=roundmanager:8083
