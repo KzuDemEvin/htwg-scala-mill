@@ -1,6 +1,5 @@
 package de.htwg.se.mill.util
 
-import de.htwg.se.mill.model.roundManagerComponent.RoundManager
 import org.scalatest.{Matchers, WordSpec}
 
 class UndoManagerSpec extends WordSpec with Matchers{
