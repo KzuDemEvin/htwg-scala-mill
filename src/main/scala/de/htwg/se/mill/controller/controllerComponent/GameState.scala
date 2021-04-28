@@ -45,17 +45,24 @@ case class LoadState() extends GameState {
 object GameState {
   var state: String = NewState().handle
   def handle(e: GameState): String = {
-    e match {
-      case FinishedState() => state = FinishedState().handle
-      case WhiteTurnState() => state = WhiteTurnState().handle
-      case BlackTurnState() => state = BlackTurnState().handle
-      case NewState() => state = NewState().handle
-      case RandomState() => state = RandomState().handle
-      case UndoState() => state = UndoState().handle
-      case RedoState() => state = RedoState().handle
-      case SaveState() => state = SaveState().handle
-      case LoadState() => state = LoadState().handle
+    state = e match {
+      case FinishedState() => FinishedState().handle
+      case WhiteTurnState() => WhiteTurnState().handle
+      case BlackTurnState() => BlackTurnState().handle
+      case NewState() => NewState().handle
+      case RandomState() => RandomState().handle
+      case UndoState() => UndoState().handle
+      case RedoState() => RedoState().handle
+      case SaveState() => SaveState().handle
+      case LoadState() => LoadState().handle
     }
     state
+  }
+
+  def whichState(state: String): GameState = {
+    state match {
+      case "White" | "white" | "White's turn" => WhiteTurnState()
+      case "Black" | "black" | "Black's turn" => BlackTurnState()
+    }
   }
 }

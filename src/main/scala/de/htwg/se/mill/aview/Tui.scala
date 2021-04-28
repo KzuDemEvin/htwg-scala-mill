@@ -34,22 +34,22 @@ class Tui(controller: ControllerInterface) extends Reactor {
         "valid command: " + input
       case _ =>
         input.toList.filter(p => p != ' ').filter(_.isDigit).map(p => p.toString.toInt) match {
-        case row :: column :: Nil =>
-          controller.handleClick(row, column)
-          println(controller.getMillState)
-          "valid command: " + input
-        case _ =>
-          "Wrong input: " + input
-      }
+          case row :: column :: Nil =>
+            controller.handleClick(row, column)({ case Some(_) => {}})
+            controller.getMillState({ case Some(state) => println(state)})
+            "valid command: " + input
+          case _ =>
+            "Wrong input: " + input
+        }
     }
   }
 
   reactions += {
-    case event: CellChanged => printTui
+    case _: CellChanged => printTui
   }
 
   def printTui: Unit = {
-    printf(s"${controller.fieldToString}\n")
-    printf(s"${GameState.state}\n")
+    controller.fieldToString({ case Some(field) => print(s"${field}\n")})
+    print(s"${GameState.state}\n")
   }
 }

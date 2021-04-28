@@ -1,48 +1,33 @@
 package de.htwg.se.mill.controller.controllerComponent
 
-import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.RoundManager
-import de.htwg.se.mill.model.playerComponent.Player
-import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
-
 import scala.swing.Publisher
-
-trait ControllerInterface extends Publisher {
-  var tmpCell:(Int,Int)
-  var setCounter:Int
-  var moveCounter:Int
-  var flyCounter:Int
-  var gameState:String
-  def createPlayer(name: String, number: Int): Player
-  def createEmptyField(size: Int): Unit
-  def createRandomField(size: Int): Unit
-  def fieldToString: String
-  def fieldToHtml: String
-
-  def getRoundCounter:Int
-  def selectDriveCommand():ModeState
-  def handleClick(row: Int, column: Int): Unit
-  def undo(): Unit
-  def redo(): Unit
-  def checkMill(row:Int, col:Int):String
-  def checkWinner(row:Int, column:Int): Unit
-  def save(): Unit
-  def load(): Unit
-  def cell(row:Int, col:Int):Cell
-  def isSet(row:Int, col:Int):Boolean
-  def available(row:Int, col:Int):Boolean
-  def possiblePosition(row:Int, col:Int):Boolean
-  def placedStones(): Int
-  def placedWhiteStones():Int
-  def placedBlackStones():Int
-  def isNeigbour(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Boolean
-  def fieldsize:Int
-  def getRoundManager:RoundManager
-  def getMillState: String
-  def stoneHasOtherColor(row: Int, col: Int, color: Color.Value): Boolean
-  def stoneHasOtherColorREST(row: Int, col: Int, color: String): String
-}
-
 import scala.swing.event.Event
 
+trait ControllerInterface extends Publisher {
+  var gameState:String
+  // var cachedField: Option[JsValue]
+  def createPlayer(name: String, number: Int): String
+  def createEmptyField(size: Int): Unit
+  def createRandomField(size: Int): Unit
+  def fieldToString(oncomplete: Option[String] => Unit): Unit
+  def fieldToHtml(oncomplete: Option[String] => Unit): Unit
+  def fieldToHtmlSync: String
+  def fieldToJson(oncomplete: Option[String] => Unit): Unit
+
+  def getRoundCounter(oncomplete: Option[String] => Unit): Unit
+  def handleClick(row: Int, column: Int)(oncomplete: Option[String] => Unit): Unit
+  def undo(): Unit
+  def redo(): Unit
+  def save(): Unit
+  def load(): Unit
+  def color(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit
+  def isSet(row:Int, col:Int)(oncomplete: Option[String] => Unit): Unit
+  def possiblePosition(row:Int, col:Int)(oncomplete: Option[String] => Unit): Unit
+  def fieldsize:Int
+  def getWinner(oncomplete: Option[String] => Unit): Unit
+  def getWinnerText(oncomplete: Option[String] => Unit): Unit
+  def getMillState(oncomplete: Option[String] => Unit): Unit
+}
+
+class FieldChanged extends Event
 class CellChanged extends Event
-class StoneRemoved extends Event

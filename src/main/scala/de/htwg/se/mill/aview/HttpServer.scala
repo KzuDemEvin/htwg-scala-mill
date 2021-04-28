@@ -77,16 +77,8 @@ case class HttpServer(controller: ControllerInterface) {
           fieldToHtml
         }
       }
-      } ~
-      path("mill" / "removeStone") {
-        get {
-          parameters("row", "col", "color") {
-            (row, col, color) =>
-              complete(HttpEntity(ContentTypes.`application/json`, controller.stoneHasOtherColorREST(row.toInt, col.toInt, color)))
-          }
-        }
       }
-  )
+    )
 
   def fieldToHtml: StandardRoute = {
     complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, standardHtml))
@@ -144,7 +136,7 @@ case class HttpServer(controller: ControllerInterface) {
        |   <label for="input"/>
        |   <input id="input" type="text" placeholder="Enter command" />
        |   <button id="confirm" onclick="process()">Confirm</button>
-       |    ${controller.fieldToHtml}
+       |    ${controller.fieldToHtmlSync}
        | </div>
        |</body>
        |""".stripMargin
@@ -162,7 +154,7 @@ case class HttpServer(controller: ControllerInterface) {
 
   def processInputLine(input: String): Unit = {
     input.toList.filter(p => p != ' ').filter(_.isDigit).map(p => p.toString.toInt) match {
-      case row :: column :: Nil => controller.handleClick(row, column)
+      case row :: column :: Nil => controller.handleClick(row, column)({ case Some(_) => })
       case _ =>
     }
   }

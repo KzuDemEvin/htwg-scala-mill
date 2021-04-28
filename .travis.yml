@@ -9,7 +9,7 @@ env:
   - DISPLAY=:99.0
 
 script:
-  - sbt -sbt-launch-repo https://repo1.maven.org/maven2 ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
+  - sbt clean coverage test coverageReport
 
 after_success:
   - sbt coverageReport coveralls

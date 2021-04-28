@@ -1,6 +1,6 @@
 package de.htwg.se.mill.aview.gui
 
-import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface}
+import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, FieldChanged}
 
 import scala.swing.FlowPanel.Alignment
 import scala.swing.{BorderPanel, BoxPanel, Dimension, FlowPanel, Font, Frame, GridPanel, MainFrame, Orientation, TextField}
@@ -22,14 +22,18 @@ class GUI(controller: ControllerInterface) extends MainFrame {
     font = Font("Dialog", Font.Bold, 16)
     editable = false
   }
-  val millline: TextField = new TextField(controller.getMillState, 7) {
+
+  val millline: TextField = new TextField("", 7) {
     font = Font("Dialog", Font.Bold, 16)
     editable = false
   }
-  val roundCounter: TextField = new TextField(controller.getRoundCounter.toString, 6) {
+  controller.getMillState({ case Some(millState) => millline.text = millState })
+
+  val roundCounter: TextField = new TextField("", 6) {
     font = Font("Dialog", Font.Bold, 16)
     editable = false
   }
+  controller.getRoundCounter({ case Some(rc) => roundCounter.text = rc })
 
   val topBar: BoxPanel = new BoxPanel(Orientation.Horizontal) {
     contents += new FlowPanel(Alignment.Left)(millline)
@@ -54,21 +58,25 @@ class GUI(controller: ControllerInterface) extends MainFrame {
 
 
   reactions += {
-    case _: CellChanged => updateField()
+    case _: CellChanged => updateField(false)
+    case _: FieldChanged => updateField()
   }
 
-  def updateField(): Unit = {
-    for {
-      row <- 0 until controller.fieldsize
-      col <- 0 until controller.fieldsize
-    } cells(row)(col).redraw()
-    statusline.text = controller.gameState
-    millline.text = controller.getMillState
-    roundCounter.text = "Round: " + controller.getRoundCounter.toString
-
+  private def updateField(repaintField: Boolean = true): Unit = {
+    if (repaintField) {
+      for {
+        row <- 0 until controller.fieldsize
+        col <- 0 until controller.fieldsize
+      } cells(row)(col).redraw()
+    }
+    controller.getMillState({ case Some(millState) => millline.text = millState })
+    controller.getRoundCounter({ case Some(rc) => roundCounter.text = "Round: " + rc })
     repaint
+    statusline.text = controller.gameState
   }
 
-  def getPlayers: Frame = { new GUIPlayerWindow(controller) }
+  def getPlayers: Frame = {
+    new GUIPlayerWindow(controller)
+  }
 
 }
