@@ -27,6 +27,7 @@ case class PlayerDaoSlick() extends PlayerDaoInterface {
 
   val setup: DBIOAction[Unit, NoStream, Effect.Schema] = DBIO.seq(playerTable.schema.createIfNotExists)
   database.run(setup)
+  println(s"Settings, databaseUrl: ${databaseUrl}, databaseUser: ${databaseUser}, databasePassword: ${databasePassword}")
 
   override def save(player: Player): Unit = {
     Await.ready(database.run(playerTable += (0, player.name, player.amountStones, player.mode)), Duration.Inf)
