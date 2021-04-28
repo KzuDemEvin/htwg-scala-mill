@@ -11,9 +11,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
 case class FileIODaoSlick() extends FileIODaoInterface {
-  val databaseUrl: String = "jdbc:mysql://" + sys.env.getOrElse("DATABASE_HOST", "localhost:3308") + "/" + sys.env.getOrElse("MYSQL_DATABASE", "fileio") + "?serverTimezone=UTC"
-  val databaseUser: String = sys.env.getOrElse("MYSQL_USER", "fileio")
-  val databasePassword: String = sys.env.getOrElse("MYSQL_PASSWORD", "fileio")
+  val databaseUrl: String = "jdbc:mysql://" + sys.env.getOrElse("DATABASE_HOST", "localhost:3308") + "/" + sys.env.getOrElse("MYSQL_DATABASE", "fileio") + "?serverTimezone=UTC&useSSL=false"
+  val databaseUser: String = sys.env.getOrElse("MYSQL_USER", "root")
+  val databasePassword: String = sys.env.getOrElse("MYSQL_PASSWORD", "FILEIO")
 
   val database: JdbcBackend.DatabaseDef = Database.forURL(
     url = databaseUrl,
@@ -28,6 +28,7 @@ case class FileIODaoSlick() extends FileIODaoInterface {
   database.run(setup)
 
   override def save(field: String): Unit = {
+    println(s"Settings, databaseUrl: ${databaseUrl}, databaseUser: ${databaseUser}, databasePassword: ${databasePassword}")
     Await.ready(database.run(fileIOTable += (0, field)), Duration.Inf)
   }
 

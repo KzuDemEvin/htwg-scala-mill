@@ -21,6 +21,8 @@ services:
       - "8081:8081"
     depends_on:
       - playerdb
+    environment:
+      - DATABASE_HOST=playerdb:3307
 
   fileiodb:
     image: mysql
@@ -30,8 +32,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: FILEIO
       MYSQL_DATABASE: fileio
-      MYSQL_USER: fileio
-      MYSQL_PASSWORD: fileio
     volumes:
       - .:/var/lib/fileio
 
@@ -42,6 +42,8 @@ services:
       - "8082:8082"
     depends_on:
       - fileiodb
+    environment:
+      - DATABASE_HOST=fileiodb:3308
     volumes:
       - .:/gameSaves
 
@@ -52,9 +54,7 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: ROOT
-      MYSQL_DATABASE: root
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: rootDb
     volumes:
       - .:/var/lib/root
 
