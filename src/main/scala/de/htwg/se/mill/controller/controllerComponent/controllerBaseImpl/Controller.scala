@@ -22,15 +22,20 @@ class Controller extends ControllerInterface with Publisher {
   // var cachedField: Option[JsValue] = None
   var cachedFieldAsHtml: String = ""
 
+
+  val playerHttpServer: String = sys.env.getOrElse("PLAYERHTTPSERVER", "localhost:8081")
+  val fileIOHttpServer: String = sys.env.getOrElse("FILEIOHTTPSERVER", "localhost:8082")
+  val roundManagerHttpServer: String = sys.env.getOrElse("ROUNDMANAGERHTTPSERVER", "localhost:8083")
+
   def createPlayer(name: String, number: Int = 1): String = {
-    asyncRequest(s"http://localhost:8082/player?number=$number&name=$name", POST)({
+    asyncRequest(s"http://${playerHttpServer}/player?number=$number&name=$name", POST)({
       case Some(_) =>
     })
     ""
   }
 
   def createEmptyField(size: Int): Unit = {
-    asyncRequest(s"http://localhost:8083/field/createField?size=$size", POST)({
+    asyncRequest(s"http://${roundManagerHttpServer}/field/createField?size=$size", POST)({
       case Some(_) =>
         gameState = GameState.handle(NewState())
         publish(new FieldChanged)
@@ -38,14 +43,14 @@ class Controller extends ControllerInterface with Publisher {
   }
 
   def createEmptyFieldSync(size: Int): String = {
-    val field: String = blockRequest(s"http://localhost:8083/field/createField?size=$size", POST)
+    val field: String = blockRequest(s"http://${roundManagerHttpServer}/field/createField?size=$size", POST)
     gameState = GameState.handle(NewState())
     publish(new FieldChanged)
     field
   }
 
   def createRandomField(size: Int): Unit = {
-    asyncRequest(s"http://localhost:8083/field/createRandomField?size=$size", POST)({
+    asyncRequest(s"http://${roundManagerHttpServer}/field/createRandomField?size=$size", POST)({
       case Some(_) =>
         gameState = GameState.handle(RandomState())
         publish(new FieldChanged)
@@ -53,28 +58,28 @@ class Controller extends ControllerInterface with Publisher {
   }
 
   def createRandomFieldSync(size: Int): String = {
-    val field: String = blockRequest(s"http://localhost:8083/field/createRandomField?size=$size", POST)
+    val field: String = blockRequest(s"http://${roundManagerHttpServer}/field/createRandomField?size=$size", POST)
     publish(new FieldChanged)
     gameState = GameState.handle(RandomState())
     field
   }
 
   def handleClick(row: Int, col: Int)(oncomplete: Option[String] => Unit = {case Some(_) => case None =>}): Unit =
-    asyncRequest(s"http://localhost:8083/handleClick?row=$row&col=$col", POST)(value => {
+    asyncRequest(s"http://${roundManagerHttpServer}/handleClick?row=$row&col=$col", POST)(value => {
       oncomplete(value)
       turn()
       publish(new CellChanged)
   })
 
   def handleClickSync(row: Int, col: Int): String = {
-    val field = blockRequest(s"http://localhost:8083/handleClick?row=$row&col=$col", POST)
+    val field = blockRequest(s"http://${roundManagerHttpServer}/handleClick?row=$row&col=$col", POST)
     turn()
     publish(new CellChanged)
     field
   }
 
   def undo(): Unit = {
-    asyncRequest(s"http://localhost:8083/undo", POST)(_ => {
+    asyncRequest(s"http://${roundManagerHttpServer}/undo", POST)(_ => {
       print("Hello!")
       turn()
       publish(new FieldChanged)
@@ -82,52 +87,52 @@ class Controller extends ControllerInterface with Publisher {
   }
 
   def redo(): Unit = {
-    asyncRequest(s"http://localhost:8083/redo", POST)(_ => {
+    asyncRequest(s"http://${roundManagerHttpServer}/redo", POST)(_ => {
       turn()
       publish(new FieldChanged)
     })
   }
 
   def save(): Unit = {
-    val field: String = blockRequest("http://localhost:8083/field/json", GET)
-    Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = "http://localhost:8082/json", entity = Json.prettyPrint(Json.parse(field))))
+    val field: String = blockRequest(s"http://${roundManagerHttpServer}/field/json", GET)
+    Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://${fileIOHttpServer}/json", entity = Json.prettyPrint(Json.parse(field))))
     gameState = GameState.handle(SaveState())
     publish(new CellChanged)
   }
 
   def load(): Unit = {
     gameState = GameState.handle(LoadState())
-    val field: String = blockRequest("http://localhost:8082/json", GET)
-    Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = "http://localhost:8083/field/setField", entity = Json.prettyPrint(Json.parse(field))))
+    val field: String = blockRequest(s"http://${fileIOHttpServer}/json", GET)
+    Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://${roundManagerHttpServer}/field/setField", entity = Json.prettyPrint(Json.parse(field))))
     gameState = GameState.handle(LoadState())
     publish(new FieldChanged)
   }
 
-  def isSet(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://localhost:8083/field/isSet?row=$row&col=$col")(oncomplete)
+  def isSet(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://${roundManagerHttpServer}/field/isSet?row=$row&col=$col")(oncomplete)
 
-  def color(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://localhost:8083/field/color?row=$row&col=$col")(oncomplete)
+  def color(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://${roundManagerHttpServer}/field/color?row=$row&col=$col")(oncomplete)
 
-  def possiblePosition(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://localhost:8083/field/possiblePosition?row=$row&col=$col")(oncomplete)
+  def possiblePosition(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://${roundManagerHttpServer}/field/possiblePosition?row=$row&col=$col")(oncomplete)
 
-  def getMillState(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://localhost:8083/field/millState")(oncomplete)
+  def getMillState(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://${roundManagerHttpServer}/field/millState")(oncomplete)
 
-  def turn(): Unit = asyncRequest(s"http://localhost:8083/turn")({ case Some(state) => gameState = GameState.whichState(state).handle })
+  def turn(): Unit = asyncRequest(s"http://${roundManagerHttpServer}/turn")({ case Some(state) => gameState = GameState.whichState(state).handle })
 
   def fieldsize: Int = 7
 
-  def fieldToHtml(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://localhost:8083/field/html")(oncomplete)
+  def fieldToHtml(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://${roundManagerHttpServer}/field/html")(oncomplete)
 
-  def fieldToHtmlSync: String = blockRequest(s"http://localhost:8083/field/html", GET)
+  def fieldToHtmlSync: String = blockRequest(s"http://${roundManagerHttpServer}/field/html", GET)
 
-  def fieldToString(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://localhost:8083/field/string")(oncomplete)
+  def fieldToString(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://${roundManagerHttpServer}/field/string")(oncomplete)
 
-  def fieldToJson(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://localhost:8083/field/json")(oncomplete)
+  def fieldToJson(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://${roundManagerHttpServer}/field/json")(oncomplete)
 
-  def getRoundCounter(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://localhost:8083/roundCounter")(oncomplete)
+  def getRoundCounter(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://${roundManagerHttpServer}/roundCounter")(oncomplete)
 
-  def getWinner(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://localhost:8083/winner")(oncomplete)
+  def getWinner(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://${roundManagerHttpServer}/winner")(oncomplete)
 
-  def getWinnerText(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://localhost:8083/winnerText")(oncomplete)
+  def getWinnerText(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://${roundManagerHttpServer}/winnerText")(oncomplete)
 
   private def sendRequest(uri: String, method: HttpMethod, errMsg: String = "Something went wrong."): Future[HttpResponse] = {
     implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
