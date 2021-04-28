@@ -5,6 +5,8 @@ import de.htwg.se.mill.model.fieldComponent.Cell
 trait RoundManagerControllerInterface {
 
   def handleClick(row: Int, col: Int): String
+  def undo(): String
+  def setField(field: String): String
   def createEmptyField(size: Int): String
   def createRandomField(size: Int): String
   def turn(): String

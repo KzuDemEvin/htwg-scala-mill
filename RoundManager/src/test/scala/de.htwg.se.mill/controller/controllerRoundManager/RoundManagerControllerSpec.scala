@@ -11,28 +11,28 @@ class RoundManagerControllerSpec extends WordSpec with Matchers {
   "A Controller" when {
     "new" should {
       val field = new Field(normalSize)
-      val controllerUndoRedo = new RoundManagerController(field)
-      /* "handle undo/redo correctly on an empty undo-stack" in {
+      "handle undo/redo correctly on an empty undo-stack" in {
+        val controllerUndoRedo = new RoundManagerController(field)
         controllerUndoRedo.cell(0, 0).isSet should be(false)
-        controllerUndoRedo.undo
+        controllerUndoRedo.undo()
         controllerUndoRedo.cell(0, 0).isSet should be(false)
         controllerUndoRedo.mgr.roundCounter should be(0)
-        controllerUndoRedo.redo
+        controllerUndoRedo.redo()
         controllerUndoRedo.field.cell(0, 0).isSet should be(false)
         controllerUndoRedo.mgr.roundCounter should be(0)
       }
       "handle undo/redo of setting a cell correctly" in {
+        val controllerUndoRedo = new RoundManagerController(field)
         controllerUndoRedo.handleClick(0, 0)
         controllerUndoRedo.cell(0, 0).isSet should be(true)
         controllerUndoRedo.cell(0, 0).content.color should be(Color.white)
-        controllerUndoRedo.undo
+        controllerUndoRedo.undo()
         controllerUndoRedo.cell(0, 0).isSet should be(false)
         controllerUndoRedo.cell(0, 0).content.color should be(Color.noColor)
-        controllerUndoRedo.redo
+        controllerUndoRedo.redo()
         controllerUndoRedo.cell(0, 0).isSet should be(true)
         controllerUndoRedo.cell(0, 0).content.color should be(Color.white)
-        controllerUndoRedo.gameState should be("Redo")
-      } */
+      }
     }
     "ready to play" should {
       val field = new Field(normalSize)

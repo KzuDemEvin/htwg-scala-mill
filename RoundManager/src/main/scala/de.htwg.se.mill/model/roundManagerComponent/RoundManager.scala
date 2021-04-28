@@ -31,15 +31,6 @@ case class RoundManager(field: FieldInterface,
     }).checkWinner().modeChoice()
   }
 
-  @deprecated
-  def setPlayerMode(playerMode: String, number: Int = 1): RoundManager = {
-    if (number == 1) {
-      copy(player1Mode = playerMode)
-    } else {
-      copy(player2Mode = playerMode)
-    }
-  }
-
   def modeChoice(placedStones: (Int, Int) = (field.placedBlackStones(), field.placedWhiteStones())): RoundManager = {
     val mgr: RoundManager = copy()
     var player1Mode = mgr.player1Mode

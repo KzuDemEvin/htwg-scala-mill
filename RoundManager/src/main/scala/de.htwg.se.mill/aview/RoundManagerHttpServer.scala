@@ -4,6 +4,7 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.javadsl.Behaviors
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.{Http, server}
 import de.htwg.se.mill.controller.controllerRoundManager.RoundManagerControllerInterface
 
@@ -16,8 +17,13 @@ class RoundManagerHttpServer(roundManagerController: RoundManagerControllerInter
   val interface: String = "localhost"
   val port: Int = 8083
 
-  val route =
+  val route: Route =
     concat(
+      path("undo") {
+        post {
+          postResponse(roundManagerController.undo())
+        }
+      } ~
       path("handleClick") {
         post {
           parameters("row", "col") {
@@ -26,6 +32,13 @@ class RoundManagerHttpServer(roundManagerController: RoundManagerControllerInter
         }
       } ~
         pathPrefix("field") {
+          path("setField") {
+            post {
+              entity(as[String]) { fieldInJson =>
+                postResponse(roundManagerController.setField(fieldInJson))
+              }
+            }
+          }~
           path("json") {
             get {
               postResponse(roundManagerController.fieldAsJson())

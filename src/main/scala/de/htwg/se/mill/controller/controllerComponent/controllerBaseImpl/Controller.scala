@@ -7,6 +7,7 @@ import akka.http.scaladsl.model.HttpMethods.{GET, POST}
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import de.htwg.se.mill.controller.controllerComponent._
+import play.api.libs.json.Json
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContextExecutor, Future}
@@ -73,73 +74,34 @@ class Controller extends ControllerInterface with Publisher {
     field
   }
 
-  def undo: Unit = {
-    /*
-    cachedField = sendRequest(s"http://localhost:8083/undo", POST, "Undo failed.") match {
-      case Some(field) => Some(Json.parse(field))
-      case None => None
-    }
-    gameState = GameState.handle(UndoState())
-    publish(new CellChanged)
-     */
+  def undo(): Unit = {
+    asyncRequest(s"http://localhost:8083/undo", POST)(_ => {
+      print("Hello!")
+      turn
+      publish(new FieldChanged)
+    })
   }
 
-  def redo: Unit = {
-    /*
-    cachedField = sendRequest(s"http://localhost:8083/redo", POST, "Redo failed.") match {
-      case Some(field) => Some(Json.parse(field))
-      case None => None
-    }
-    gameState = GameState.handle(RedoState())
-    publish(new CellChanged)
-
-     */
+  def redo(): Unit = {
+    asyncRequest(s"http://localhost:8083/redo", POST)(_ => {
+      turn
+      publish(new FieldChanged)
+    })
   }
 
-  def save: Unit = {
-    /*
-    cachedField = sendRequest("http://localhost:8083/field", GET, "Getting field went wrong.") match {
-      case Some(fieldAsString) => Some(Json.parse(fieldAsString))
-      case None => None
-    }
-
-    implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
-    implicit val executionContext: ExecutionContextExecutor = system.executionContext
-
-    cachedField match {
-      case Some(field) =>
-        Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = "http://localhost:8082/json", entity = Json.prettyPrint(field)))
-      case None =>
-    }
+  def save(): Unit = {
+    val field: String = blockRequest("http://localhost:8083/field/json", GET)
+    Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = "http://localhost:8082/json", entity = Json.prettyPrint(Json.parse(field))))
     gameState = GameState.handle(SaveState())
     publish(new CellChanged)
-
-     */
   }
 
-  def load: Unit = {
-    /*
+  def load(): Unit = {
     gameState = GameState.handle(LoadState())
-    cachedField = sendRequest("http://localhost:8082/json", GET, "Loading game went wrong") match {
-      case Some(fieldAsString) =>
-        Some(Json.parse(fieldAsString))
-      case None => None
-    }
-
-    implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
-    implicit val executionContext: ExecutionContextExecutor = system.executionContext
-
-    // updating field from RoundManager
-    cachedField match {
-      case Some(field) =>
-        Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = "http://localhost:8083/setField", entity = Json.prettyPrint(field)))
-      case None =>
-    }
-
+    val field: String = blockRequest("http://localhost:8082/json", GET)
+    Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = "http://localhost:8083/field/setField", entity = Json.prettyPrint(Json.parse(field))))
     gameState = GameState.handle(LoadState())
-    publish(new CellChanged)
-
-     */
+    publish(new FieldChanged)
   }
 
   def isSet(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://localhost:8083/field/isSet?row=${row}&col=${col}")(oncomplete)
@@ -168,6 +130,37 @@ class Controller extends ControllerInterface with Publisher {
 
   def getWinnerText(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://localhost:8083/winnerText")(oncomplete)
 
+  private def sendRequest(uri: String, method: HttpMethod, errMsg: String = "Something went wrong."): Future[HttpResponse] = {
+    implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
+    implicit val executionContext: ExecutionContextExecutor = system.executionContext
+    Http().singleRequest(HttpRequest(method = method, uri = uri))
+  }
+
+  private def asyncRequest(uri: String, method: HttpMethod = HttpMethods.GET, errMsg: String = "Async Request failed.")(oncomplete: Option[String] => Unit): Unit = {
+    sendRequest(uri, method).onComplete({
+      case Failure(_) => sys.error(errMsg)
+      case Success(value) => unmarshalAsync(value)(oncomplete)
+    })
+  }
+
+  private def blockRequest(uri: String, method: HttpMethod, failed: String = ""): String = {
+    block(sendRequest(uri, method)) match {
+      case Some(response) =>
+        block(unmarshal(response)) match {
+          case Some(unpackedString) => unpackedString
+          case None => failed
+        }
+      case None => failed
+    }
+  }
+
+  private def block[T](future: Future[T]): Option[T] = {
+    Await.ready(future, Duration.Inf).value.get match {
+      case Success(s) => Some(s)
+      case Failure(_) => None
+    }
+  }
+
   private def unmarshalAsync(value: HttpResponse)(oncomplete: Option[String] => Unit): Unit = {
     unmarshal(value).onComplete {
       case Failure(_) =>
@@ -182,40 +175,5 @@ class Controller extends ControllerInterface with Publisher {
     implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
     implicit val executionContext: ExecutionContextExecutor = system.executionContext
     Unmarshal(value.entity).to[String]
-  }
-
-  /* NONBLOCKING REQUEST */
-
-  private def asyncRequest(uri: String, method: HttpMethod = HttpMethods.GET, errMsg: String = "Async Request failed.")(oncomplete: Option[String] => Unit): Unit = {
-    sendRequest(uri, method).onComplete({
-      case Failure(_) => sys.error(errMsg)
-      case Success(value) => unmarshalAsync(value)(oncomplete)
-    })
-  }
-
-  /* BLOCKING REQUEST*/
-
-  private def block[T](future: Future[T]): Option[T] = {
-    Await.ready(future, Duration.Inf).value.get match {
-      case Success(s) => Some(s)
-      case Failure(_) => None
-    }
-  }
-
-  private def blockRequest(uri: String, method: HttpMethod, failed: String = ""): String = {
-    block(sendRequest(uri, method)) match {
-      case Some(response) =>
-        block(unmarshal(response)) match {
-          case Some(unpackedString) => unpackedString
-          case None => failed
-        }
-      case None => failed
-    }
-  }
-
-  private def sendRequest(uri: String, method: HttpMethod, errMsg: String = "Something went wrong."): Future[HttpResponse] = {
-    implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
-    implicit val executionContext: ExecutionContextExecutor = system.executionContext
-    Http().singleRequest(HttpRequest(method = method, uri = uri))
   }
 }

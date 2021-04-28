@@ -42,12 +42,6 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         controller.possiblePosition(0, 1)({ case Some(possiblePosition) => possiblePosition.toBoolean should be(false) })
         controller.fieldsize should be(normalSize)
       }
-      "be able to save its current state" in {
-        controller.save
-      }
-      "be able to load from an older state" in {
-        controller.load
-      }
       "be able to place random stones" in {
         controller.createRandomFieldSync(normalSize)
         controller.fieldsize should be(normalSize)
@@ -202,8 +196,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
           controller.handleClickSync(2, 2) //remove
           controller.handleClickSync(2, 2)
           controller.handleClickSync(4, 2)
-          controller.handleClickSync(2, 2);
-          controller.handleClickSync(2, 3)
+          controller.handleClickSync(2, 2);controller.handleClickSync(2, 3)
           controller.handleClickSync(4, 2)
           controller.handleClickSync(5, 3);
           controller.handleClickSync(4, 3)
@@ -212,50 +205,32 @@ class ControllerSpec extends AnyWordSpec with Matchers {
           controller.handleClickSync(4, 3);
           controller.handleClickSync(5, 3)
           controller.handleClickSync(2, 2) //remove
-          controller.handleClickSync(1, 3);
-          controller.handleClickSync(2, 3)
+          controller.handleClickSync(1, 3);controller.handleClickSync(2, 3)
           controller.handleClickSync(5, 3);
           controller.handleClickSync(4, 3)
-          controller.handleClickSync(2, 3);
-          controller.handleClickSync(2, 2)
-          controller.handleClickSync(6, 3);
-          controller.handleClickSync(5, 3)
+          controller.handleClickSync(2, 3);controller.handleClickSync(2, 2)
+          controller.handleClickSync(6, 3);controller.handleClickSync(5, 3)
           controller.handleClickSync(2, 2) //remove
-          controller.handleClickSync(0, 3);
-          controller.handleClickSync(1, 3)
+          controller.handleClickSync(0, 3);controller.handleClickSync(1, 3)
           controller.handleClickSync(4, 3) //remove
-          controller.handleClickSync(5, 3);
-          controller.handleClickSync(6, 3)
+          controller.handleClickSync(5, 3);controller.handleClickSync(6, 3)
           controller.handleClickSync(0, 0) //remove
-          controller.handleClickSync(1, 3);
-          controller.handleClickSync(0, 3)
-          controller.handleClickSync(6, 0);
-          controller.handleClickSync(3, 0)
-          controller.handleClickSync(0, 3);
-          controller.handleClickSync(1, 3)
+          controller.handleClickSync(1, 3);controller.handleClickSync(0, 3)
+          controller.handleClickSync(6, 0);controller.handleClickSync(3, 0)
+          controller.handleClickSync(0, 3);controller.handleClickSync(1, 3)
           controller.handleClickSync(3, 0) //remove
-          controller.handleClickSync(6, 6);
-          controller.handleClickSync(3, 6)
-          controller.handleClickSync(1, 3);
-          controller.handleClickSync(0, 3)
-          controller.handleClickSync(3, 6);
-          controller.handleClickSync(6, 6)
-          controller.handleClickSync(0, 3);
-          controller.handleClickSync(1, 3)
+          controller.handleClickSync(6, 6);controller.handleClickSync(3, 6)
+          controller.handleClickSync(1, 3);controller.handleClickSync(0, 3)
+          controller.handleClickSync(3, 6);controller.handleClickSync(6, 6)
+          controller.handleClickSync(0, 3);controller.handleClickSync(1, 3)
           controller.handleClickSync(6, 6) //remove
-          controller.handleClickSync(6, 3);
-          controller.handleClickSync(6, 6)
-          controller.handleClickSync(0, 6);
-          controller.handleClickSync(3, 6)
-          controller.handleClickSync(6, 6);
-          controller.handleClickSync(6, 3)
-          controller.handleClickSync(1, 3);
-          controller.handleClickSync(0, 3)
-          controller.handleClickSync(6, 3);
-          controller.handleClickSync(5, 3)
+          controller.handleClickSync(6, 3);controller.handleClickSync(6, 6)
+          controller.handleClickSync(0, 6);controller.handleClickSync(3, 6)
+          controller.handleClickSync(6, 6);controller.handleClickSync(6, 3)
+          controller.handleClickSync(1, 3);controller.handleClickSync(0, 3)
+          controller.handleClickSync(6, 3);controller.handleClickSync(5, 3)
           controller.handleClickSync(3, 6) //remove
-          controller.handleClickSync(0, 3);
-          controller.handleClickSync(1, 3)
+          controller.handleClickSync(0, 3);controller.handleClickSync(1, 3)
           controller.handleClickSync(0, 0) //remove
           controller.getWinner({ case Some(winner) => winner.toInt should be(0) })
           controller.handleClickSync(5, 3) //remove

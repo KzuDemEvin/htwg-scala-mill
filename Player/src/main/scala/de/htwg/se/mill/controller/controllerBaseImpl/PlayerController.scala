@@ -9,6 +9,7 @@ class PlayerController extends PlayerControllerInterface {
   var player2: Player = Player(name = "No name")
 
   override def createPlayer(number: Int, name: String): Player = {
+    print(s"Creating Player ${number}!\n")
     val player: Player = Player(name)
     if (number % 2 == 0) {
       player1 = player
@@ -19,6 +20,7 @@ class PlayerController extends PlayerControllerInterface {
   }
 
   override def getPlayer(number: Int): Player = {
+    print(s"Player ${number} called!\n")
     if (number % 2 == 0) {
       player1
     } else {
@@ -27,6 +29,7 @@ class PlayerController extends PlayerControllerInterface {
   }
 
   override def updatePlayerMode(number: Int, mode: String): Player = {
+    print(s"Updating Playermode of Player ${number} to ${mode}!\n")
     if (number % 2 == 0) {
       player1 = player1.changeMode(mode)
       player1
@@ -37,6 +40,7 @@ class PlayerController extends PlayerControllerInterface {
   }
 
   override def deletePlayer(number: Int): Player = {
+    print(s"Deleting Player ${number} called!\n")
     if (number % 2 == 0) {
       player1 = Player(name = "No name")
       player1
