@@ -27,6 +27,7 @@ services:
       - fileio
       - roundmanager
     environment:
+      - DISPLAY=host.docker.internal:0
       - PLAYERHTTPSERVER=player:8081
       - FILEIOHTTPSERVER=fileio:8082
       - ROUNDMANAGERHTTPSERVER=roundmanager:8083
