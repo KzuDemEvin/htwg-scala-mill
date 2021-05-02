@@ -6,10 +6,11 @@ import com.google.inject.{Guice, Injector}
 import de.htwg.se.mill.RoundManagerModule
 import de.htwg.se.mill.model.fieldComponent.FieldInterface
 import net.codingwell.scalaguice.InjectorExtensions._
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 
-class FieldSpec extends WordSpec with Matchers {
+class FieldSpec extends AnyWordSpec with Matchers {
   val injector: Injector = Guice.createInjector(new RoundManagerModule)
   "A Field is the playingfield of Mill. A Field" when {
     val field = injector.instance[FieldInterface](Names.named("normal"))

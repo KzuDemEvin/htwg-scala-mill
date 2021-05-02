@@ -1,9 +1,10 @@
 package de.htwg.se.mill.model
 
 import de.htwg.se.mill.model.fieldComponent.{Color, Stone}
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class StoneSpec extends WordSpec with Matchers {
+class StoneSpec extends AnyWordSpec with Matchers {
 
   "A stone" when {
     "created" should {

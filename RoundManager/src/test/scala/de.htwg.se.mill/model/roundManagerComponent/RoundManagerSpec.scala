@@ -3,9 +3,10 @@ package de.htwg.se.mill.model.roundManagerComponent
 import de.htwg.se.mill.controller.controllerRoundManager.RoundManagerController
 import de.htwg.se.mill.model.{FlyModeState, ModeState, MoveModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class RoundManagerSpec extends WordSpec with Matchers {
+class RoundManagerSpec extends AnyWordSpec with Matchers {
   "A RoundManager" when {
     val normalSize = 7
     "created" should {

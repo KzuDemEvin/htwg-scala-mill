@@ -1,9 +1,10 @@
 package de.htwg.se.mill.aview
 
 import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class TuiSpec extends WordSpec with Matchers {
+class TuiSpec extends AnyWordSpec with Matchers {
 
   "A Mill Tui" should {
     val controller = new Controller

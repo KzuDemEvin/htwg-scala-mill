@@ -1,9 +1,10 @@
 package de.htwg.se.mill.controller
 
 import de.htwg.se.mill.controller.controllerComponent._
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class GameStateSpec extends WordSpec with Matchers {
+class GameStateSpec extends AnyWordSpec with Matchers {
   "A GameState" when {
     "should represent the game current sate. It" should {
       "be in progress" in {

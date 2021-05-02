@@ -1,6 +1,7 @@
 package de.htwg.se.mill.util
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 class incrCommand extends CommandTrait {
   var state:Int =0
@@ -11,7 +12,7 @@ class incrCommand extends CommandTrait {
   override def redoStep: Unit = state+=1
 }
 
-class CommandSpec extends WordSpec with Matchers {
+class CommandSpec extends AnyWordSpec with Matchers {
   "A Command" should {
 
     "have a do step" in {

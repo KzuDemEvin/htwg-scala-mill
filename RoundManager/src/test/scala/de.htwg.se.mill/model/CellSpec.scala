@@ -1,9 +1,10 @@
 package de.htwg.se.mill.model
 
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class CellSpec extends WordSpec with Matchers {
+class CellSpec extends AnyWordSpec with Matchers {
   "A Cell" when {
     "filled with a white stone" should {
       val filledWhiteCell = Cell("cw")

@@ -1,9 +1,10 @@
 package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
 import de.htwg.se.mill.model.fieldComponent._
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class FieldSpec extends WordSpec with Matchers {
+class FieldSpec extends AnyWordSpec with Matchers {
   val weirdSize = 2
   val tinySize = 3
   val smallSize = 5

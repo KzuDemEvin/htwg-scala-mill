@@ -4,9 +4,10 @@ import de.htwg.se.mill.model.fieldComponent.Color
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
 
 import scala.language.reflectiveCalls
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class RoundManagerControllerSpec extends WordSpec with Matchers {
+class RoundManagerControllerSpec extends AnyWordSpec with Matchers {
   val normalSize = 7
   "A Controller" when {
     "new" should {

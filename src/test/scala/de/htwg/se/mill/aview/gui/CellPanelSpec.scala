@@ -1,9 +1,10 @@
 package de.htwg.se.mill.aview.gui
 
 import de.htwg.se.mill.controller.controllerComponent.controllerStubImpl.ControllerStub
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class CellPanelSpec extends WordSpec with Matchers {
+class CellPanelSpec extends AnyWordSpec with Matchers {
   "A CellPanel" when {
     "created" should {
       val controller: ControllerStub = new ControllerStub

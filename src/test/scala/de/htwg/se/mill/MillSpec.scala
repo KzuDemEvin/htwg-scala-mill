@@ -1,8 +1,9 @@
 package de.htwg.se.mill
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class MillSpec extends WordSpec with Matchers {
+class MillSpec extends AnyWordSpec with Matchers {
   "Main should have default field size of 7" in {
     val defaultSize = 7
     Mill.defaultSize should be(defaultSize)

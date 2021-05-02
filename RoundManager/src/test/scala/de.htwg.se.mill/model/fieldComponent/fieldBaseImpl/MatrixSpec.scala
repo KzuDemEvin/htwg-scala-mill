@@ -1,9 +1,10 @@
 package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
 import de.htwg.se.mill.model.fieldComponent.{Cell, Color}
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class MatrixSpec extends WordSpec with Matchers {
+class MatrixSpec extends AnyWordSpec with Matchers {
   "A Matrix is a tailor-made immutable data type that contains a two-dimentional Vector of Cells. A Matrix" when {
     "empty " should {
       "be created by using a dimention and a sample cell" in {
