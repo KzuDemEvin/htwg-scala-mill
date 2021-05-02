@@ -29,5 +29,6 @@ trait ControllerInterface extends Publisher {
   def getMillState(oncomplete: Option[String] => Unit): Unit
 }
 
-class FieldChanged extends Event
+class StateChanged extends Event
 class CellChanged extends Event
+class FieldChanged extends Event

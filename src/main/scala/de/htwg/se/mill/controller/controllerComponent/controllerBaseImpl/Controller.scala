@@ -71,7 +71,14 @@ class Controller extends ControllerInterface with Publisher {
     asyncRequest(s"http://${roundManagerHttpServer}/handleClick?row=$row&col=$col", POST)(value => {
       oncomplete(value)
       turn()
-      publish(new CellChanged)
+      value match {
+        case Some(changeType) =>
+          changeType.toInt match {
+            case 0 => publish(new StateChanged)
+            case 1 => publish(new CellChanged)
+            case _ => publish(new FieldChanged)
+          }
+      }
     })
 
   def handleClickSync(row: Int, col: Int): String = {

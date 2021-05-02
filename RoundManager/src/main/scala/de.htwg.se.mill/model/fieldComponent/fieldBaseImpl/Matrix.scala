@@ -1,7 +1,7 @@
 package de.htwg.se.mill.model.fieldComponent.fieldBaseImpl
 
 case class Matrix[T](allRows: Vector[Vector[T]]) {
-  def this(size: Int, filling: T) = this(Vector.tabulate(size, size) { (x1, x2) => filling })
+  def this(size: Int, filling: T) = this(Vector.tabulate(size, size) { (_, _) => filling })
 
   val allowedPosition = List((0, 0), (0, 3), (0, 6), (1, 1), (1, 3), (1, 5), (2, 2), (2, 3), (2, 4), (3, 0), (3, 1), (3, 2),
     (3, 4), (3, 5), (3, 6), (4, 2), (4, 3), (4, 4), (5, 1), (5, 3), (5, 5), (6, 0), (6, 3), (6, 6))

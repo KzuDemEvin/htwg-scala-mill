@@ -45,7 +45,7 @@ class Tui(controller: ControllerInterface) extends Reactor {
   }
 
   reactions += {
-    case _: CellChanged => printTui
+    case _ => printTui
   }
 
   def printTui: Unit = {

@@ -20,7 +20,8 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
     print(s"HandleClick called!\n")
     mgr = mgr.handleClick(row, col)
     doStep()
-    fieldAsJson()
+    print(mgr.update)
+    new Gson().toJson(mgr.update)
   }
 
   def doStep(): String = {
@@ -54,13 +55,13 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
   }
 
   def createEmptyField(size: Int): String = {
-    print(s"Creating empty field!\n")
+    print(s"Creating empty field of size $size!\n")
     mgr = mgr.copy(winner = 0, roundCounter = 0, field = injector.instance[FieldInterface](Names.named("normal"))).modeChoice()
     fieldAsJson()
   }
 
   def createRandomField(size: Int): String = {
-    print(s"Creating random field!\n")
+    print(s"Creating random field of size $size!\n")
     mgr = mgr.copy(winner = 0, roundCounter = mgr.borderToMoveMode, field = injector.instance[FieldInterface](Names.named("random"))).modeChoice()
     fieldAsJson()
   }
@@ -82,15 +83,15 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
     new Gson().toJson(mgr.winnerText)
   }
   def cell(row: Int, col: Int): Cell = {
-    print(s"Cell called!\n")
+    print(s"Cell at position ($row, $col) called!\n")
     mgr.field.cell(row, col)
   }
   def isSet(row: Int, col: Int): String = {
-    print(s"IsSet called!\n")
+    print(s"IsSet at position ($row, $col) called!\n")
     new Gson().toJson(cell(row, col).isSet)
   }
   def color(row: Int, col: Int): String = {
-    print(s"Color called!\n")
+    print(s"Color at position ($row, $col) called!\n")
     new Gson().toJson(cell(row, col).content.color match {
       case Color.black => 1
       case Color.white => 0

@@ -11,6 +11,7 @@ case class RoundManager(field: FieldInterface,
                         roundCounter: Int = 0,
                         setCounter: Int = 0,
                         borderToMoveMode: Int = 18,
+                        update: Int = 0,
                         winner: Int = 0,
                         winnerText: String = "No Winner") {
 
@@ -70,6 +71,7 @@ case class RoundManager(field: FieldInterface,
     var field: FieldInterface = mgr.field
     var roundCounter: Int = mgr.roundCounter
     val (row, col): (Int, Int) = cell
+    var update: Int = 0
 
     if (field.available(row, col) && field.millState == "No Mill") {
       // set cell normally
@@ -79,9 +81,10 @@ case class RoundManager(field: FieldInterface,
         if (field.millState == "No Mill") {
           roundCounter += 1
         }
+        update = 1
       }
     }
-    copy(field = field, roundCounter = roundCounter).checkWinner().modeChoice()
+    copy(field = field, roundCounter = roundCounter, update = update).checkWinner().modeChoice()
   }
 
   private def remove(cell: (Int, Int)): RoundManager = {
@@ -89,6 +92,7 @@ case class RoundManager(field: FieldInterface,
     var field: FieldInterface = mgr.field
     var roundCounter: Int = mgr.roundCounter
     val (row, col): (Int, Int) = cell
+    var update: Int = 0
 
     val cellColor: Color.Value = field.cell(row, col).content.color
     if ((cellColor == Color.black && mgr.whiteTurn()) || (cellColor == Color.white && mgr.blackTurn())) {
@@ -96,9 +100,10 @@ case class RoundManager(field: FieldInterface,
       if (rSuccessfullyRemoved) {
         field = rField.resetMill()
         roundCounter += 1
+        update = 2
       }
     }
-    copy(field = field, roundCounter = roundCounter)
+    copy(field = field, roundCounter = roundCounter, update = update)
   }
 
   private def checkIfCanMove(): Boolean = {
@@ -146,6 +151,7 @@ case class RoundManager(field: FieldInterface,
     var tmpCell@(tmpRow, tmpCol): (Int, Int) = mgr.tmpCell
 
     val cellColor = field.cell(row, col).content.color
+    var update: Int = 0
 
     // do move only if it's own color and destination field has no color!!
     if (tmpCell != (-1, -1) && tmpCell != cell && cellColor == Color.noColor) {
@@ -155,6 +161,7 @@ case class RoundManager(field: FieldInterface,
         if (field.millState == "No Mill") {
           roundCounter += 1
           tmpCell = (-1, -1) // reset temporary cell after move
+          update = 2
         }
       }
     }
@@ -165,7 +172,7 @@ case class RoundManager(field: FieldInterface,
         tmpCell = cell
       }
     }
-    copy(field = field, roundCounter = roundCounter, tmpCell = tmpCell).modeChoice()
+    copy(field = field, roundCounter = roundCounter, tmpCell = tmpCell, update = update).modeChoice()
   }
 
   def handleWinnerText(winner: Int = winner): String = {

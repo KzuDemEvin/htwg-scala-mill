@@ -1,6 +1,6 @@
 package de.htwg.se.mill.aview.gui
 
-import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, FieldChanged}
+import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, FieldChanged, StateChanged}
 
 import scala.swing.FlowPanel.Alignment
 import scala.swing.{BorderPanel, BoxPanel, Dimension, FlowPanel, Font, Frame, GridPanel, MainFrame, Orientation, TextField}
@@ -51,7 +51,7 @@ class GUI(controller: ControllerInterface) extends MainFrame {
 
   visible = true
 
-  val sizeDim = new Dimension(708, 840)
+  val sizeDim: Dimension = new Dimension(708, 840)
   size = sizeDim
   centerOnScreen()
   updateField()
@@ -59,6 +59,7 @@ class GUI(controller: ControllerInterface) extends MainFrame {
 
 
   reactions += {
+    case _: StateChanged => updateField(false)
     case _: CellChanged => updateField(false)
     case _: FieldChanged => updateField()
   }
