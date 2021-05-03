@@ -9,11 +9,11 @@ trait FieldInterface {
   def available(row: Int, col: Int): Boolean
   def set(row:Int, col:Int, c:Cell) : (FieldInterface, Boolean)
   def replace(row:Int, col:Int, c:Cell) : FieldInterface
-  def isNeighbour(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Boolean
   def fly(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):(FieldInterface, Boolean)
-  def checkIfCanMove(row: Int, col: Int): Boolean
   def moveStone(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int): (FieldInterface, Boolean)
-  def removeStone(row:Int, col:Int):(FieldInterface, Boolean)
+  def removeStone(row:Int, col:Int, ignore: Boolean = false):(FieldInterface, Boolean)
+  def isNeighbour(rowOld: Int, colOld: Int, rowNew: Int, colNew: Int):Boolean
+  def checkIfCanMove(row: Int, col: Int): Boolean
   def placedStones(): Int
   def placedWhiteStones():Int
   def placedBlackStones():Int

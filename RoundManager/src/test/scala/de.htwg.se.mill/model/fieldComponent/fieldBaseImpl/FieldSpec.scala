@@ -98,20 +98,20 @@ class FieldSpec extends AnyWordSpec with Matchers {
       }
       "should be able to check if there is a mill" should {
         "black mill" in {
-          var changedfield = new Field(normalSize).set(0, 0, Cell("cb"))._1
-          changedfield = changedfield.set(0, 3, Cell("cb"))._1
-          changedfield = changedfield.set(0, 6, Cell("cb"))._1
-          changedfield.checkMill(0, 0).millState should be(BlackMillState().handle)
+          var blackMillField = new Field(normalSize).set(0, 0, Cell("cb"))._1
+          blackMillField = blackMillField.set(0, 3, Cell("cb"))._1
+          blackMillField = blackMillField.set(0, 6, Cell("cb"))._1
+          blackMillField.checkMill(0, 0).millState should be(BlackMillState().handle)
         }
         "white mill" in {
-          var changedfield = new Field(normalSize).set(0, 0, Cell("cw"))._1
-          changedfield = changedfield.set(0, 3, Cell("cw"))._1
-          changedfield = changedfield.set(0, 6, Cell("cw"))._1
-          changedfield.checkMill(0, 0).millState should be(WhiteMillState().handle)
+          var whiteMillField = new Field(normalSize).set(0, 0, Cell("cw"))._1
+          whiteMillField = whiteMillField.set(0, 3, Cell("cw"))._1
+          whiteMillField = whiteMillField.set(0, 6, Cell("cw"))._1
+          whiteMillField.checkMill(0, 0).millState should be(WhiteMillState().handle)
         }
         "when its not even possible" in {
-          val changedField = new Field(normalSize)
-          changedField.checkMill(0, 1).millState should be(NoMillState().handle)
+          val noMillField = new Field(normalSize)
+          noMillField.checkMill(0, 1).millState should be(NoMillState().handle)
         }
       }
       "should create a new field" in {

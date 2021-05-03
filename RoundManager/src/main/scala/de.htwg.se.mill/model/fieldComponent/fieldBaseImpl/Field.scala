@@ -67,9 +67,9 @@ case class Field @Inject()(allCells: Matrix[Cell],
     copy().replace(rowOld, colOld, Cell("ce")).set(rowNew, colNew, cell(rowOld, colOld))
   }
 
-  def removeStone(row: Int, col: Int): (Field, Boolean) = {
+  def removeStone(row: Int, col: Int, ignore: Boolean = false): (Field, Boolean) = {
     val field = checkMill(row, col)
-    if (field.millState == NoMillState().handle) {
+    if (field.millState == NoMillState().handle || ignore) {
       (field.replace(row, col, Cell("ce")), true)
     } else {
       (field, false)

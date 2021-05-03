@@ -165,58 +165,91 @@ class RoundManagerControllerSpec extends AnyWordSpec with Matchers {
         "black wins" in {
           val field = new Field(7)
           val controller = new RoundManagerController(field)
-          controller.handleClick(0, 0)
-          controller.handleClick(6, 0)
-          controller.handleClick(0, 3)
-          controller.handleClick(6, 3)
-          controller.handleClick(0, 6)
+          controller.handleClick(0, 0) // w
+          controller.fieldAsString() should be("Mill Gameboard:\n w  -  -  o  -  -  o \n -  o  -  o  -  o  - " +
+            "\n -  -  o  o  o  -  - \n o  o  o  -  o  o  o \n -  -  o  o  o  -  - \n -  o  -  o  -  o  - \n o" +
+            "  -  -  o  -  -  o \n")
+          controller.handleClick(6, 0) // b
+          controller.handleClick(0, 3) // w
+          controller.handleClick(6, 3) // b
+          controller.handleClick(0, 6) // w
+          controller.mgr.field.millState should be ("White Mill")
           controller.handleClick(6, 3) //Remove
           controller.handleClick(6, 3)
           controller.handleClick(1, 1)
           controller.handleClick(6, 6)
+          controller.mgr.field.millState should be ("Black Mill")
           controller.handleClick(1, 1) //Remove
-          controller.handleClick(1, 1)
-          controller.handleClick(5, 1)
-          controller.handleClick(1, 3)
-          controller.handleClick(5, 3)
-          controller.handleClick(1, 5)
+          controller.handleClick(1, 1) // w
+          controller.handleClick(5, 1) // b
+          controller.handleClick(1, 3) // w
+          controller.handleClick(5, 3) // b
+          controller.handleClick(1, 5) // w
+          controller.mgr.field.millState should be ("White Mill")
           controller.handleClick(5, 3) //remove
           controller.handleClick(5, 3)
           controller.handleClick(2, 2)
           controller.handleClick(5, 5)
+          controller.mgr.field.millState should be ("Black Mill")
           controller.handleClick(2, 2) //remove
-          controller.handleClick(2, 2)
-          controller.handleClick(4, 2)
+          controller.handleClick(2, 2) // w
+          controller.handleClick(4, 2) // b
+          controller.mgr.roundCounter should be (18)
           controller.handleClick(2, 2); controller.handleClick(2, 3)
-          controller.handleClick(4, 2)
-          controller.handleClick(5, 3); controller.handleClick(4, 3)
-          controller.handleClick(2, 3); controller.handleClick(2, 2)
-          controller.handleClick(4, 3); controller.handleClick(5, 3)
+          controller.mgr.field.millState should be ("White Mill")
+          controller.handleClick(4, 2) // remove
+          controller.mgr.roundCounter should be (19)
+          controller.handleClick(5, 3); controller.handleClick(4, 3) // b
+          controller.mgr.roundCounter should be (20)
+          controller.handleClick(2, 3); controller.handleClick(2, 2) // w
+          controller.mgr.roundCounter should be (21)
+          controller.handleClick(4, 3); controller.handleClick(5, 3) // b
+          controller.mgr.field.millState should be ("Black Mill")
           controller.handleClick(2, 2) //remove
-          controller.handleClick(1, 3); controller.handleClick(2, 3)
-          controller.handleClick(5, 3); controller.handleClick(4, 3)
-          controller.handleClick(2, 3); controller.handleClick(2, 2)
-          controller.handleClick(6, 3); controller.handleClick(5, 3)
+          controller.mgr.roundCounter should be (22)
+          controller.handleClick(1, 3); controller.handleClick(2, 3) // w
+          controller.mgr.roundCounter should be (23)
+          controller.handleClick(5, 3); controller.handleClick(4, 3) // b
+          controller.mgr.roundCounter should be (24)
+          controller.handleClick(2, 3); controller.handleClick(2, 2) // w
+          controller.mgr.roundCounter should be (25)
+          controller.handleClick(6, 3); controller.handleClick(5, 3) // b
+          controller.mgr.field.millState should be ("Black Mill")
           controller.handleClick(2, 2) //remove
-          controller.handleClick(0, 3); controller.handleClick(1, 3)
+          controller.mgr.roundCounter should be (26)
+          controller.handleClick(0, 3); controller.handleClick(1, 3) // w
+          controller.mgr.field.millState should be ("White Mill")
           controller.handleClick(4, 3) //remove
-          controller.handleClick(5, 3); controller.handleClick(6, 3)
+          controller.mgr.roundCounter should be (27)
+          controller.handleClick(5, 3); controller.handleClick(6, 3) // b
+          controller.mgr.field.millState should be ("Black Mill")
           controller.handleClick(0, 0) //remove
-          controller.handleClick(1, 3); controller.handleClick(0, 3)
-          controller.handleClick(6, 3); controller.handleClick(5, 3)
+          controller.mgr.roundCounter should be (28)
+          controller.handleClick(1, 3); controller.handleClick(0, 3) // w
+          controller.mgr.roundCounter should be (29)
+          controller.handleClick(6, 3); controller.handleClick(5, 3) // b
+          controller.mgr.roundCounter should be (29)
+          controller.mgr.field.millState should be ("Black Mill")
           controller.handleClick(0, 6) //remove
-          controller.handleClick(0, 3); controller.handleClick(1, 3)
+          controller.mgr.roundCounter should be (30)
+          controller.handleClick(0, 3); controller.handleClick(1, 3) // w
+          controller.mgr.field.millState should be ("White Mill")
           controller.handleClick(6, 6) //remove
-          controller.handleClick(6, 0); controller.handleClick(3, 0)
+          controller.mgr.roundCounter should be (31)
+          controller.mgr.field.millState should be ("No Mill")
+          controller.handleClick(6, 0); controller.handleClick(3, 0) // b
 
-          controller.handleClick(1, 3); controller.handleClick(0, 3)
-          controller.handleClick(5, 3); controller.handleClick(6, 3)
+          controller.handleClick(1, 3); controller.handleClick(0, 3) // w
+          controller.handleClick(5, 3); controller.handleClick(6, 3) // b
 
-          controller.handleClick(0, 3); controller.handleClick(1, 3)
+          controller.handleClick(0, 3); controller.handleClick(1, 3) // w
+          controller.mgr.field.millState should be ("White Mill")
           controller.handleClick(3, 0) //remove
-          controller.handleClick(6, 3); controller.handleClick(5, 3)
+          controller.mgr.field.millState should be ("No Mill")
+          controller.handleClick(6, 3); controller.handleClick(5, 3) // b
           controller.handleClick(1, 1) //remove
-          // controller.mgr.winner should be(2) // TODO should be fixed!!
+          controller.mgr.winner should be(2)
+          controller.mgr.winnerText should be("Black wins!")
         }
         "white wins" in {
           val field = new Field(7)
@@ -277,7 +310,8 @@ class RoundManagerControllerSpec extends AnyWordSpec with Matchers {
           controller.handleClick(0, 0) //remove
           controller.mgr.winner should be(0)
           controller.handleClick(5, 3) //remove
-          // controller.mgr.winner should be(1) // TODO should be fixed!!
+          controller.mgr.winner should be(1)
+          controller.mgr.winnerText should be("White wins!")
         }
       }
     }

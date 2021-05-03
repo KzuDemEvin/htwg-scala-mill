@@ -17,10 +17,10 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
   doStep()
 
   def handleClick(row: Int, col: Int): String = {
-    print(s"HandleClick called!\n")
+    print(s"HandleClick at position ($row, $col) called!\t")
     mgr = mgr.handleClick(row, col)
+    print(s"Round: ${mgr.roundCounter} \tMill: ${mgr.field.millState}\n")
     doStep()
-    print(mgr.update)
     new Gson().toJson(mgr.update)
   }
 

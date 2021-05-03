@@ -96,7 +96,8 @@ case class RoundManager(field: FieldInterface,
 
     val cellColor: Color.Value = field.cell(row, col).content.color
     if ((cellColor == Color.black && mgr.whiteTurn()) || (cellColor == Color.white && mgr.blackTurn())) {
-      val (rField, rSuccessfullyRemoved) = field.removeStone(row, col)
+      val ignore: Boolean = field.placedBlackStones() <= 3 && field.placedWhiteStones() <= 3
+      val (rField, rSuccessfullyRemoved) = field.removeStone(row, col, ignore)
       if (rSuccessfullyRemoved) {
         field = rField.resetMill()
         roundCounter += 1
