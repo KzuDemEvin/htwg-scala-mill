@@ -1,5 +1,12 @@
 package de.htwg.se.mill.controller.controllerRoundManager
 
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
+import akka.http.javadsl.settings.ConnectionPoolSettings
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.{HttpMethod, HttpRequest, HttpResponse}
+import akka.http.scaladsl.model.HttpMethods.GET
+import akka.http.scaladsl.unmarshalling.Unmarshal
 import com.google.gson.Gson
 import com.google.inject.name.Names
 import com.google.inject.{Guice, Inject, Injector}
@@ -8,12 +15,17 @@ import de.htwg.se.mill.model.fieldComponent.{Cell, Color, FieldInterface}
 import de.htwg.se.mill.model.roundManagerComponent.RoundManager
 import de.htwg.se.mill.util.UndoManager
 import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
-import play.api.libs.json.{JsNumber, JsValue, JsString, Json}
+import play.api.libs.json.{JsNumber, JsString, JsValue, Json}
+
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContextExecutor, Future}
+import scala.util.{Failure, Success}
 
 class RoundManagerController @Inject()(var field: FieldInterface) extends RoundManagerControllerInterface {
   var mgr: RoundManager = RoundManager(field)
   val injector: Injector = Guice.createInjector(new RoundManagerModule)
   private val undoManager: UndoManager = new UndoManager
+  val playerHttpServer: String = sys.env.getOrElse("PLAYERHTTPSERVER", "localhost:8081")
   doStep()
 
   def handleClick(row: Int, col: Int): String = {
@@ -80,7 +92,15 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
   }
   def winnerText(): String = {
     print(s"WinnerText called!\n")
-    new Gson().toJson(mgr.winnerText)
+    val player: String = blockRequest(s"http://${playerHttpServer}/player/name?number=${winner+1}", GET, s"Player ${(mgr.winner % 2) + 1}")
+    val winnerText: String = {
+      mgr.winner match {
+        case 2 => " wins! (white)"
+        case 1 => " wins! (black)"
+        case _ => "No Winner"
+      }
+    }
+    new Gson().toJson(player + winnerText)
   }
   def cell(row: Int, col: Int): Cell = {
     print(s"Cell at position ($row, $col) called!\n")
@@ -148,4 +168,34 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
   def fieldAsHtml(): String = mgr.field.toHtml
 
   def fieldAsString(): String = mgr.field.toString
+
+  private def sendRequest(uri: String, method: HttpMethod, errMsg: String = "Something went wrong."): Future[HttpResponse] = {
+    implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
+    implicit val executionContext: ExecutionContextExecutor = system.executionContext
+    Http().singleRequest(HttpRequest(method = method, uri = uri))
+  }
+
+  private def unmarshal(value: HttpResponse): Future[String] = {
+    implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
+    implicit val executionContext: ExecutionContextExecutor = system.executionContext
+    Unmarshal(value.entity).to[String]
+  }
+
+  private def blockRequest(uri: String, method: HttpMethod, failed: String = ""): String = {
+    block(sendRequest(uri, method)) match {
+      case Some(response) =>
+        block(unmarshal(response)) match {
+          case Some(unpackedString) => unpackedString
+          case None => failed
+        }
+      case None => failed
+    }
+  }
+
+  private def block[T](future: Future[T]): Option[T] = {
+    Await.ready(future, Duration.Inf).value.get match {
+      case Success(s) => Some(s)
+      case Failure(_) => None
+    }
+  }
 }

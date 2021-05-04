@@ -1,5 +1,6 @@
 package de.htwg.se.mill.controller.controllerRoundManager
 
+import com.google.gson.Gson
 import de.htwg.se.mill.model.fieldComponent.Color
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
 
@@ -159,7 +160,7 @@ class RoundManagerControllerSpec extends AnyWordSpec with Matchers {
         controller.handleClick(0, 6) ; controller.handleClick(5, 1) // black
         controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
         controller.handleClick(5, 1) // remove
-        controller.mgr.winner should be(1) // white winner
+        controller.mgr.winner should be(2) // white winner
       }
       "check if at the end a player is choosing a stone in a mill to remove and to win" should {
         "black wins" in {
@@ -248,8 +249,8 @@ class RoundManagerControllerSpec extends AnyWordSpec with Matchers {
           controller.mgr.field.millState should be ("No Mill")
           controller.handleClick(6, 3); controller.handleClick(5, 3) // b
           controller.handleClick(1, 1) //remove
-          controller.mgr.winner should be(2)
-          controller.mgr.winnerText should be("Black wins!")
+          controller.mgr.winner should be(1)
+          controller.winnerText() should be(new Gson().toJson("Player 2 wins! (black)"))
         }
         "white wins" in {
           val field = new Field(7)
@@ -310,8 +311,8 @@ class RoundManagerControllerSpec extends AnyWordSpec with Matchers {
           controller.handleClick(0, 0) //remove
           controller.mgr.winner should be(0)
           controller.handleClick(5, 3) //remove
-          controller.mgr.winner should be(1)
-          controller.mgr.winnerText should be("White wins!")
+          controller.mgr.winner should be(2)
+          controller.winnerText() should be(new Gson().toJson("Player 1 wins! (white)"))
         }
       }
     }

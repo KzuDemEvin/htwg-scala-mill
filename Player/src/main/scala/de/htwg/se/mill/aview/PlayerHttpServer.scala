@@ -39,6 +39,13 @@ class PlayerHttpServer(playerController: PlayerControllerInterface) {
             }
           }
         } ~
+          path(uriPath / "name") {
+            get {
+              parameters("number") {
+                number => postResponse(playerController.getPlayer(number.toInt).name)
+              }
+            }
+          } ~
           path(uriPath / "sqldb") {
             get {
               parameters("id") {
