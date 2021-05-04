@@ -320,6 +320,7 @@ class RoundManagerControllerSpec extends AnyWordSpec with Matchers {
           controller.mgr.winner should be(0)
           controller.handleClick(5, 3) //remove
           controller.mgr.winner should be(2)
+          controller.winner() should be(new Gson().toJson(2))
           controller.winnerText() should be(new Gson().toJson("Player 1 wins! (white)"))
         }
       }
