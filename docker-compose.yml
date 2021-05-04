@@ -53,19 +53,6 @@ services:
     ports:
       - "8083:8083"
 
-  roundmanagerdb:
-    image: mysql
-    restart: always
-    ports:
-      - "3309:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: ROUNDMANAGER
-      MYSQL_DATABASE: roundmanager
-      MYSQL_USER: roundmanager
-      MYSQL_PASSWORD: roundmanager
-    volumes:
-      - .:/var/lib/roundmanager
-
   rootdb:
     image: mysql
     restart: always

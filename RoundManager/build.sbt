@@ -1,5 +1,7 @@
 // RoundManager
 
+enablePlugins(JavaAppPackaging)
+
 val commonDependencies = Seq(
   "org.scalactic" %% "scalactic" % "3.1.2",
   "org.scalatest" %% "scalatest" % "3.1.2" % "test",
@@ -11,7 +13,10 @@ val commonDependencies = Seq(
   "com.typesafe.akka" %% "akka-actor-typed" % "2.6.8",
   "com.typesafe.akka" %% "akka-stream" % "2.6.8",
   "com.typesafe.akka" %% "akka-http" % "10.2.4",
-  "com.google.code.gson" % "gson" % "2.8.6"
+  "com.google.code.gson" % "gson" % "2.8.6",
+  "com.typesafe.slick" %% "slick" % "3.3.3",
+  "org.slf4j" % "slf4j-nop" % "1.7.30" % Test,
+  "mysql" % "mysql-connector-java" % "8.0.24"
 )
 
 lazy val roundManager = (project in file(".")).settings(
@@ -21,3 +26,8 @@ lazy val roundManager = (project in file(".")).settings(
   scalaVersion  := "2.13.2",
   libraryDependencies ++= commonDependencies
 )
+  .enablePlugins(sbtdocker.DockerPlugin, JavaAppPackaging)
+  .settings(dockerBaseImage := "hseeberger/scala-sbt:8u222_1.3.5_2.13.1")
+  .settings(daemonUser in Docker := "sbtuser")
+  .settings(mainClass in Compile := Some("de.htwg.se.mill.RoundManager"))
+  .settings(dockerExposedPorts := Seq(8083))
