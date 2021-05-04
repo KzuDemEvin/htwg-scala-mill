@@ -10,29 +10,13 @@ class ControllerSpec extends AnyWordSpec with Matchers {
   val normalSize = 7
   "A Controller" when {
     "new" should {
-      /*
       val controllerUndoRedo = new Controller
-       "handle undo/redo correctly on an empty undo-stack" in {
-        controllerUndoRedo.cell(0, 0).isSet should be(false)
-        controllerUndoRedo.undo
-        controllerUndoRedo.cell(0, 0).isSet should be(false)
-        controllerUndoRedo.mgr.roundCounter should be(0)
-        controllerUndoRedo.redo
-        controllerUndoRedo.field.cell(0, 0).isSet should be(false)
-        controllerUndoRedo.mgr.roundCounter should be(0)
+       "be able to undo and redo" in {
+         controllerUndoRedo.undo
+         controllerUndoRedo.gameState should be("Undo")
+         controllerUndoRedo.redo
+         controllerUndoRedo.gameState should be("Redo")
       }
-      "handle undo/redo of setting a cell correctly" in {
-        controllerUndoRedo.handleClickSync(0, 0)
-        controllerUndoRedo.cell(0, 0).isSet should be(true)
-        controllerUndoRedo.cell(0, 0).content.color should be(Color.white)
-        controllerUndoRedo.undo
-        controllerUndoRedo.cell(0, 0).isSet should be(false)
-        controllerUndoRedo.cell(0, 0).content.color should be(Color.noColor)
-        controllerUndoRedo.redo
-        controllerUndoRedo.cell(0, 0).isSet should be(true)
-        controllerUndoRedo.cell(0, 0).content.color should be(Color.white)
-        controllerUndoRedo.gameState should be("Redo")
-      } */
     }
     "ready to play" should {
       val controller = new Controller

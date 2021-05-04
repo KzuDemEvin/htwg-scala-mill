@@ -88,10 +88,10 @@ class Controller extends ControllerInterface with Publisher {
 
   def undo(): Unit = {
     asyncRequest(s"http://${roundManagerHttpServer}/undo", POST)(_ => {
-      print("Hello!")
       turn()
       publish(new FieldChanged)
     })
+    gameState = GameState.handle(UndoState())
   }
 
   def redo(): Unit = {
@@ -99,6 +99,7 @@ class Controller extends ControllerInterface with Publisher {
       turn()
       publish(new FieldChanged)
     })
+    gameState = GameState.handle(RedoState())
   }
 
   def save(): Unit = {
