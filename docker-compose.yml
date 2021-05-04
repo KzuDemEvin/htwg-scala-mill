@@ -1,18 +1,18 @@
 version: "3.9"
 
 services:
-  playerdb:
+  db:
     image: mysql
     restart: always
     ports:
-      - "3307:3306"
+      - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: PLAYER
-      MYSQL_DATABASE: player
-      MYSQL_USER: player
-      MYSQL_PASSWORD: player
+      MYSQL_ROOT_PASSWORD: MILL
+      MYSQL_DATABASE: mill
+      MYSQL_USER: mill
+      MYSQL_PASSWORD: mill
     volumes:
-      - .:/var/lib/player
+      - .:/var/lib/mill
 
   player:
     build:
@@ -20,20 +20,9 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      - playerdb
+      - db
     environment:
-      - DATABASE_HOST=playerdb:3307
-
-  fileiodb:
-    image: mysql
-    restart: always
-    ports:
-      - "3308:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: FILEIO
-      MYSQL_DATABASE: fileio
-    volumes:
-      - .:/var/lib/fileio
+      - DATABASE_HOST=db:3306
 
   fileio:
     build:
@@ -41,9 +30,9 @@ services:
     ports:
       - "8082:8082"
     depends_on:
-      - fileiodb
+      - db
     environment:
-      - DATABASE_HOST=fileiodb:3308
+      - DATABASE_HOST=db:3306
     volumes:
       - .:/gameSaves
 
