@@ -12,9 +12,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
 case class PlayerDaoSlick() extends PlayerDaoInterface {
-  val databaseUrl: String = "jdbc:mysql://" + sys.env.getOrElse("DATABASE_HOST", "localhost:3307") + "/" + sys.env.getOrElse("MYSQL_DATABASE", "player") + "?serverTimezone=UTC&useSSL=false"
+  val databaseUrl: String = "jdbc:mysql://" + sys.env.getOrElse("DATABASE_HOST", "localhost:3306") + "/" + sys.env.getOrElse("MYSQL_DATABASE", "mill") + "?serverTimezone=UTC&useSSL=false"
   val databaseUser: String = sys.env.getOrElse("MYSQL_USER", "root")
-  val databasePassword: String = sys.env.getOrElse("MYSQL_PASSWORD", "PLAYER")
+  val databasePassword: String = sys.env.getOrElse("MYSQL_PASSWORD", "MILL")
 
   val database: JdbcBackend.DatabaseDef = Database.forURL(
     url = databaseUrl,
