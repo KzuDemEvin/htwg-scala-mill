@@ -118,6 +118,10 @@ class FieldSpec extends AnyWordSpec with Matchers {
         val newfield = normalField.createNewField
         newfield.placedBlackStones() should be(0)
       }
+      "should print out field as html" in {
+        val field = new Field(normalSize)
+        field.toHtml should be("<p  style=\"font-family:'Lucida Console',monospace\"> " + field.toString.replace("\n", "<br>") + "</p>")
+      }
     }
   }
 }

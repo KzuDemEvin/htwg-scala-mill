@@ -1,8 +1,9 @@
 package de.htwg.se.mill.model.roundManagerComponent
 
+import de.htwg.se.mill.model._
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
 import de.htwg.se.mill.model.fieldComponent.{Color, _}
-import de.htwg.se.mill.model._
+import play.api.libs.json.Json
 
 case class RoundManager(field: FieldInterface,
                         player1Mode: String = ModeState.handle(SetModeState()),
@@ -11,7 +12,7 @@ case class RoundManager(field: FieldInterface,
                         roundCounter: Int = 0,
                         setCounter: Int = 0,
                         borderToMoveMode: Int = 18,
-                        update: Int = 0,
+                        update: (Int, Int) = (-1, -1),
                         winner: Int = 0,
                         winnerText: String = "No Winner") {
 
@@ -66,12 +67,15 @@ case class RoundManager(field: FieldInterface,
     copy(player1Mode = player1Mode, player2Mode = player2Mode)
   }
 
+  private def updateSingleCell(): RoundManager = copy(update = (-1, -1))
+
+  private def updateAllCells(): RoundManager = copy(update = (-2, -2))
+
   private def set(cell: (Int, Int)): RoundManager = {
     val mgr: RoundManager = copy()
     var field: FieldInterface = mgr.field
     var roundCounter: Int = mgr.roundCounter
     val (row, col): (Int, Int) = cell
-    var update: Int = 0
 
     if (field.available(row, col) && field.millState == "No Mill") {
       // set cell normally
@@ -81,10 +85,9 @@ case class RoundManager(field: FieldInterface,
         if (field.millState == "No Mill") {
           roundCounter += 1
         }
-        update = 1
       }
     }
-    copy(field = field, roundCounter = roundCounter, update = update).checkWinner().modeChoice()
+    copy(field = field, roundCounter = roundCounter).updateSingleCell()
   }
 
   private def remove(cell: (Int, Int)): RoundManager = {
@@ -104,7 +107,7 @@ case class RoundManager(field: FieldInterface,
         update = 2
       }
     }
-    copy(field = field, roundCounter = roundCounter, update = update)
+    copy(field = field, roundCounter = roundCounter).updateSingleCell()
   }
 
   private def checkIfCanMove(): Boolean = {
@@ -173,8 +176,14 @@ case class RoundManager(field: FieldInterface,
         tmpCell = cell
       }
     }
-    copy(field = field, roundCounter = roundCounter, tmpCell = tmpCell, update = update).modeChoice()
+    copy(field = field, roundCounter = roundCounter, tmpCell = tmpCell, update = mgr.tmpCell)
   }
+
+  def updateToJson(): String = Json.prettyPrint(
+    Json.obj(
+      "row" -> update._1,
+      "col" -> update._2
+    ))
 
   def handleWinnerText(winner: Int = winner): String = {
     winner match {

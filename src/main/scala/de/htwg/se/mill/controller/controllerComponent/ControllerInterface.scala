@@ -29,6 +29,6 @@ trait ControllerInterface extends Publisher {
   def getMillState(oncomplete: Option[String] => Unit): Unit
 }
 
-class StateChanged extends Event
-class CellChanged extends Event
+case class TwoCellsChanged(cell: (Int, Int)) extends Event
+class CellChanged extends Event // could be case class
 class FieldChanged extends Event

@@ -7,7 +7,6 @@ import de.htwg.se.mill.model.fileIoComponent.fileIoJsonImpl.FileIO
 
 class FileIOController(daoInterface: FileIODaoInterface) extends FileIOControllerInterface {
   val fileIO = new FileIO
-  val gson = new Gson
 
   override def load(filename: Option[String]): String = fileIO.load(filename)
 
@@ -20,6 +19,6 @@ class FileIOController(daoInterface: FileIODaoInterface) extends FileIOControlle
   override def loadSqlDb(): Map[Int, String] = daoInterface.load()
 
   override def toJson(fields: Map[Int, String]): String = {
-    gson.toJson(fields)
+    new Gson().toJson(fields)
   }
 }

@@ -43,6 +43,9 @@ class FileIOHttpServer(controller: FileIOControllerInterface) {
               complete("")
             }
           }
+        } ~
+        path("") {
+          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>Player Server</h1>"))
         }
     )
   val bindingFuture: Future[Http.ServerBinding] = Http().newServerAt(interface, port).bind(route)

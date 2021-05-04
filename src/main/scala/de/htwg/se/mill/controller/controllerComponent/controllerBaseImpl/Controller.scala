@@ -7,7 +7,7 @@ import akka.http.scaladsl.model.HttpMethods.{GET, POST}
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import de.htwg.se.mill.controller.controllerComponent._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContextExecutor, Future}
@@ -68,20 +68,23 @@ class Controller extends ControllerInterface with Publisher {
     case Some(_) =>
     case None =>
   }): Unit =
-    asyncRequest(s"http://${roundManagerHttpServer}/handleClick?row=$row&col=$col", POST)(value => {
+    asyncRequest(s"http://$roundManagerHttpServer/handleClick?row=$row&col=$col", POST)(value => {
       oncomplete(value)
       turn()
       value match {
-        case Some(changeType) =>
-          changeType.toInt match {
-            case 0 => publish(new StateChanged)
-            case 1 => publish(new CellChanged)
+        case Some(cell) =>
+          val json: JsValue = Json.parse(cell)
+          val parsedCell = ((json \ "row").get.toString.toInt, (json \ "col").get.toString.toInt)
+          parsedCell match {
+            case (-1, -1) => publish(new CellChanged)
+            case (row, col) => publish(TwoCellsChanged(row, col))
             case _ => publish(new FieldChanged)
           }
       }
     })
 
   def handleClickSync(row: Int, col: Int): String = {
+    // TODO handle return value
     val field = blockRequest(s"http://${roundManagerHttpServer}/handleClick?row=$row&col=$col", POST)
     turn()
     publish(new CellChanged)
@@ -104,18 +107,26 @@ class Controller extends ControllerInterface with Publisher {
   }
 
   def save(): Unit = {
-    val field: String = blockRequest(s"http://${roundManagerHttpServer}/field/json", GET)
-    Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://${fileIOHttpServer}/json", entity = Json.prettyPrint(Json.parse(field))))
-    gameState = GameState.handle(SaveState())
-    publish(new CellChanged)
+    val field: String = blockRequest(s"http://${roundManagerHttpServer}/field/json", GET, "failed")
+    if (field != "failed") {
+      Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://${fileIOHttpServer}/json", entity = Json.prettyPrint(Json.parse(field))))
+      gameState = GameState.handle(SaveState())
+      publish(new CellChanged)
+    } else {
+      print(s"Saving failed!")
+    }
   }
 
   def load(): Unit = {
     gameState = GameState.handle(LoadState())
-    val field: String = blockRequest(s"http://${fileIOHttpServer}/json", GET)
-    Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://${roundManagerHttpServer}/field/setField", entity = Json.prettyPrint(Json.parse(field))))
-    gameState = GameState.handle(LoadState())
-    publish(new FieldChanged)
+    val field: String = blockRequest(s"http://${fileIOHttpServer}/json", GET, "failed")
+    if (field != "failed") {
+      Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://${roundManagerHttpServer}/field/setField", entity = Json.prettyPrint(Json.parse(field))))
+      gameState = GameState.handle(LoadState())
+      publish(new FieldChanged)
+    } else {
+      print(s"Loading failed!")
+    }
   }
 
   def isSet(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://${roundManagerHttpServer}/field/isSet?row=$row&col=$col")(oncomplete)

@@ -31,6 +31,11 @@ class PlayerSpec extends AnyWordSpec with Matchers {
           player1.toString should be("Name: Kevin, Amount of Stones: 9")
         }
       }
+      "be able to change its mode" in {
+        var player = Player.apply("Josef")
+        player = player.changeMode("Chilling'")
+        player.mode should be("Chilling'")
+      }
     }
   }
 }

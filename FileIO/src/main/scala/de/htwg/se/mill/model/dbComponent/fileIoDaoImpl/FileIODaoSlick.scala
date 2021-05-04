@@ -34,7 +34,7 @@ case class FileIODaoSlick() extends FileIODaoInterface {
 
   override def load(fieldId: Int): String = {
     val fileIOIdQuery = fileIOTable.filter(_.id === fieldId).result.head
-    val fileIO@(id, field) = Await.result(database.run(fileIOIdQuery), Duration.Inf)
+    val (_, field) = Await.result(database.run(fileIOIdQuery), Duration.Inf)
     field
   }
 

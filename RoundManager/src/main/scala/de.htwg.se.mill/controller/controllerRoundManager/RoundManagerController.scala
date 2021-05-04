@@ -21,7 +21,7 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
     mgr = mgr.handleClick(row, col)
     print(s"Round: ${mgr.roundCounter} \tMill: ${mgr.field.millState}\n")
     doStep()
-    new Gson().toJson(mgr.update)
+    mgr.updateToJson()
   }
 
   def doStep(): String = {
@@ -70,26 +70,32 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
     print(s"Turn called!\n")
     new Gson().toJson(if (mgr.blackTurn()) "Black" else "White")
   }
+
   def roundCounter(): String = {
     print(s"RoundCounter called!\n")
     new Gson().toJson(mgr.roundCounter)
   }
+
   def winner(): String = {
     print(s"Winner called!\n")
     new Gson().toJson(mgr.winner)
   }
+
   def winnerText(): String = {
     print(s"WinnerText called!\n")
     new Gson().toJson(mgr.winnerText)
   }
+
   def cell(row: Int, col: Int): Cell = {
     print(s"Cell at position ($row, $col) called!\n")
     mgr.field.cell(row, col)
   }
+
   def isSet(row: Int, col: Int): String = {
     print(s"IsSet at position ($row, $col) called!\n")
     new Gson().toJson(cell(row, col).isSet)
   }
+
   def color(row: Int, col: Int): String = {
     print(s"Color at position ($row, $col) called!\n")
     new Gson().toJson(cell(row, col).content.color match {
@@ -97,7 +103,9 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
       case Color.white => 0
     })
   }
+
   def possiblePosition(row: Int, col: Int): String = new Gson().toJson(mgr.field.possiblePosition(row, col))
+
   def millState(): String = new Gson().toJson(mgr.field.millState)
 
   def fieldAsJson(): String = {
@@ -132,9 +140,9 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
     val injector = Guice.createInjector(new RoundManagerModule)
     var newField = injector.instance[FieldInterface](Names.named("normal"))
     for (index <- 0 until newField.size * newField.size) {
-      val row = (json \\ "row")(index).as[Int]
-      val col = (json \\ "col")(index).as[Int]
-      val color = (json \\ "color")(index).toString().replaceAll("\"", "")
+      val row = (json \\ "row") (index).as[Int]
+      val col = (json \\ "col") (index).as[Int]
+      val color = (json \\ "color") (index).toString().replaceAll("\"", "")
       newField = color match {
         case "white" => newField.set(row, col, Cell("cw"))._1
         case "black" => newField.set(row, col, Cell("cb"))._1
