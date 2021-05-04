@@ -15,11 +15,9 @@ import scala.swing.Publisher
 import scala.util.{Failure, Success}
 
 class Controller extends ControllerInterface with Publisher {
-  // private val undoManager = new UndoManager
   implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
   implicit val executionContext: ExecutionContextExecutor = system.executionContext
   var gameState: String = GameState.handle(NewState())
-  // var cachedField: Option[JsValue] = None
   var cachedFieldAsHtml: String = ""
 
 
@@ -93,10 +91,10 @@ class Controller extends ControllerInterface with Publisher {
 
   def undo(): Unit = {
     asyncRequest(s"http://${roundManagerHttpServer}/undo", POST)(_ => {
-      print("Hello!")
       turn()
       publish(new FieldChanged)
     })
+    gameState = GameState.handle(UndoState())
   }
 
   def redo(): Unit = {
@@ -104,6 +102,7 @@ class Controller extends ControllerInterface with Publisher {
       turn()
       publish(new FieldChanged)
     })
+    gameState = GameState.handle(RedoState())
   }
 
   def save(): Unit = {

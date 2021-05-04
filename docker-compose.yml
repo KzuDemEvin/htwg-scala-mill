@@ -41,13 +41,16 @@ services:
       context: ./RoundManager
     ports:
       - "8083:8083"
+    depends_on:
+      - player
+    environment:
+      - PLAYERHTTPSERVER=player:8081
 
   root:
     build: .
     ports:
       - "8080:8080"
     depends_on:
-      - player
       - fileio
       - roundmanager
     environment:

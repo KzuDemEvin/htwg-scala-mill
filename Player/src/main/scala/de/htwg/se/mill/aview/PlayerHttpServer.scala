@@ -8,12 +8,12 @@ import akka.http.scaladsl.{Http, server}
 import de.htwg.se.mill.controller.PlayerControllerInterface
 
 class PlayerHttpServer(playerController: PlayerControllerInterface) {
-  implicit val system = ActorSystem(Behaviors.empty, "player")
-  implicit val executionContext = system.executionContext
+    implicit val system = ActorSystem(Behaviors.empty, "player")
+    implicit val executionContext = system.executionContext
 
-  val interface: String = "0.0.0.0"
-  val port: Int = 8081
-  val uriPath: String = "player"
+    val interface: String = "0.0.0.0"
+    val port: Int = 8081
+    val uriPath: String = "player"
 
   val route =
     concat(
@@ -39,6 +39,13 @@ class PlayerHttpServer(playerController: PlayerControllerInterface) {
             }
           }
       } ~
+          path(uriPath / "name") {
+            get {
+              parameters("number") {
+                number => postResponse(playerController.getPlayer(number.toInt).name)
+              }
+            }
+          } ~
         path(uriPath / "sqldb") {
           get {
             parameters("id") {
