@@ -13,7 +13,7 @@ case class RoundManager(field: FieldInterface,
                         borderToMoveMode: Int = 18,
                         update: Int = 0,
                         winner: Int = 0,
-                       @Deprecated winnerText: String = "No Winner") {
+                       @deprecated winnerText: String = "No Winner") {
 
   def this() {
     this(field = new Field(size = 7))
@@ -176,7 +176,7 @@ case class RoundManager(field: FieldInterface,
     copy(field = field, roundCounter = roundCounter, tmpCell = tmpCell, update = update).modeChoice()
   }
 
-  @Deprecated
+  @deprecated
   def handleWinnerText(winner: Int = winner): String = {
     winner match {
       case 0 => "No Winner"
