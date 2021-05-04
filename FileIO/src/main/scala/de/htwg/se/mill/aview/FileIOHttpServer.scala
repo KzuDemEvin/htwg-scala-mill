@@ -7,6 +7,8 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives._
 import de.htwg.se.mill.controller.FileIOControllerInterface
 
+import scala.concurrent.Future
+
 class FileIOHttpServer(controller: FileIOControllerInterface) {
   implicit val system = ActorSystem(Behaviors.empty, "fileIo")
   implicit val executionContext = system.executionContext
@@ -27,9 +29,23 @@ class FileIOHttpServer(controller: FileIOControllerInterface) {
             complete("")
           }
         }
-      }
+      } ~
+        path(uriPath / "sqldb") {
+          get {
+            parameters("id") {
+              id => complete(HttpEntity(ContentTypes.`application/json`, controller.loadSqlDb(id.toInt)))
+            } ~
+              complete(HttpEntity(ContentTypes.`application/json`, controller.toJson(controller.loadSqlDb())))
+          } ~
+          post {
+            entity(as[String]) { fieldInJson =>
+              controller.saveSqlDb(fieldInJson)
+              complete("")
+            }
+          }
+        }
     )
-  val bindingFuture = Http().newServerAt(interface, port).bind(route)
+  val bindingFuture: Future[Http.ServerBinding] = Http().newServerAt(interface, port).bind(route)
 
   println(s"FileIOs server is online at http://${interface}:${port}/${uriPath}")
 }

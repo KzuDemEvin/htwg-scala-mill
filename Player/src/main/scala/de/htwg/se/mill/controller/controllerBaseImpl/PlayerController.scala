@@ -2,11 +2,13 @@ package de.htwg.se.mill.controller.controllerBaseImpl
 
 import com.google.gson.Gson
 import de.htwg.se.mill.controller.PlayerControllerInterface
+import de.htwg.se.mill.model.dbComponent.PlayerDaoInterface
 import de.htwg.se.mill.model.playerComponent.Player
 
-class PlayerController extends PlayerControllerInterface {
+class PlayerController(daoInterface: PlayerDaoInterface) extends PlayerControllerInterface {
   var player1: Player = Player(name = "No name")
   var player2: Player = Player(name = "No name")
+  val gson = new Gson
 
   override def createPlayer(number: Int, name: String): Player = {
     print(s"Creating Player ${number}!\n")
@@ -50,8 +52,21 @@ class PlayerController extends PlayerControllerInterface {
     }
   }
 
-  override def toJson(player: Player): String = {
-    val gson = new Gson
-    gson.toJson(player)
+  override def save(number: Int): Unit = daoInterface.save(getPlayer(number))
+
+  override def load(id: Int): Player = {
+    val player = daoInterface.load(id)
+    /*if (id % 2 == 0) {
+      player1 = player
+    } else {
+      player2 = player
+    } */
+    player
   }
+
+  override def load(): Map[Int, Player] = daoInterface.load()
+
+  override def toJson(player: Player): String = gson.toJson(player)
+
+  override def toJson(players: Map[Int, Player]): String = gson.toJson(players)
 }

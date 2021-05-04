@@ -1,28 +1,88 @@
 version: "3.8"
 
 services:
+  playerdb:
+    image: mysql
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: PLAYER
+      MYSQL_DATABASE: player
+      MYSQL_USER: player
+      MYSQL_PASSWORD: player
+    volumes:
+      - .:/var/lib/player
+
   player:
     build:
       context: ./Player
     ports:
       - "8081:8081"
+    depends_on:
+      - playerdb
+    environment:
+      - DATABASE_HOST=playerdb:3307
+
+  fileiodb:
+    image: mysql
+    restart: always
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: FILEIO
+      MYSQL_DATABASE: fileio
+    volumes:
+      - .:/var/lib/fileio
+
   fileio:
     build:
       context: ./FileIO
     ports:
       - "8082:8082"
+    depends_on:
+      - fileiodb
+    environment:
+      - DATABASE_HOST=fileiodb:3308
     volumes:
       - .:/gameSaves
+
   roundmanager:
     build:
       context: ./RoundManager
     ports:
       - "8083:8083"
+
+  roundmanagerdb:
+    image: mysql
+    restart: always
+    ports:
+      - "3309:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ROUNDMANAGER
+      MYSQL_DATABASE: roundmanager
+      MYSQL_USER: roundmanager
+      MYSQL_PASSWORD: roundmanager
+    volumes:
+      - .:/var/lib/roundmanager
+
+  rootdb:
+    image: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ROOT
+      MYSQL_DATABASE: rootDb
+    volumes:
+      - .:/var/lib/root
+
   root:
     build: .
     ports:
       - "8080:8080"
     depends_on:
+      - rootdb
       - player
       - fileio
       - roundmanager
