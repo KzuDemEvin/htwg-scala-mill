@@ -15,11 +15,9 @@ import scala.swing.Publisher
 import scala.util.{Failure, Success}
 
 class Controller extends ControllerInterface with Publisher {
-  // private val undoManager = new UndoManager
   implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
   implicit val executionContext: ExecutionContextExecutor = system.executionContext
   var gameState: String = GameState.handle(NewState())
-  // var cachedField: Option[JsValue] = None
   var cachedFieldAsHtml: String = ""
 
 
