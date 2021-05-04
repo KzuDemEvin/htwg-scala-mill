@@ -47,23 +47,11 @@ services:
     volumes:
       - .:/gameSaves
 
-  rootdb:
-    image: mysql
-    restart: always
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: ROOT
-      MYSQL_DATABASE: rootDb
-    volumes:
-      - .:/var/lib/root
-
   root:
     build: .
     ports:
       - "8080:8080"
     depends_on:
-      - rootdb
       - player
       - fileio
     environment:
