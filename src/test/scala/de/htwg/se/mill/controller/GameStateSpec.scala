@@ -31,6 +31,14 @@ class GameStateSpec extends AnyWordSpec with Matchers {
         val gameStateLoad = GameState.handle(LoadState())
         gameStateLoad should be("Game loaded")
       }
+      "say its in Undo State" in {
+        val gameStateLoad = GameState.handle(UndoState())
+        gameStateLoad should be("Undo")
+      }
+      "say its in Redo State" in {
+        val gameStateLoad = GameState.handle(RedoState())
+        gameStateLoad should be("Redo")
+      }
     }
 
   }
