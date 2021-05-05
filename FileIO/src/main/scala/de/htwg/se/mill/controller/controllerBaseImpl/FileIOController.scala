@@ -7,6 +7,8 @@ import de.htwg.se.mill.FileIOModule
 import de.htwg.se.mill.controller.FileIOControllerInterface
 import de.htwg.se.mill.model.dbComponent.FileIODaoInterface
 import de.htwg.se.mill.model.fileIoComponent.fileIoJsonImpl.FileIO
+import net.codingwell.scalaguice.InjectorExtensions._
+import com.google.inject.{Guice, Inject, Injector}
 
 class FileIOController @Inject() (var daoInterface: FileIODaoInterface) extends FileIOControllerInterface {
   val fileIO: FileIO = new FileIO
@@ -23,11 +25,11 @@ class FileIOController @Inject() (var daoInterface: FileIODaoInterface) extends 
 
   override def save(fieldInJson: String, filename: Option[String]): Unit = fileIO.save(fieldInJson, filename)
 
-  override def saveSqlDb(field: String): Unit = daoInterface.save(field)
+  override def saveSqlDb(field: String, id: Option[Int]): Unit = daoInterface.save(field, id)
 
-  override def loadSqlDb(id: Int): String = daoInterface.load(id)
+  override def loadSqlDb(id: Option[Int]): String = daoInterface.load(id)
 
-  override def loadSqlDb(): Map[Int, String] = daoInterface.load()
+  override def loadAllSqlDb(): Map[Int, String] = daoInterface.loadAll()
 
   override def deleteInSqlDB(id: Int): Unit = daoInterface.delete(id)
 

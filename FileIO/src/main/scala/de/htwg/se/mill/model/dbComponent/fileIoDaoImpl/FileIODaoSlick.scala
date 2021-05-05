@@ -5,6 +5,7 @@ import slick.dbio.{DBIO, Effect}
 import slick.jdbc.JdbcBackend
 import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.MySQLProfile.api._
+import slick.sql.SqlAction
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -28,8 +29,12 @@ case class FileIODaoSlick() extends FileIODaoInterface {
   database.run(setup)
   println(s"Settings, databaseUrl: ${databaseUrl}, databaseUser: ${databaseUser}, databasePassword: ${databasePassword}")
 
-  override def save(field: String): Unit = {
-    Await.ready(database.run(fileIOTable += (0, field)), Duration.Inf)
+  override def save(field: String, id: Option[Int] = None): Unit = {
+    val ID = id match {
+      case Some(ID) => ID
+      case None => 0
+    }
+    Await.ready(database.run(fileIOTable += (ID, field)), Duration.Inf)
   }
 
   override def load(fileIoID: Option[Int]): String = {
@@ -41,7 +46,7 @@ case class FileIODaoSlick() extends FileIODaoInterface {
     field
   }
 
-  override def load(): Map[Int, String] = {
+  override def loadAll(): Map[Int, String] = {
     var fields = Map.empty[Int, String]
     Await.result(database.run(fileIOTable.result).map(_.foreach {
       case (id, field) => fields += (id -> field)

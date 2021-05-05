@@ -33,9 +33,9 @@ class FileIOHttpServer(controller: FileIOControllerInterface) {
         path(uriPath / "sqldb") {
           get {
             parameters("id") {
-              id => complete(HttpEntity(ContentTypes.`application/json`, controller.loadSqlDb(id.toInt)))
+              id => complete(HttpEntity(ContentTypes.`application/json`, controller.loadSqlDb(id.toIntOption)))
             } ~
-              complete(HttpEntity(ContentTypes.`application/json`, controller.toJson(controller.loadSqlDb())))
+              complete(HttpEntity(ContentTypes.`application/json`, controller.toJson(controller.loadAllSqlDb())))
           } ~
           post {
             entity(as[String]) { fieldInJson =>

@@ -16,7 +16,7 @@ import scala.collection.JavaConverters._
 import scala.concurrent.{Await, ExecutionContextExecutor, Future}
 import scala.util.{Failure, Success}
 
-class FileIODaoMongo extends FileIODaoInterface {
+case class FileIODaoMongo() extends FileIODaoInterface {
   val uri: String = "mongodb://" + sys.env.getOrElse("MONGODB_HOST", "localhost:27017")
   val client: MongoClient = MongoClient(uri)
   val database: MongoDatabase = client.getDatabase("mill")

@@ -8,9 +8,9 @@ trait FileIOControllerInterface {
 
   def saveSqlDb(field: String): Unit
 
-  def loadSqlDb(id: Int): String
+  def loadSqlDb(id: Option[Int]): String
 
-  def loadSqlDb(): Map[Int, String]
+  def loadAllSqlDb(): Map[Int, String]
 
   def deleteInSqlDB(id: Int): Unit
 
