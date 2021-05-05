@@ -1,4 +1,4 @@
-package de.htwg.se.mill.controller
+package de.htwg.se.mill.controller.contollerBaseImpl
 
 import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
 import org.scalatest.matchers.should.Matchers
@@ -12,9 +12,9 @@ class ControllerSpec extends AnyWordSpec with Matchers {
     "new" should {
       val controllerUndoRedo = new Controller
        "be able to undo and redo" in {
-         controllerUndoRedo.undo
+         controllerUndoRedo.undo()
          controllerUndoRedo.gameState should be("Undo")
-         controllerUndoRedo.redo
+         controllerUndoRedo.redo()
          controllerUndoRedo.gameState should be("Redo")
       }
     }
