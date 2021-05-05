@@ -42,6 +42,14 @@ class FileIOHttpServer(controller: FileIOControllerInterface) {
               controller.saveSqlDb(fieldInJson)
               complete("")
             }
+          } ~
+          delete {
+            parameters("id") {
+              id => {
+                controller.deleteInSqlDB(id.toInt)
+                complete("")
+              }
+            }
           }
         } ~
         path("") {

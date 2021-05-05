@@ -45,4 +45,9 @@ case class FileIODaoSlick() extends FileIODaoInterface {
     }), Duration.Inf)
     fields
   }
+
+  override def delete(fieldId: Int): Unit = {
+    val query = fileIOTable.filter(_.id === fieldId).delete
+    database.run(query)
+  }
 }
