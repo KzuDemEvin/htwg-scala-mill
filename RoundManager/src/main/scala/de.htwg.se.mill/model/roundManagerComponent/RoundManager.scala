@@ -13,8 +13,7 @@ case class RoundManager(field: FieldInterface,
                         setCounter: Int = 0,
                         borderToMoveMode: Int = 18,
                         update: (Int, Int) = (-1, -1),
-                        winner: Int = 0,
-                        @deprecated winnerText: String = "No Winner") {
+                        winner: Int = 0) {
 
   def this() {
     this(field = new Field(size = 7))
@@ -136,7 +135,7 @@ case class RoundManager(field: FieldInterface,
   private def checkWinner(): RoundManager = {
     if (checkIfHasOnly3Stones() || !checkIfCanMove()) {
       val winner = if (blackTurn()) 2 else 1
-      copy(winner = winner, winnerText = handleWinnerText(winner))
+      copy(winner = winner)
     } else {
       copy()
     }
@@ -184,13 +183,4 @@ case class RoundManager(field: FieldInterface,
       "row" -> update._1,
       "col" -> update._2
     ))
-
-  @deprecated
-  def handleWinnerText(winner: Int = winner): String = {
-    winner match {
-      case 0 => "No Winner"
-      case 1 => "White wins!"
-      case 2 => "Black wins!"
-    }
-  }
 }
