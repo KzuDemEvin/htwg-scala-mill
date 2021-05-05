@@ -12,5 +12,7 @@ trait FileIOControllerInterface {
 
   def loadSqlDb(): Map[Int, String]
 
+  def deleteInSqlDB(id: Int): Unit
+
   def toJson(fields: Map[Int, String]): String
 }

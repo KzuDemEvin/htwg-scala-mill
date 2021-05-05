@@ -18,6 +18,8 @@ class FileIOController(daoInterface: FileIODaoInterface) extends FileIOControlle
 
   override def loadSqlDb(): Map[Int, String] = daoInterface.load()
 
+  override def deleteInSqlDB(id: Int): Unit = daoInterface.delete(id)
+
   override def toJson(fields: Map[Int, String]): String = {
     new Gson().toJson(fields)
   }

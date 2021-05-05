@@ -8,4 +8,6 @@ trait FileIODaoInterface {
 
   def load(): Map[Int, String]
 
+  def delete(fieldId: Int): Unit
+
 }
