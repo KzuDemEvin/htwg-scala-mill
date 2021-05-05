@@ -84,6 +84,7 @@ class Controller extends ControllerInterface with Publisher {
   def handleClickSync(row: Int, col: Int): Unit = {
     blockRequest(s"http://$roundManagerHttpServer/handleClick?row=$row&col=$col", POST)
     turn()
+    publish(new CellChanged)
   }
 
   def undo(): Unit = {
@@ -123,6 +124,20 @@ class Controller extends ControllerInterface with Publisher {
     } else {
       print(s"Loading failed!")
     }
+  }
+
+  def saveDB(): Unit = {
+    val field: String = blockRequest(s"http://$roundManagerHttpServer/field/json", GET)
+    Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$fileIOHttpServer/json/sqldb", entity = Json.prettyPrint(Json.parse(field))))
+    gameState = GameState.handle(SaveState())
+    publish(new CellChanged)
+  }
+
+  def loadDB(id: Int): Unit = {
+    val field: String = blockRequest(s"http://$fileIOHttpServer/json/sqldb?id=${id}", GET)
+    Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$roundManagerHttpServer/field/setField", entity = Json.prettyPrint(Json.parse(field))))
+    gameState = GameState.handle(LoadState())
+    publish(new FieldChanged)
   }
 
   def isSet(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://$roundManagerHttpServer/field/isSet?row=$row&col=$col")(oncomplete)

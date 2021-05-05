@@ -27,6 +27,8 @@ class ControllerStub extends ControllerInterface {
   override def redo(): Unit = {}
   override def save(): Unit = {}
   override def load(): Unit = {}
+  override def saveDB(): Unit = {}
+  override def loadDB(id: Int): Unit = {}
   override def color(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = oncomplete(Some(color.toString))
   override def isSet(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = oncomplete(Some(isSet.toString))
   override def possiblePosition(row: Int, col: Int): Boolean = possiblePosition
