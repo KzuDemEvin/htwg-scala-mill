@@ -29,5 +29,5 @@ lazy val roundManager = (project in file(".")).settings(
   .enablePlugins(sbtdocker.DockerPlugin, JavaAppPackaging)
   .settings(dockerBaseImage := "hseeberger/scala-sbt:8u222_1.3.5_2.13.1")
   .settings(daemonUser in Docker := "sbtuser")
-  .settings(mainClass in Compile := Some("de.htwg.se.mill.RoundManager"))
+  .settings(mainClass in Compile := Some("de.htwg.se.mill.RoundManagerMain"))
   .settings(dockerExposedPorts := Seq(8083))

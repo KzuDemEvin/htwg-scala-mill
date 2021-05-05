@@ -19,18 +19,18 @@ class RoundManagerHttpServer(roundManagerController: RoundManagerControllerInter
 
   val route: Route =
     concat(
-      path("undo") {
-        post {
-          postResponse(roundManagerController.undo())
-        }
-      } ~
-      path("handleClick") {
-        post {
-          parameters("row", "col") {
-            (row, col) => postResponse(roundManagerController.handleClick(row.toInt, col.toInt))
+        path("undo") {
+          post {
+            postResponse(roundManagerController.undo())
           }
-        }
-      } ~
+        } ~
+        path("handleClick") {
+          post {
+            parameters("row", "col") {
+              (row, col) => postResponse(roundManagerController.handleClick(row.toInt, col.toInt))
+            }
+          }
+        } ~
         pathPrefix("field") {
           path("setField") {
             post {
@@ -38,12 +38,12 @@ class RoundManagerHttpServer(roundManagerController: RoundManagerControllerInter
                 postResponse(roundManagerController.setField(fieldInJson))
               }
             }
-          }~
-          path("json") {
-            get {
-              postResponse(roundManagerController.fieldAsJson())
-            }
           } ~
+            path("json") {
+              get {
+                postResponse(roundManagerController.fieldAsJson())
+              }
+            } ~
             path("html") {
               get {
                 postResponse(roundManagerController.fieldAsHtml())
@@ -114,7 +114,10 @@ class RoundManagerHttpServer(roundManagerController: RoundManagerControllerInter
           get {
             postResponse(roundManagerController.winnerText())
           }
-        }
+        }~
+      path("") {
+        complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>RoundManager Server</h1>"))
+      }
     )
 
   val bindingFuture = Http().newServerAt(interface, port).bind(route)

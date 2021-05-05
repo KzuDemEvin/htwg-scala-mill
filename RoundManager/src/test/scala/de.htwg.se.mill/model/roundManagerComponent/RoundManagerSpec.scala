@@ -11,11 +11,6 @@ class RoundManagerSpec extends AnyWordSpec with Matchers {
     val normalSize = 7
     "created" should {
       val roundManager = new RoundManager()
-      "handle the WinnerText" in {
-        roundManager.handleWinnerText(0) should be("No Winner")
-        roundManager.handleWinnerText(1) should be("White wins!")
-        roundManager.handleWinnerText(2) should be("Black wins!")
-      }
       "choose the correct mode per player" should {
         val field = new Field(normalSize)
         val controller = new RoundManagerController(field)

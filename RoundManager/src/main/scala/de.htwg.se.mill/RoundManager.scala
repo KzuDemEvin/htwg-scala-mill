@@ -4,8 +4,7 @@ import com.google.inject.{Guice, Injector}
 import de.htwg.se.mill.aview.RoundManagerHttpServer
 import de.htwg.se.mill.controller.controllerRoundManager.RoundManagerControllerInterface
 
-object RoundManager {
-  val defaultSize = 7
+object RoundManagerMain {
   val injector: Injector = Guice.createInjector(new RoundManagerModule)
   val controller: RoundManagerControllerInterface = injector.getInstance(classOf[RoundManagerControllerInterface])
   val webserver = new RoundManagerHttpServer(controller)
