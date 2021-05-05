@@ -12,7 +12,7 @@ services:
       MYSQL_USER: mill
       MYSQL_PASSWORD: mill
     volumes:
-      - .:/var/lib/mill
+      - .:/var/lib/sql/mill
 
   mongodb:
     image: mongo
@@ -23,7 +23,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - .:/data/db
+      - .:/var/lib/mongo/mill
 
   player:
     build:

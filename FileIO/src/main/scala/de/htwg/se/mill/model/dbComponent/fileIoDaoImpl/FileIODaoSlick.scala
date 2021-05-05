@@ -32,8 +32,11 @@ case class FileIODaoSlick() extends FileIODaoInterface {
     Await.ready(database.run(fileIOTable += (0, field)), Duration.Inf)
   }
 
-  override def load(fieldId: Int): String = {
-    val fileIOIdQuery = fileIOTable.filter(_.id === fieldId).result.head
+  override def load(fileIoID: Option[Int]): String = {
+    val fileIOIdQuery: SqlAction[(Int, String), NoStream, Effect.Read] = fileIoID match {
+      case Some(fileIoID) => fileIOTable.filter(_.id === fileIoID).result.head
+      case None => fileIOTable.sortBy(_.id.desc).take(1).result.head
+    }
     val (_, field) = Await.result(database.run(fileIOIdQuery), Duration.Inf)
     field
   }
@@ -46,8 +49,8 @@ case class FileIODaoSlick() extends FileIODaoInterface {
     fields
   }
 
-  override def delete(fieldId: Int): Unit = {
-    val query = fileIOTable.filter(_.id === fieldId).delete
+  override def delete(fileIoID: Int): Unit = {
+    val query = fileIOTable.filter(_.id === fileIoID).delete
     database.run(query)
   }
 }
