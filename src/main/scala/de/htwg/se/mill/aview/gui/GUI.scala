@@ -1,6 +1,6 @@
 package de.htwg.se.mill.aview.gui
 
-import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, FieldChanged, StateChanged}
+import de.htwg.se.mill.controller.controllerComponent.{CellChanged, ControllerInterface, FieldChanged, TwoCellsChanged}
 
 import scala.swing.FlowPanel.Alignment
 import scala.swing.{BorderPanel, BoxPanel, Dimension, FlowPanel, Font, Frame, GridPanel, MainFrame, Orientation, TextField}
@@ -59,18 +59,21 @@ class GUI(controller: ControllerInterface) extends MainFrame {
 
 
   reactions += {
-    case _: StateChanged => updateField(false)
-    case _: CellChanged => updateField(false)
+    case _: CellChanged => updateField((-1, -1))
+    case twoCellsChanged: TwoCellsChanged => updateField(cell = twoCellsChanged.cell)
     case _: FieldChanged => updateField()
   }
 
-  private def updateField(repaintField: Boolean = true): Unit = {
-    if (repaintField) {
-      for {
-        row <- 0 until controller.fieldsize
-        col <- 0 until controller.fieldsize
-        if drawUnusedCells || controller.possiblePosition(row, col)
-      } cells(row)(col).redraw()
+  private def updateField(cell: (Int, Int) = (-2, -2)): Unit = {
+    cell match {
+      case (-2, -2) =>
+        for {
+          row <- 0 until controller.fieldsize
+          col <- 0 until controller.fieldsize
+          if drawUnusedCells || controller.possiblePosition(row, col)
+        } cells(row)(col).redraw()
+      case (-1, -1) =>
+      case (row, col) => cells(row)(col).redraw()
     }
     drawUnusedCells = false
     controller.getMillState({ case Some(millState) => millline.text = millState })

@@ -20,6 +20,8 @@ trait ControllerInterface extends Publisher {
   def redo(): Unit
   def save(): Unit
   def load(): Unit
+  def saveDB(): Unit
+  def loadDB(id: Int): Unit
   def color(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit
   def isSet(row:Int, col:Int)(oncomplete: Option[String] => Unit): Unit
   def possiblePosition(row:Int, col:Int): Boolean
@@ -29,6 +31,6 @@ trait ControllerInterface extends Publisher {
   def getMillState(oncomplete: Option[String] => Unit): Unit
 }
 
-class StateChanged extends Event
-class CellChanged extends Event
+case class TwoCellsChanged(cell: (Int, Int)) extends Event
+class CellChanged extends Event // could be case class
 class FieldChanged extends Event

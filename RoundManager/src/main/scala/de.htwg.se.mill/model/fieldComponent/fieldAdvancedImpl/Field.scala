@@ -8,5 +8,4 @@ import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.{Field => BaseField}
 class Field @Inject() ( @Named("DefaultSize") size: Int) extends BaseField(size) {
 
   override def createNewField: FieldInterface = new Field(size)
-
 }

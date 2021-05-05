@@ -19,7 +19,8 @@ case class Matrix[T](allRows: Vector[Vector[T]]) {
 
   def allowedCell(row: Int, col: Int): Boolean = allowedPosition.contains((row, col))
 
-  def refill(filling: T): Matrix[T] = copy(Vector.tabulate(size, size) { (x1, x2) => filling })
+  @deprecated
+  def refill(filling: T): Matrix[T] = copy(Vector.tabulate(size, size) { (_, _) => filling })
 
   def replaceCell(x1: Int, x2: Int, cell: T): Matrix[T] = copy(allRows.updated(x1, allRows(x1).updated(x2, cell)))
 }

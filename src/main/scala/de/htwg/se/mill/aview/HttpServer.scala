@@ -21,63 +21,78 @@ case class HttpServer(controller: ControllerInterface) {
 
   val route: Route =
     concat(
-    path(uriPath) {
-      get {
-        fieldToHtml
-      }
-    } ~
-      path(uriPath / "player") {
+      path(uriPath) {
         get {
-          parameters("name", "number") {
-            (name, number) =>
-              controller.createPlayer(name, number.toInt)
-              fieldToHtml
+          fieldToHtml
+        }
+      } ~
+        path(uriPath / "player") {
+          get {
+            parameters("name", "number") {
+              (name, number) =>
+                controller.createPlayer(name, number.toInt)
+                fieldToHtml
+            }
+          }
+        } ~
+        path(uriPath / "new") {
+          get {
+            controller.createEmptyField(size)
+            fieldToHtml
+          }
+        } ~
+        path(uriPath / "random") {
+          get {
+            controller.createRandomField(size)
+            fieldToHtml
+          }
+        } ~
+        path(uriPath / "save") {
+          get {
+            controller.save()
+            fieldToHtml
+          }
+        } ~
+        path(uriPath / "save" / "db") {
+          get {
+            controller.saveDB()
+            fieldToHtml
+          }
+        } ~
+        path(uriPath / "load") {
+          get {
+            controller.load()
+            fieldToHtml
+          }
+        } ~
+        path(uriPath / "load" / "db") {
+          get {
+            parameters("id") {
+              id =>
+                controller.loadDB(id.toInt)
+                fieldToHtml
+            }
+          }
+        } ~
+        path(uriPath / "undo") {
+          get {
+            controller.undo
+            fieldToHtml
+          }
+        } ~
+        path(uriPath / "redo") {
+          get {
+            controller.redo
+            fieldToHtml
+          }
+        } ~
+        path(uriPath / Segment) { command => {
+          get {
+            processInputLine(command)
+            fieldToHtml
           }
         }
-      } ~
-      path(uriPath / "new") {
-        get {
-          controller.createEmptyField(size)
-          fieldToHtml
         }
-      } ~
-      path(uriPath / "random") {
-        get {
-          controller.createRandomField(size)
-          fieldToHtml
-        }
-      } ~
-      path(uriPath / "save") {
-        get {
-          controller.save()
-          fieldToHtml
-        }
-      } ~
-      path(uriPath / "load") {
-        get {
-          controller.load()
-          fieldToHtml
-        }
-      } ~
-      path(uriPath / "undo") {
-        get {
-          controller.undo
-          fieldToHtml
-        }
-      } ~
-      path(uriPath / "redo") {
-        get {
-          controller.redo
-          fieldToHtml
-        }
-      } ~
-      path(uriPath / Segment) { command => {
-        get {
-          processInputLine(command)
-          fieldToHtml
-        }
-      }
-      }
     )
 
   def fieldToHtml: StandardRoute = {

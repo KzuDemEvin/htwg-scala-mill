@@ -15,14 +15,14 @@ class PlayerHttpServer(playerController: PlayerControllerInterface) {
     val port: Int = 8081
     val uriPath: String = "player"
 
-    val route =
-      concat(
-        path(uriPath) {
-          get {
-            parameters("number") {
-              number => postResponse(playerController.toJson(playerController.getPlayer(number.toInt)))
-            }
-          } ~
+  val route =
+    concat(
+      path(uriPath) {
+        get {
+          parameters("number") {
+            number => postResponse(playerController.toJson(playerController.getPlayer(number.toInt)))
+          }
+        } ~
           post {
             parameters("number", "name") {
               (number, name) => postResponse(playerController.toJson(playerController.createPlayer(number.toInt, name)))
@@ -38,12 +38,38 @@ class PlayerHttpServer(playerController: PlayerControllerInterface) {
               number => postResponse(playerController.toJson(playerController.deletePlayer(number.toInt)))
             }
           }
+      } ~
+          path(uriPath / "name") {
+            get {
+              parameters("number") {
+                number => postResponse(playerController.getPlayer(number.toInt).name)
+              }
+            }
+          } ~
+        path(uriPath / "sqldb") {
+          get {
+            parameters("id") {
+              id => postResponse(playerController.toJson(playerController.load(id.toInt)))
+            } ~
+              postResponse(playerController.toJson(playerController.load()))
+          } ~
+            post {
+              parameters("number") {
+                number => {
+                  playerController.save(number.toInt)
+                  postResponse("")
+                }
+              }
+            }
+        } ~
+        path("") {
+          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>Player Server</h1>"))
         }
-      )
+    )
 
   val bindingFuture = Http().newServerAt(interface, port).bind(route)
 
-  println(s"Players server is online at http://${interface}:${port}/${uriPath}")
+  println(s"Players server is online at http://$interface:$port/$uriPath")
 
   def postResponse(player: String): server.Route = {
     complete(HttpEntity(ContentTypes.`application/json`, player))

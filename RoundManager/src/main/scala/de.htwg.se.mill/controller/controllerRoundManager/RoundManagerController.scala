@@ -1,5 +1,12 @@
 package de.htwg.se.mill.controller.controllerRoundManager
 
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
+import akka.http.javadsl.settings.ConnectionPoolSettings
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.{HttpMethod, HttpRequest, HttpResponse}
+import akka.http.scaladsl.model.HttpMethods.GET
+import akka.http.scaladsl.unmarshalling.Unmarshal
 import com.google.gson.Gson
 import com.google.inject.name.Names
 import com.google.inject.{Guice, Inject, Injector}
@@ -8,12 +15,17 @@ import de.htwg.se.mill.model.fieldComponent.{Cell, Color, FieldInterface}
 import de.htwg.se.mill.model.roundManagerComponent.RoundManager
 import de.htwg.se.mill.util.UndoManager
 import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
-import play.api.libs.json.{JsNumber, JsValue, JsString, Json}
+import play.api.libs.json.{JsNumber, JsString, JsValue, Json}
+
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContextExecutor, Future}
+import scala.util.{Failure, Success}
 
 class RoundManagerController @Inject()(var field: FieldInterface) extends RoundManagerControllerInterface {
   var mgr: RoundManager = RoundManager(field)
   val injector: Injector = Guice.createInjector(new RoundManagerModule)
   private val undoManager: UndoManager = new UndoManager
+  val playerHttpServer: String = sys.env.getOrElse("PLAYERHTTPSERVER", "localhost:8081")
   doStep()
 
   def handleClick(row: Int, col: Int): String = {
@@ -21,7 +33,7 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
     mgr = mgr.handleClick(row, col)
     print(s"Round: ${mgr.roundCounter} \tMill: ${mgr.field.millState}\n")
     doStep()
-    new Gson().toJson(mgr.update)
+    mgr.updateToJson()
   }
 
   def doStep(): String = {
@@ -70,26 +82,40 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
     print(s"Turn called!\n")
     new Gson().toJson(if (mgr.blackTurn()) "Black" else "White")
   }
+
   def roundCounter(): String = {
     print(s"RoundCounter called!\n")
     new Gson().toJson(mgr.roundCounter)
   }
+
   def winner(): String = {
     print(s"Winner called!\n")
     new Gson().toJson(mgr.winner)
   }
+
   def winnerText(): String = {
     print(s"WinnerText called!\n")
-    new Gson().toJson(mgr.winnerText)
+    val player: String = blockRequest(s"http://${playerHttpServer}/player/name?number=${winner+1}", GET, s"Player ${(mgr.winner % 2) + 1}")
+    val winnerText: String = {
+      mgr.winner match {
+        case 2 => " wins! (white)"
+        case 1 => " wins! (black)"
+        case _ => "No Winner"
+      }
+    }
+    new Gson().toJson(player + winnerText)
   }
+
   def cell(row: Int, col: Int): Cell = {
     print(s"Cell at position ($row, $col) called!\n")
     mgr.field.cell(row, col)
   }
+
   def isSet(row: Int, col: Int): String = {
     print(s"IsSet at position ($row, $col) called!\n")
     new Gson().toJson(cell(row, col).isSet)
   }
+
   def color(row: Int, col: Int): String = {
     print(s"Color at position ($row, $col) called!\n")
     new Gson().toJson(cell(row, col).content.color match {
@@ -97,7 +123,9 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
       case Color.white => 0
     })
   }
+
   def possiblePosition(row: Int, col: Int): String = new Gson().toJson(mgr.field.possiblePosition(row, col))
+
   def millState(): String = new Gson().toJson(mgr.field.millState)
 
   def fieldAsJson(): String = {
@@ -132,9 +160,9 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
     val injector = Guice.createInjector(new RoundManagerModule)
     var newField = injector.instance[FieldInterface](Names.named("normal"))
     for (index <- 0 until newField.size * newField.size) {
-      val row = (json \\ "row")(index).as[Int]
-      val col = (json \\ "col")(index).as[Int]
-      val color = (json \\ "color")(index).toString().replaceAll("\"", "")
+      val row = (json \\ "row") (index).as[Int]
+      val col = (json \\ "col") (index).as[Int]
+      val color = (json \\ "color") (index).toString().replaceAll("\"", "")
       newField = color match {
         case "white" => newField.set(row, col, Cell("cw"))._1
         case "black" => newField.set(row, col, Cell("cb"))._1
@@ -148,4 +176,34 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
   def fieldAsHtml(): String = mgr.field.toHtml
 
   def fieldAsString(): String = mgr.field.toString
+
+  private def sendRequest(uri: String, method: HttpMethod, errMsg: String = "Something went wrong."): Future[HttpResponse] = {
+    implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
+    implicit val executionContext: ExecutionContextExecutor = system.executionContext
+    Http().singleRequest(HttpRequest(method = method, uri = uri))
+  }
+
+  private def unmarshal(value: HttpResponse): Future[String] = {
+    implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
+    implicit val executionContext: ExecutionContextExecutor = system.executionContext
+    Unmarshal(value.entity).to[String]
+  }
+
+  private def blockRequest(uri: String, method: HttpMethod, failed: String = ""): String = {
+    block(sendRequest(uri, method)) match {
+      case Some(response) =>
+        block(unmarshal(response)) match {
+          case Some(unpackedString) => unpackedString
+          case None => failed
+        }
+      case None => failed
+    }
+  }
+
+  private def block[T](future: Future[T]): Option[T] = {
+    Await.ready(future, Duration.Inf).value.get match {
+      case Success(s) => Some(s)
+      case Failure(_) => None
+    }
+  }
 }
