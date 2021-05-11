@@ -1,5 +1,6 @@
 package de.htwg.se.mill.model.dbComponent.playerDaoImpl
 
+import com.google.inject.Inject
 import de.htwg.se.mill.model.dbComponent.PlayerDaoInterface
 import de.htwg.se.mill.model.playerComponent.Player
 import slick.dbio.{DBIO, Effect}
@@ -11,7 +12,7 @@ import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
-case class PlayerDaoSlick() extends PlayerDaoInterface {
+case class PlayerDaoSlick @Inject() () extends PlayerDaoInterface {
   val databaseUrl: String = "jdbc:mysql://" + sys.env.getOrElse("DATABASE_HOST", "localhost:3306") + "/" + sys.env.getOrElse("MYSQL_DATABASE", "mill") + "?serverTimezone=UTC&useSSL=false"
   val databaseUser: String = sys.env.getOrElse("MYSQL_USER", "root")
   val databasePassword: String = sys.env.getOrElse("MYSQL_PASSWORD", "MILL")
