@@ -2,7 +2,7 @@ package de.htwg.se.mill.controller.controllerBaseImpl
 
 import com.google.gson.Gson
 import com.google.inject.name.Names
-import com.google.inject.{Guice, Inject, Injector}
+import com.google.inject.{Guice, Injector}
 import de.htwg.se.mill.FileIOModule
 import de.htwg.se.mill.controller.FileIOControllerInterface
 import de.htwg.se.mill.model.dbComponent.FileIODaoInterface

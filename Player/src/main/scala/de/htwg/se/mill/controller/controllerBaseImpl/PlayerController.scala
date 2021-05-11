@@ -9,7 +9,7 @@ import de.htwg.se.mill.model.dbComponent.PlayerDaoInterface
 import de.htwg.se.mill.model.playerComponent.Player
 import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
 
-class PlayerController() extends PlayerControllerInterface {
+class PlayerController extends PlayerControllerInterface {
   val injector: Injector = Guice.createInjector(new PlayerModule)
   var daoInterface: PlayerDaoInterface = injector.instance[PlayerDaoInterface](Names.named("sql"))
   var player1: Player = Player(name = "No name")

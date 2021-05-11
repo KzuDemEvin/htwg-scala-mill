@@ -8,11 +8,10 @@ import org.mongodb.scala.result.InsertOneResult
 import org.mongodb.scala.{Document, MongoClient, MongoCollection, MongoDatabase, Observer, SingleObservable}
 import play.api.libs.json.{JsValue, Json}
 
-import javax.inject.Inject
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
-case class PlayerDaoMongo @Inject() () extends PlayerDaoInterface {
+case class PlayerDaoMongo() extends PlayerDaoInterface {
   val uri: String = "mongodb://root:MILL@" + sys.env.getOrElse("MONGODB_HOST", "localhost:27017")
   val client: MongoClient = MongoClient(uri)
   val database: MongoDatabase = client.getDatabase("mill")

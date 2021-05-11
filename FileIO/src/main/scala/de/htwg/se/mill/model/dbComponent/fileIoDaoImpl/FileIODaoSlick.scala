@@ -2,7 +2,6 @@ package de.htwg.se.mill.model.dbComponent.fileIoDaoImpl
 
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
-import com.google.inject.Inject
 import de.htwg.se.mill.model.dbComponent.FileIODaoInterface
 import slick.dbio.{DBIO, Effect}
 import slick.jdbc.JdbcBackend
@@ -13,7 +12,7 @@ import slick.sql.SqlAction
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContextExecutor, Future}
 
-case class FileIODaoSlick @Inject() () extends FileIODaoInterface {
+case class FileIODaoSlick() extends FileIODaoInterface {
   val databaseUrl: String = "jdbc:mysql://" + sys.env.getOrElse("DATABASE_HOST", "localhost:3306") + "/" + sys.env.getOrElse("MYSQL_DATABASE", "mill") + "?serverTimezone=UTC&useSSL=false"
   val databaseUser: String = sys.env.getOrElse("MYSQL_USER", "root")
   val databasePassword: String = sys.env.getOrElse("MYSQL_PASSWORD", "MILL")

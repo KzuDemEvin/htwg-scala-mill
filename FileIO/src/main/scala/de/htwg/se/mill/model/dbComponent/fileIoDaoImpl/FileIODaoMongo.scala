@@ -9,7 +9,6 @@ import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Projections.excludeId
 import org.mongodb.scala.result.{DeleteResult, InsertOneResult}
 
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
 case class FileIODaoMongo @Inject()() extends FileIODaoInterface {
