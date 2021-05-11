@@ -15,7 +15,7 @@ class FileIOHttpServer(controller: FileIOControllerInterface) {
 
   val interface: String = "0.0.0.0"
   val port: Int = 8082
-  val uriPath: String = "json"
+  val uriPath: String = "fileio"
 
   val route =
     concat (

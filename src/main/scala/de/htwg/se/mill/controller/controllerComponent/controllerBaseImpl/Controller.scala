@@ -106,7 +106,7 @@ class Controller extends ControllerInterface with Publisher {
   def save(): Unit = {
     val field: String = blockRequest(s"http://$roundManagerHttpServer/field/json", GET, "failed")
     if (field != "failed") {
-      Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$fileIOHttpServer/json", entity = Json.prettyPrint(Json.parse(field))))
+      Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$fileIOHttpServer/fileio", entity = Json.prettyPrint(Json.parse(field))))
       gameState = GameState.handle(SaveState())
       publish(new CellChanged)
     } else {
@@ -116,7 +116,7 @@ class Controller extends ControllerInterface with Publisher {
 
   def load(): Unit = {
     gameState = GameState.handle(LoadState())
-    val field: String = blockRequest(s"http://$fileIOHttpServer/json", GET, "failed")
+    val field: String = blockRequest(s"http://$fileIOHttpServer/fileio", GET, "failed")
     if (field != "failed") {
       Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$roundManagerHttpServer/field/setField", entity = Json.prettyPrint(Json.parse(field))))
       gameState = GameState.handle(LoadState())
@@ -128,13 +128,13 @@ class Controller extends ControllerInterface with Publisher {
 
   def saveDB(): Unit = {
     val field: String = blockRequest(s"http://$roundManagerHttpServer/field/json", GET)
-    Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$fileIOHttpServer/json/sqldb", entity = Json.prettyPrint(Json.parse(field))))
+    Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$fileIOHttpServer/fileio/sqldb", entity = Json.prettyPrint(Json.parse(field))))
     gameState = GameState.handle(SaveState())
     publish(new CellChanged)
   }
 
   def loadDB(id: Int): Unit = {
-    val field: String = blockRequest(s"http://$fileIOHttpServer/json/sqldb?id=${id}", GET)
+    val field: String = blockRequest(s"http://$fileIOHttpServer/fileio/sqldb?id=${id}", GET)
     Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$roundManagerHttpServer/field/setField", entity = Json.prettyPrint(Json.parse(field))))
     gameState = GameState.handle(LoadState())
     publish(new FieldChanged)
