@@ -4,20 +4,16 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import de.htwg.se.mill.model.dbComponent.FileIODaoInterface
 import org.mongodb.scala._
-import org.mongodb.scala.model.Aggregates._
+import org.mongodb.scala.bson.ObjectId
 import org.mongodb.scala.model.Filters._
-import org.mongodb.scala.model.Projections._
-import org.mongodb.scala.model.Sorts._
-import org.mongodb.scala.model.Updates._
-import org.mongodb.scala.model._
+import org.mongodb.scala.model.Projections.excludeId
 import org.mongodb.scala.result.{DeleteResult, InsertOneResult}
 
-import scala.collection.JavaConverters._
-import scala.concurrent.{Await, ExecutionContextExecutor, Future}
-import scala.util.{Failure, Success}
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
-case class FileIODaoMongo() extends FileIODaoInterface {
-  val uri: String = "mongodb://" + sys.env.getOrElse("MONGODB_HOST", "localhost:27017")
+case class FileIODaoMongo @Inject()() extends FileIODaoInterface {
+  val uri: String = "mongodb://root:MILL@" + sys.env.getOrElse("MONGODB_HOST", "localhost:27017")
   val client: MongoClient = MongoClient(uri)
   val database: MongoDatabase = client.getDatabase("mill")
   val fileIOCollection: MongoCollection[Document] = database.getCollection("FileIO")
@@ -27,38 +23,37 @@ case class FileIODaoMongo() extends FileIODaoInterface {
 
     val insertObservable: SingleObservable[InsertOneResult] = fileIOCollection.insertOne(doc)
     insertObservable.subscribe(new Observer[InsertOneResult] {
-      override def onNext(result: InsertOneResult): Unit = println(s"inserted: $result")
-      override def onError(e: Throwable): Unit = println(s"failed: $e")
-      override def onComplete(): Unit = println("completed")
+      override def onNext(result: InsertOneResult): Unit = printf(s"inserted: $result\n")
+
+      override def onError(e: Throwable): Unit = printf(s"failed: $e\n")
+
+      override def onComplete(): Unit = printf(s"completed\n")
     })
   }
 
-  override def load(fileIoID: Option[Int])(oncomplete: Option[String] => Unit): Unit = {
+  override def load(fileIoID: String): Future[String] = {
+    implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
+    implicit val executionContext: ExecutionContextExecutor = system.executionContext
+    fileIOCollection.find(equal("_id", new ObjectId(fileIoID))).projection(excludeId()).head().map(_.toJson)
+  }
+
+  override def loadAll(): Future[Seq[(Int, String)]] = {
     implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
     implicit val executionContext: ExecutionContextExecutor = system.executionContext
 
-    (fileIoID match {
-      case Some(fileIoID) => fileIOCollection.find(equal("_id", fileIoID)).first().head()
-      case None => fileIOCollection.find().first().head()
-    }).onComplete({
-      case Success(value) => oncomplete(Some(value.toJson()))
-      case Failure(_) => oncomplete(None)
-    })
+    val loadedFiles: Future[Seq[(Int, String)]] = fileIOCollection
+      .find()
+      .toFuture
+      .map(list => list
+        .map(_.toJson)
+        .zipWithIndex
+        .map((el: (String, Int)) => (el._2, el._1)))
+    loadedFiles
   }
 
-  override def loadAll()(oncomplete: Option[String] => Unit): Unit = {
-    implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
-    implicit val executionContext: ExecutionContextExecutor = system.executionContext
-
-    fileIOCollection.find().head().onComplete({
-      case Success(value) => oncomplete(Some(value.toJson()))
-      case Failure(_) => oncomplete(None)
-    })
-  }
-
-  override def delete(fileIoID: Int): Unit = {
-    fileIOCollection.deleteOne(equal("_id", fileIoID)).subscribe(
-      (dr: DeleteResult) => print(s"Deleted document with id ${fileIoID}\n"),
+  override def delete(fileIoID: String): Unit = {
+    fileIOCollection.deleteOne(equal("_id", new ObjectId(fileIoID))).subscribe(
+      (_: DeleteResult) => print(s"Deleted document with id $fileIoID\n"),
       (e: Throwable) => print(s"Error when deleting the document with id $fileIoID: $e\n")
     )
   }

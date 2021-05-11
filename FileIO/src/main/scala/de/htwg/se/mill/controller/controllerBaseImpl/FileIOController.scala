@@ -8,9 +8,11 @@ import de.htwg.se.mill.controller.FileIOControllerInterface
 import de.htwg.se.mill.model.dbComponent.FileIODaoInterface
 import de.htwg.se.mill.model.fileIoComponent.fileIoJsonImpl.FileIO
 import net.codingwell.scalaguice.InjectorExtensions._
-import com.google.inject.{Guice, Inject, Injector}
 
-class FileIOController @Inject() (var daoInterface: FileIODaoInterface) extends FileIOControllerInterface {
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
+
+class FileIOController @Inject() () extends FileIOControllerInterface {
   val fileIO: FileIO = new FileIO
   val injector: Injector = Guice.createInjector(new FileIOModule)
   var daoInterface: FileIODaoInterface = injector.instance[FileIODaoInterface](Names.named("mongo"))
@@ -28,9 +30,11 @@ class FileIOController @Inject() (var daoInterface: FileIODaoInterface) extends 
 
   override def saveSqlDb(field: String, id: Option[Int]): Unit = daoInterface.save(field, id)
 
-  override def loadSqlDb(id: Option[Int]): String = daoInterface.load(id)
+  override def loadSqlDb(id: String): String = {
+    Await.result(daoInterface.load(id), Duration.Inf)
+  }
 
-  override def loadAllSqlDb(): Map[Int, String] = daoInterface.loadAll()
+  override def loadAllSqlDb(): Map[Int, String] = Await.result(daoInterface.loadAll(), Duration.Inf).toMap[Int, String]
 
   override def deleteInSqlDB(id: String): Unit = daoInterface.delete(id)
 

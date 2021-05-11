@@ -43,14 +43,16 @@ class FileIOHttpServer(controller: FileIOControllerInterface) {
         path(uriPath / "sqldb") {
           get {
             parameters("id") {
-              id => complete(HttpEntity(ContentTypes.`application/json`, controller.loadSqlDb(id.toIntOption)))
+              id => complete(HttpEntity(ContentTypes.`application/json`, controller.loadSqlDb(id)))
             } ~
               complete(HttpEntity(ContentTypes.`application/json`, controller.toJson(controller.loadAllSqlDb())))
           } ~
           post {
-            entity(as[String]) { fieldInJson =>
-              controller.saveSqlDb(fieldInJson)
-              complete("")
+            parameters("id") {
+              id => entity(as[String]) { fieldInJson =>
+                controller.saveSqlDb(fieldInJson, id.toIntOption)
+                complete("Game saved!")
+              }
             }
           } ~
           delete {

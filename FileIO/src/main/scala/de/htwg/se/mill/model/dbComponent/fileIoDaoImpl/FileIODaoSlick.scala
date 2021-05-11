@@ -1,5 +1,8 @@
 package de.htwg.se.mill.model.dbComponent.fileIoDaoImpl
 
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
+import com.google.inject.Inject
 import de.htwg.se.mill.model.dbComponent.FileIODaoInterface
 import slick.dbio.{DBIO, Effect}
 import slick.jdbc.JdbcBackend
@@ -7,9 +10,8 @@ import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.MySQLProfile.api._
 import slick.sql.SqlAction
 
-import scala.concurrent.Await
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContextExecutor, Future}
 
 case class FileIODaoSlick @Inject() () extends FileIODaoInterface {
   val databaseUrl: String = "jdbc:mysql://" + sys.env.getOrElse("DATABASE_HOST", "localhost:3306") + "/" + sys.env.getOrElse("MYSQL_DATABASE", "mill") + "?serverTimezone=UTC&useSSL=false"
@@ -30,29 +32,24 @@ case class FileIODaoSlick @Inject() () extends FileIODaoInterface {
   println(s"Settings, databaseUrl: ${databaseUrl}, databaseUser: ${databaseUser}, databasePassword: ${databasePassword}")
 
   override def save(field: String, id: Option[Int] = None): Unit = {
-    val ID = id match {
-      case Some(ID) => ID
+    val ID: Int = id match {
+      case Some(unwrappedID) => unwrappedID
       case None => 0
     }
     Await.ready(database.run(fileIOTable += (ID, field)), Duration.Inf)
   }
 
-  override def load(fileIoID: Option[Int]): String = {
-    val fileIOIdQuery: SqlAction[(Int, String), NoStream, Effect.Read] = fileIoID match {
-      case Some(fileIoID) => fileIOTable.filter(_.id === fileIoID).result.head
+  override def load(fileIoID: String): Future[String] = {
+    implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
+    implicit val executionContext: ExecutionContextExecutor = system.executionContext
+    val fileIOIdQuery: SqlAction[(Int, String), NoStream, Effect.Read] = fileIoID.toIntOption match {
+      case Some(fileIoID) => fileIOTable.filter(_.id === fileIoID.toInt).result.head
       case None => fileIOTable.sortBy(_.id.desc).take(1).result.head
     }
-    val (_, field) = Await.result(database.run(fileIOIdQuery), Duration.Inf)
-    field
+    database.run(fileIOIdQuery).map[String](_._2)
   }
 
-  override def loadAll(): Map[Int, String] = {
-    var fields = Map.empty[Int, String]
-    Await.result(database.run(fileIOTable.result).map(_.foreach {
-      case (id, field) => fields += (id -> field)
-    }), Duration.Inf)
-    fields
-  }
+  override def loadAll(): Future[Seq[(Int, String)]] = database.run(fileIOTable.result)
 
   override def delete(fileIoID: String): Unit = {
     val query = fileIOTable.filter(_.id === fileIoID.toInt).delete
