@@ -39,16 +39,6 @@ class PlayerHttpServer(playerController: PlayerControllerInterface) {
             }
           }
       } ~
-        path(uriPath / "db") {
-          get {
-            parameters("type") {
-              dbType => {
-                playerController.changeSaveMethod(dbType)
-                postResponse("Database changed!")
-              }
-            }
-          }
-        } ~
         path(uriPath / "name") {
           get {
             parameters("number") {
@@ -58,8 +48,8 @@ class PlayerHttpServer(playerController: PlayerControllerInterface) {
         } ~
         path(uriPath / "db") {
           get {
-            parameters("id") {
-              id => postResponse(playerController.toJson(playerController.load(id.toInt)))
+            parameters("id", "number") {
+              (id, number) => postResponse(playerController.toJson(playerController.load(id.toInt, number.toInt)))
             }
           } ~
           post {
@@ -67,6 +57,14 @@ class PlayerHttpServer(playerController: PlayerControllerInterface) {
               number => {
                 playerController.save(number.toInt)
                 postResponse("Player saved!")
+              }
+            }
+          } ~
+          put {
+            parameters("type") {
+              dbType => {
+                playerController.changeSaveMethod(dbType)
+                postResponse("Database changed!")
               }
             }
           }

@@ -28,7 +28,7 @@ class FileIOController extends FileIOControllerInterface {
 
   override def save(fieldInJson: String, filename: Option[String]): Unit = fileIO.save(fieldInJson, filename)
 
-  override def saveDb(field: String, id: Option[Int]): Unit = daoInterface.save(field, id)
+  override def saveDb(field: String): Unit = daoInterface.save(field)
 
   override def loadDb(id: String): String = {
     Await.result(daoInterface.load(id), Duration.Inf)

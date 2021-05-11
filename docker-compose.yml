@@ -35,7 +35,7 @@ services:
       - mongodb
     environment:
       - DATABASE_HOST=sqldb:3306
-      - MONGODB_HOST=mongo:27017
+      - MONGODB_HOST=mongodb:27017
 
   fileio:
     build:
@@ -47,7 +47,7 @@ services:
       - mongodb
     environment:
       - DATABASE_HOST=sqldb:3306
-      - MONGODB_HOST=mongo:27017
+      - MONGODB_HOST=mongodb:27017
     volumes:
       - .:/gameSaves
 

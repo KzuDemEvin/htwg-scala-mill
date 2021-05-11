@@ -15,7 +15,7 @@ trait PlayerControllerInterface {
 
   def save(number: Int): Unit
 
-  def load(id: Int): Player
+  def load(id: Int, number: Int): Player
 
   def load(): Map[Int, Player]
 
