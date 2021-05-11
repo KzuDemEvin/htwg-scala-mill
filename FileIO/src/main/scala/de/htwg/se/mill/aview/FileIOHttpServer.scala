@@ -31,7 +31,7 @@ class FileIOHttpServer(controller: FileIOControllerInterface) {
         }
       } ~
         path(uriPath / "db") {
-          get {
+          put {
             parameters("type") {
               dbType => {
                 controller.changeSaveMethod(dbType)
