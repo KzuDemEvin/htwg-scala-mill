@@ -11,7 +11,7 @@ import org.mongodb.scala.result.{DeleteResult, InsertOneResult}
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
-case class FileIODaoMongo @Inject()() extends FileIODaoInterface {
+case class FileIODaoMongo() extends FileIODaoInterface {
   val uri: String = "mongodb://root:MILL@" + sys.env.getOrElse("MONGODB_HOST", "localhost:27017")
   val client: MongoClient = MongoClient(uri)
   val database: MongoDatabase = client.getDatabase("mill")

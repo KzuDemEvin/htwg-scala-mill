@@ -12,7 +12,7 @@ import net.codingwell.scalaguice.InjectorExtensions._
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
-class FileIOController @Inject() () extends FileIOControllerInterface {
+class FileIOController extends FileIOControllerInterface {
   val fileIO: FileIO = new FileIO
   val injector: Injector = Guice.createInjector(new FileIOModule)
   var daoInterface: FileIODaoInterface = injector.instance[FileIODaoInterface](Names.named("mongo"))
