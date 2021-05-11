@@ -7,7 +7,7 @@ trait FileIOControllerInterface {
 
   def save(fieldInJson: String, filename: Option[String]): Unit
 
-  def saveSqlDb(field: String, id: Option[Int]): Unit
+  def saveDb(field: String, id: Option[Int]): Unit
 
   def loadDb(id: String): String
 

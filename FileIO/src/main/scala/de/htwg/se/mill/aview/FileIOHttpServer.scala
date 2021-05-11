@@ -50,7 +50,7 @@ class FileIOHttpServer(controller: FileIOControllerInterface) {
           post {
             parameters("id") {
               id => entity(as[String]) { fieldInJson =>
-                controller.saveSqlDb(fieldInJson, id.toIntOption)
+                controller.saveDb(fieldInJson, id.toIntOption)
                 complete("Game saved!")
               }
             }
