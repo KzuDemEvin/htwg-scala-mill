@@ -30,10 +30,12 @@ case class FileIODaoSlick() extends FileIODaoInterface {
   database.run(setup)
 
   override def save(field: String): Unit = {
+    printf(s"Saving file in MySQL\n")
     Await.ready(database.run(fileIOTable += (0, field)), Duration.Inf)
   }
 
   override def load(fileIoID: String): Future[String] = {
+    printf(s"Loading file $fileIoID in MySQL\n")
     implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
     implicit val executionContext: ExecutionContextExecutor = system.executionContext
     val fileIOIdQuery: SqlAction[(Int, String), NoStream, Effect.Read] = fileIoID.toIntOption match {
@@ -43,9 +45,13 @@ case class FileIODaoSlick() extends FileIODaoInterface {
     database.run(fileIOIdQuery).map[String](_._2)
   }
 
-  override def loadAll(): Future[Seq[(Int, String)]] = database.run(fileIOTable.result)
+  override def loadAll(): Future[Seq[(Int, String)]] = {
+    printf(s"Loading files in MySQL\n")
+    database.run(fileIOTable.result)
+  }
 
   override def delete(fileIoID: String): Unit = {
+    printf(s"Deleting file $fileIoID in MySQL\n")
     val query = fileIOTable.filter(_.id === fileIoID.toInt).delete
     database.run(query)
   }

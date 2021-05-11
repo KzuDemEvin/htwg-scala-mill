@@ -19,6 +19,7 @@ case class PlayerDaoMongo() extends PlayerDaoInterface {
   val gson = new Gson()
 
   override def save(player: Player): Unit = {
+    printf(s"Saving player ${player.name} in MongoDB\n")
     val doc: Document = Document("_id" -> 0, "name" -> player.name, "amountStones" -> player.amountStones, "mode" -> player.mode)
 
     val insertObservable: SingleObservable[InsertOneResult] = playerCollection.insertOne(doc)
@@ -30,6 +31,7 @@ case class PlayerDaoMongo() extends PlayerDaoInterface {
   }
 
   override def load(id: Int): Player = {
+    printf(s"Loading player $id in MongoDB\n")
     val json: JsValue = Json.parse(Await.result(playerCollection.find(equal("_id", id)).first().head(), Duration.Inf).toJson())
     val name = (json \ "name").get.toString().replaceAll("\"", "")
     val amountStones = (json \ "amountStones").get.toString().toInt
@@ -38,6 +40,7 @@ case class PlayerDaoMongo() extends PlayerDaoInterface {
   }
 
   override def load(): Map[Int, Player] = {
+    printf(s"Loading players in MongoDB\n")
     val json: JsValue = Json.parse(Await.result(playerCollection.find().head(), Duration.Inf).toJson())
     println(json)
     Map.empty[Int, Player]

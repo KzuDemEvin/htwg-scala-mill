@@ -32,11 +32,6 @@ class PlayerController extends PlayerControllerInterface {
     player
   }
 
-  override def createPlayer(number: Int, name: String): Player = {
-    print(s"Creating Player ${number}!\n")
-    setPlayer(number, Player(name))
-  }
-
   override def getPlayer(number: Int): Player = {
     print(s"Player ${number} called!\n")
     if (number % 2 == 0) {

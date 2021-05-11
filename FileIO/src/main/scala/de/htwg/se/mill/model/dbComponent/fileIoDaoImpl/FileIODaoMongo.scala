@@ -31,12 +31,14 @@ case class FileIODaoMongo() extends FileIODaoInterface {
   }
 
   override def load(fileIoID: String): Future[String] = {
+    printf(s"Loading file $fileIoID in MongoDB\n")
     implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
     implicit val executionContext: ExecutionContextExecutor = system.executionContext
     fileIOCollection.find(equal("_id", new ObjectId(fileIoID))).projection(excludeId()).head().map(_.toJson)
   }
 
   override def loadAll(): Future[Seq[(Int, String)]] = {
+    printf(s"Loading files in MongoDB\n")
     implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
     implicit val executionContext: ExecutionContextExecutor = system.executionContext
 
@@ -51,6 +53,7 @@ case class FileIODaoMongo() extends FileIODaoInterface {
   }
 
   override def delete(fileIoID: String): Unit = {
+    printf(s"Deleting file $fileIoID in MongoDB\n")
     fileIOCollection.deleteOne(equal("_id", new ObjectId(fileIoID))).subscribe(
       (_: DeleteResult) => print(s"Deleted document with id $fileIoID\n"),
       (e: Throwable) => print(s"Error when deleting the document with id $fileIoID: $e\n")

@@ -29,16 +29,19 @@ case class PlayerDaoSlick() extends PlayerDaoInterface {
   database.run(setup)
 
   override def save(player: Player): Unit = {
+    printf(s"Saving player ${player.name} in MySQL\n")
     Await.ready(database.run(playerTable += (0, player.name, player.amountStones, player.mode)), Duration.Inf)
   }
 
   override def load(playerId: Int): Player = {
+    printf(s"Loading player $playerId in MySQL\n")
     val playerIdQuery = playerTable.filter(_.id === playerId).result.head
     val player@(id, name, amountStones, mode) = Await.result(database.run(playerIdQuery), Duration.Inf)
     Player.apply(name, amountStones).changeMode(mode)
   }
 
   override def load(): Map[Int, Player] = {
+    printf(s"Loading players in MySQL\n")
     var players = Map.empty[Int, Player]
     Await.result(database.run(playerTable.result).map(_.foreach {
       case (id, name, amountStones, mode) => players += (id -> Player.apply(name, amountStones).changeMode(mode))
