@@ -7,28 +7,28 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives._
 import de.htwg.se.mill.controller.FileIOControllerInterface
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
 class FileIOHttpServer(controller: FileIOControllerInterface) {
-  implicit val system = ActorSystem(Behaviors.empty, "fileIo")
-  implicit val executionContext = system.executionContext
+  implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "fileIo")
+  implicit val executionContext: ExecutionContextExecutor = system.executionContext
 
   val interface: String = "0.0.0.0"
   val port: Int = 8082
   val uriPath: String = "fileio"
 
   val route =
-    concat (
+    concat(
       path(uriPath) {
         get {
           complete(HttpEntity(ContentTypes.`application/json`, controller.load(None)))
         } ~
-        post {
-          entity(as[String]) { fieldInJson =>
-            controller.save(fieldInJson, None)
-            complete("")
+          post {
+            entity(as[String]) { fieldInJson =>
+              controller.save(fieldInJson, None)
+              complete("")
+            }
           }
-        }
       } ~
         path(uriPath / "db") {
           get {
@@ -69,5 +69,5 @@ class FileIOHttpServer(controller: FileIOControllerInterface) {
     )
   val bindingFuture: Future[Http.ServerBinding] = Http().newServerAt(interface, port).bind(route)
 
-  println(s"FileIOs server is online at http://${interface}:${port}/${uriPath}")
+  printf(s"FileIOs server is online at http://$interface:$port/$uriPath\n")
 }
