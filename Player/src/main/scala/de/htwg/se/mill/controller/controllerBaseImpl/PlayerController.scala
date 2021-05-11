@@ -17,6 +17,7 @@ class PlayerController extends PlayerControllerInterface {
   val gson = new Gson
 
   override def changeSaveMethod(method: String): Unit = {
+    printf(s"Changing saving method from ${daoInterface.toString} to $method\n")
     method match {
       case "mongo" => daoInterface = injector.instance[PlayerDaoInterface](Names.named("mongo"))
       case _ => daoInterface = injector.instance[PlayerDaoInterface](Names.named("sql"))
@@ -30,6 +31,11 @@ class PlayerController extends PlayerControllerInterface {
       player2 = player
     }
     player
+  }
+
+  override def createPlayer(number: Int, name: String): Player = {
+    print(s"Creating Player ${number}!\n")
+    setPlayer(number, Player(name))
   }
 
   override def getPlayer(number: Int): Player = {

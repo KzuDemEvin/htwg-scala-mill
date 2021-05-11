@@ -18,15 +18,22 @@ class FileIOController extends FileIOControllerInterface {
   var daoInterface: FileIODaoInterface = injector.instance[FileIODaoInterface](Names.named("mongo"))
 
   override def changeSaveMethod(method: String): Unit = {
+    printf(s"Changing saving method from ${daoInterface.toString} to $method\n")
     method match {
       case "mongo" => daoInterface = injector.instance[FileIODaoInterface](Names.named("mongo"))
       case _ => daoInterface = injector.instance[FileIODaoInterface](Names.named("sql"))
     }
   }
 
-  override def load(filename: Option[String]): String = fileIO.load(filename)
+  override def load(filename: Option[String]): String = {
+    printf(s"Loading file ${filename.getOrElse("")}\n")
+    fileIO.load(filename)
+  }
 
-  override def save(fieldInJson: String, filename: Option[String]): Unit = fileIO.save(fieldInJson, filename)
+  override def save(fieldInJson: String, filename: Option[String]): Unit = {
+    printf(s"Saving file ${filename.getOrElse("")}\n")
+    fileIO.save(fieldInJson, filename)
+  }
 
   override def saveDb(field: String): Unit = daoInterface.save(field)
 
@@ -38,7 +45,5 @@ class FileIOController extends FileIOControllerInterface {
 
   override def deleteInDB(id: String): Unit = daoInterface.delete(id)
 
-  override def toJson(fields: Map[Int, String]): String = {
-    new Gson().toJson(fields)
-  }
+  override def toJson(fields: Map[Int, String]): String = new Gson().toJson(fields)
 }
