@@ -28,15 +28,15 @@ class FileIOController extends FileIOControllerInterface {
 
   override def save(fieldInJson: String, filename: Option[String]): Unit = fileIO.save(fieldInJson, filename)
 
-  override def saveSqlDb(field: String, id: Option[Int]): Unit = daoInterface.save(field, id)
+  override def saveDb(field: String, id: Option[Int]): Unit = daoInterface.save(field, id)
 
-  override def loadSqlDb(id: String): String = {
+  override def loadDb(id: String): String = {
     Await.result(daoInterface.load(id), Duration.Inf)
   }
 
-  override def loadAllSqlDb(): Map[Int, String] = Await.result(daoInterface.loadAll(), Duration.Inf).toMap[Int, String]
+  override def loadAllDb(): Map[Int, String] = Await.result(daoInterface.loadAll(), Duration.Inf).toMap[Int, String]
 
-  override def deleteInSqlDB(id: String): Unit = daoInterface.delete(id)
+  override def deleteInDB(id: String): Unit = daoInterface.delete(id)
 
   override def toJson(fields: Map[Int, String]): String = {
     new Gson().toJson(fields)

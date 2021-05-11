@@ -43,9 +43,9 @@ class FileIOHttpServer(controller: FileIOControllerInterface) {
         path(uriPath / "sqldb") {
           get {
             parameters("id") {
-              id => complete(HttpEntity(ContentTypes.`application/json`, controller.loadSqlDb(id)))
+              id => complete(HttpEntity(ContentTypes.`application/json`, controller.loadDb(id)))
             } ~
-              complete(HttpEntity(ContentTypes.`application/json`, controller.toJson(controller.loadAllSqlDb())))
+              complete(HttpEntity(ContentTypes.`application/json`, controller.toJson(controller.loadAllDb())))
           } ~
           post {
             parameters("id") {
@@ -58,7 +58,7 @@ class FileIOHttpServer(controller: FileIOControllerInterface) {
           delete {
             parameters("id") {
               id => {
-                controller.deleteInSqlDB(id)
+                controller.deleteInDB(id)
                 complete("Deleted!")
               }
             }

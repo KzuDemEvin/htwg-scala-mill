@@ -9,11 +9,11 @@ trait FileIOControllerInterface {
 
   def saveSqlDb(field: String, id: Option[Int]): Unit
 
-  def loadSqlDb(id: String): String
+  def loadDb(id: String): String
 
-  def loadAllSqlDb(): Map[Int, String]
+  def loadAllDb(): Map[Int, String]
 
-  def deleteInSqlDB(id: String): Unit
+  def deleteInDB(id: String): Unit
 
   def toJson(fields: Map[Int, String]): String
 }
