@@ -17,7 +17,7 @@ case class FileIODaoMongo() extends FileIODaoInterface {
   val database: MongoDatabase = client.getDatabase("mill")
   val fileIOCollection: MongoCollection[Document] = database.getCollection("FileIO")
 
-  override def save(field: String, id: Option[Int] = None): Unit = {
+  override def save(field: String): Unit = {
     val doc: Document = Document.apply(field)
 
     val insertObservable: SingleObservable[InsertOneResult] = fileIOCollection.insertOne(doc)

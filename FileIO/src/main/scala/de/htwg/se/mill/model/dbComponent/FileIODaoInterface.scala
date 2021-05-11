@@ -4,7 +4,7 @@ import scala.concurrent.Future
 
 trait FileIODaoInterface {
 
-  def save(field: String, id: Option[Int] = None): Unit
+  def save(field: String): Unit
 
   def load(fileIoID: String): Future[String]
 

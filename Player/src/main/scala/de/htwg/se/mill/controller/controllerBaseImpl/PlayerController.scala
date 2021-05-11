@@ -23,15 +23,18 @@ class PlayerController extends PlayerControllerInterface {
     }
   }
 
-  override def createPlayer(number: Int, name: String): Player = {
-    print(s"Creating Player ${number}!\n")
-    val player: Player = Player(name)
+  private def setPlayer(number: Int, player: Player): Player = {
     if (number % 2 == 0) {
       player1 = player
     } else {
       player2 = player
     }
     player
+  }
+
+  override def createPlayer(number: Int, name: String): Player = {
+    print(s"Creating Player ${number}!\n")
+    setPlayer(number, Player(name))
   }
 
   override def getPlayer(number: Int): Player = {

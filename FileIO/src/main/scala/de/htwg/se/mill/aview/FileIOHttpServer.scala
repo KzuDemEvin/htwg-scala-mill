@@ -38,12 +38,9 @@ class FileIOHttpServer(controller: FileIOControllerInterface) {
               complete(HttpEntity(ContentTypes.`application/json`, controller.toJson(controller.loadAllDb())))
           } ~
             post {
-              parameters("id") {
-                id =>
-                  entity(as[String]) { fieldInJson =>
-                    controller.saveDb(fieldInJson, id.toIntOption)
-                    complete("Game saved!")
-                  }
+              entity(as[String]) { fieldInJson =>
+                controller.saveDb(fieldInJson)
+                complete("Game saved!")
               }
             } ~
             put {
