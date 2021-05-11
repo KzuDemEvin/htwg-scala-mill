@@ -1,7 +1,6 @@
 package de.htwg.se.mill.controller.controllerFileIO
 
 import de.htwg.se.mill.controller.controllerBaseImpl.FileIOController
-import de.htwg.se.mill.model.dbComponent.fileIoDaoImpl.FileIODaoSlick
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 

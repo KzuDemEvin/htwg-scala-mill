@@ -30,6 +30,16 @@ class FileIOHttpServer(controller: FileIOControllerInterface) {
           }
         }
       } ~
+        path(uriPath / "db") {
+          get {
+            parameters("type") {
+              dbType => {
+                controller.changeSaveMethod(dbType)
+                complete(HttpEntity(ContentTypes.`application/json`, "Database changed!"))
+              }
+            }
+          }
+        } ~
         path(uriPath / "sqldb") {
           get {
             parameters("id") {
@@ -46,8 +56,8 @@ class FileIOHttpServer(controller: FileIOControllerInterface) {
           delete {
             parameters("id") {
               id => {
-                controller.deleteInSqlDB(id.toInt)
-                complete("")
+                controller.deleteInSqlDB(id)
+                complete("Deleted!")
               }
             }
           }

@@ -11,7 +11,7 @@ import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
-case class FileIODaoSlick() extends FileIODaoInterface {
+case class FileIODaoSlick @Inject() () extends FileIODaoInterface {
   val databaseUrl: String = "jdbc:mysql://" + sys.env.getOrElse("DATABASE_HOST", "localhost:3306") + "/" + sys.env.getOrElse("MYSQL_DATABASE", "mill") + "?serverTimezone=UTC&useSSL=false"
   val databaseUser: String = sys.env.getOrElse("MYSQL_USER", "root")
   val databasePassword: String = sys.env.getOrElse("MYSQL_PASSWORD", "MILL")
@@ -54,8 +54,8 @@ case class FileIODaoSlick() extends FileIODaoInterface {
     fields
   }
 
-  override def delete(fileIoID: Int): Unit = {
-    val query = fileIOTable.filter(_.id === fileIoID).delete
+  override def delete(fileIoID: String): Unit = {
+    val query = fileIOTable.filter(_.id === fileIoID.toInt).delete
     database.run(query)
   }
 }

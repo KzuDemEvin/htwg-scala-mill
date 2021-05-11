@@ -13,11 +13,12 @@ import com.google.inject.{Guice, Inject, Injector}
 class FileIOController @Inject() (var daoInterface: FileIODaoInterface) extends FileIOControllerInterface {
   val fileIO: FileIO = new FileIO
   val injector: Injector = Guice.createInjector(new FileIOModule)
+  var daoInterface: FileIODaoInterface = injector.instance[FileIODaoInterface](Names.named("mongo"))
 
-  def changeSaveMethod(method: String): Unit = {
+  override def changeSaveMethod(method: String): Unit = {
     method match {
-      case "mongo" => injector.instance[FileIODaoInterface](Names.named("mongo"))
-      case _ => injector.instance[FileIODaoInterface](Names.named("sql"))
+      case "mongo" => daoInterface = injector.instance[FileIODaoInterface](Names.named("mongo"))
+      case _ => daoInterface = injector.instance[FileIODaoInterface](Names.named("sql"))
     }
   }
 
@@ -31,7 +32,7 @@ class FileIOController @Inject() (var daoInterface: FileIODaoInterface) extends 
 
   override def loadAllSqlDb(): Map[Int, String] = daoInterface.loadAll()
 
-  override def deleteInSqlDB(id: Int): Unit = daoInterface.delete(id)
+  override def deleteInSqlDB(id: String): Unit = daoInterface.delete(id)
 
   override def toJson(fields: Map[Int, String]): String = {
     new Gson().toJson(fields)
