@@ -28,7 +28,6 @@ case class FileIODaoSlick() extends FileIODaoInterface {
 
   val setup: DBIOAction[Unit, NoStream, Effect.Schema] = DBIO.seq(fileIOTable.schema.createIfNotExists)
   database.run(setup)
-  println(s"Settings, databaseUrl: ${databaseUrl}, databaseUser: ${databaseUser}, databasePassword: ${databasePassword}")
 
   override def save(field: String, id: Option[Int] = None): Unit = {
     val ID: Int = id match {
