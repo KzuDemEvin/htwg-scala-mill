@@ -31,38 +31,37 @@ class FileIOHttpServer(controller: FileIOControllerInterface) {
         }
       } ~
         path(uriPath / "db") {
-          put {
-            parameters("type") {
-              dbType => {
-                controller.changeSaveMethod(dbType)
-                complete(HttpEntity(ContentTypes.`application/json`, "Database changed!"))
-              }
-            }
-          }
-        } ~
-        path(uriPath / "sqldb") {
           get {
             parameters("id") {
               id => complete(HttpEntity(ContentTypes.`application/json`, controller.loadDb(id)))
             } ~
               complete(HttpEntity(ContentTypes.`application/json`, controller.toJson(controller.loadAllDb())))
           } ~
-          post {
-            parameters("id") {
-              id => entity(as[String]) { fieldInJson =>
-                controller.saveDb(fieldInJson, id.toIntOption)
-                complete("Game saved!")
+            post {
+              parameters("id") {
+                id =>
+                  entity(as[String]) { fieldInJson =>
+                    controller.saveDb(fieldInJson, id.toIntOption)
+                    complete("Game saved!")
+                  }
+              }
+            } ~
+            put {
+              parameters("type") {
+                dbType => {
+                  controller.changeSaveMethod(dbType)
+                  complete(HttpEntity(ContentTypes.`application/json`, "Database changed!"))
+                }
+              }
+            } ~
+            delete {
+              parameters("id") {
+                id => {
+                  controller.deleteInDB(id)
+                  complete("Deleted!")
+                }
               }
             }
-          } ~
-          delete {
-            parameters("id") {
-              id => {
-                controller.deleteInDB(id)
-                complete("Deleted!")
-              }
-            }
-          }
         } ~
         path("") {
           complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>Player Server</h1>"))

@@ -56,20 +56,20 @@ class PlayerHttpServer(playerController: PlayerControllerInterface) {
             }
           }
         } ~
-        path(uriPath / "sqldb") {
+        path(uriPath / "db") {
           get {
             parameters("id") {
               id => postResponse(playerController.toJson(playerController.load(id.toInt)))
             }
           } ~
-            post {
-              parameters("number") {
-                number => {
-                  playerController.save(number.toInt)
-                  postResponse("Player saved!")
-                }
+          post {
+            parameters("number") {
+              number => {
+                playerController.save(number.toInt)
+                postResponse("Player saved!")
               }
             }
+          }
         } ~
         path("") {
           complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>Player Server</h1>"))

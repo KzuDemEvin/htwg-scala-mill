@@ -128,13 +128,13 @@ class Controller extends ControllerInterface with Publisher {
 
   def saveDB(): Unit = {
     val field: String = blockRequest(s"http://$roundManagerHttpServer/field/json", GET)
-    Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$fileIOHttpServer/fileio/sqldb", entity = Json.prettyPrint(Json.parse(field))))
+    Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$fileIOHttpServer/fileio/db", entity = Json.prettyPrint(Json.parse(field))))
     gameState = GameState.handle(SaveState())
     publish(new CellChanged)
   }
 
   def loadDB(id: Int): Unit = {
-    val field: String = blockRequest(s"http://$fileIOHttpServer/fileio/sqldb?id=${id}", GET)
+    val field: String = blockRequest(s"http://$fileIOHttpServer/fileio/db?id=${id}", GET)
     Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$roundManagerHttpServer/field/setField", entity = Json.prettyPrint(Json.parse(field))))
     gameState = GameState.handle(LoadState())
     publish(new FieldChanged)
