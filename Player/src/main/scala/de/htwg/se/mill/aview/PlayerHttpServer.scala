@@ -8,12 +8,12 @@ import akka.http.scaladsl.{Http, server}
 import de.htwg.se.mill.controller.PlayerControllerInterface
 
 class PlayerHttpServer(playerController: PlayerControllerInterface) {
-    implicit val system = ActorSystem(Behaviors.empty, "player")
-    implicit val executionContext = system.executionContext
+  implicit val system = ActorSystem(Behaviors.empty, "player")
+  implicit val executionContext = system.executionContext
 
-    val interface: String = "0.0.0.0"
-    val port: Int = 8081
-    val uriPath: String = "player"
+  val interface: String = "0.0.0.0"
+  val port: Int = 8081
+  val uriPath: String = "player"
 
   val route =
     concat(
@@ -39,28 +39,35 @@ class PlayerHttpServer(playerController: PlayerControllerInterface) {
             }
           }
       } ~
-          path(uriPath / "name") {
-            get {
-              parameters("number") {
-                number => postResponse(playerController.getPlayer(number.toInt).name)
-              }
-            }
-          } ~
-        path(uriPath / "sqldb") {
+        path(uriPath / "name") {
           get {
-            parameters("id") {
-              id => postResponse(playerController.toJson(playerController.load(id.toInt)))
-            } ~
-              postResponse(playerController.toJson(playerController.load()))
+            parameters("number") {
+              number => postResponse(playerController.getPlayer(number.toInt).name)
+            }
+          }
+        } ~
+        path(uriPath / "db") {
+          get {
+            parameters("id", "number") {
+              (id, number) => postResponse(playerController.toJson(playerController.load(id.toInt, number.toInt)))
+            }
           } ~
-            post {
-              parameters("number") {
-                number => {
-                  playerController.save(number.toInt)
-                  postResponse("")
-                }
+          post {
+            parameters("number") {
+              number => {
+                playerController.save(number.toInt)
+                postResponse("Player saved!")
               }
             }
+          } ~
+          put {
+            parameters("type") {
+              dbType => {
+                playerController.changeSaveMethod(dbType)
+                postResponse("Database changed!")
+              }
+            }
+          }
         } ~
         path("") {
           complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>Player Server</h1>"))

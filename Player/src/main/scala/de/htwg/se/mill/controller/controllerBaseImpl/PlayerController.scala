@@ -1,24 +1,41 @@
 package de.htwg.se.mill.controller.controllerBaseImpl
 
 import com.google.gson.Gson
+import com.google.inject.name.Names
+import com.google.inject.{Guice, Injector}
+import de.htwg.se.mill.PlayerModule
 import de.htwg.se.mill.controller.PlayerControllerInterface
 import de.htwg.se.mill.model.dbComponent.PlayerDaoInterface
 import de.htwg.se.mill.model.playerComponent.Player
+import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
 
-class PlayerController(daoInterface: PlayerDaoInterface) extends PlayerControllerInterface {
+class PlayerController extends PlayerControllerInterface {
+  val injector: Injector = Guice.createInjector(new PlayerModule)
+  var daoInterface: PlayerDaoInterface = injector.instance[PlayerDaoInterface](Names.named("mongo"))
   var player1: Player = Player(name = "No name")
   var player2: Player = Player(name = "No name")
   val gson = new Gson
 
-  override def createPlayer(number: Int, name: String): Player = {
-    print(s"Creating Player ${number}!\n")
-    val player: Player = Player(name)
+  override def changeSaveMethod(method: String): Unit = {
+    printf(s"Changing saving method from ${daoInterface.toString} to $method\n")
+    method match {
+      case "mongo" => daoInterface = injector.instance[PlayerDaoInterface](Names.named("mongo"))
+      case _ => daoInterface = injector.instance[PlayerDaoInterface](Names.named("sql"))
+    }
+  }
+
+  private def setPlayer(number: Int, player: Player): Player = {
     if (number % 2 == 0) {
       player1 = player
     } else {
       player2 = player
     }
     player
+  }
+
+  override def createPlayer(number: Int, name: String): Player = {
+    print(s"Creating Player ${number}!\n")
+    setPlayer(number, Player(name))
   }
 
   override def getPlayer(number: Int): Player = {
@@ -43,26 +60,12 @@ class PlayerController(daoInterface: PlayerDaoInterface) extends PlayerControlle
 
   override def deletePlayer(number: Int): Player = {
     print(s"Deleting Player ${number} called!\n")
-    if (number % 2 == 0) {
-      player1 = Player(name = "No name")
-      player1
-    } else {
-      player2 = Player(name = "No name")
-      player2
-    }
+    setPlayer(number, Player.apply("No name"))
   }
 
   override def save(number: Int): Unit = daoInterface.save(getPlayer(number))
 
-  override def load(id: Int): Player = {
-    val player = daoInterface.load(id)
-    /*if (id % 2 == 0) {
-      player1 = player
-    } else {
-      player2 = player
-    } */
-    player
-  }
+  override def load(id: Int, number: Int): Player = setPlayer(number, daoInterface.load(id))
 
   override def load(): Map[Int, Player] = daoInterface.load()
 

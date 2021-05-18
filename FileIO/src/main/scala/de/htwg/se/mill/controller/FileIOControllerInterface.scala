@@ -1,18 +1,19 @@
 package de.htwg.se.mill.controller
 
 trait FileIOControllerInterface {
+  def changeSaveMethod(method: String): Unit
 
   def load(filename: Option[String]): String
 
   def save(fieldInJson: String, filename: Option[String]): Unit
 
-  def saveSqlDb(field: String): Unit
+  def saveDb(field: String): Unit
 
-  def loadSqlDb(id: Int): String
+  def loadDb(id: String): String
 
-  def loadSqlDb(): Map[Int, String]
+  def loadAllDb(): Map[Int, String]
 
-  def deleteInSqlDB(id: Int): Unit
+  def deleteInDB(id: String): Unit
 
   def toJson(fields: Map[Int, String]): String
 }

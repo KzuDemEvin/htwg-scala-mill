@@ -95,7 +95,7 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
 
   def winnerText(): String = {
     print(s"WinnerText called!\n")
-    val player: String = blockRequest(s"http://${playerHttpServer}/player/name?number=${winner+1}", GET, s"Player ${(mgr.winner % 2) + 1}")
+    val player: String = blockRequest(s"http://$playerHttpServer/player/name?number=${winner+1}", GET, s"Player ${(mgr.winner % 2) + 1}")
     val winnerText: String = {
       mgr.winner match {
         case 2 => " wins! (white)"

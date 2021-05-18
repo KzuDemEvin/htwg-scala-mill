@@ -48,3 +48,5 @@ yourgame.log
 # Safe files
 *.json
 *.xml
+
+*.wt

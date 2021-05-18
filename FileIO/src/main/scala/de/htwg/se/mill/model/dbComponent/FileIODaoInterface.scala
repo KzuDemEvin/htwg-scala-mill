@@ -1,13 +1,14 @@
 package de.htwg.se.mill.model.dbComponent
 
+import scala.concurrent.Future
+
 trait FileIODaoInterface {
 
   def save(field: String): Unit
 
-  def load(fieldId: Int): String
+  def load(fileIoID: String): Future[String]
 
-  def load(): Map[Int, String]
+  def loadAll(): Future[Seq[(Int, String)]]
 
-  def delete(fieldId: Int): Unit
-
+  def delete(fileIoID: String): Unit
 }
