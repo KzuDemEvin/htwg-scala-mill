@@ -1,9 +1,10 @@
 package de.htwg.se.mill.model.fileIoComponent.fileIoComponent.fileIoXmlImpl
 
 import de.htwg.se.mill.model.fileIoComponent.fileToXmlImpl.FileIO
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class FileIOSpec extends WordSpec with Matchers {
+class FileIOSpec extends AnyWordSpec with Matchers {
   "A XML FileIO" when {
     "new" should {
       val fileIo = new FileIO

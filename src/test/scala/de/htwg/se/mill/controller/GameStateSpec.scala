@@ -1,9 +1,10 @@
 package de.htwg.se.mill.controller
 
-import de.htwg.se.mill.controller.controllerComponent.{BlackTurnState, FinishedState, GameState, LoadState, NewState, SaveState, WhiteTurnState}
-import org.scalatest.{Matchers, WordSpec}
+import de.htwg.se.mill.controller.controllerComponent._
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class GameStateSpec extends WordSpec with Matchers {
+class GameStateSpec extends AnyWordSpec with Matchers {
   "A GameState" when {
     "should represent the game current sate. It" should {
       "be in progress" in {
@@ -29,6 +30,14 @@ class GameStateSpec extends WordSpec with Matchers {
       "say its in Load State" in {
         val gameStateLoad = GameState.handle(LoadState())
         gameStateLoad should be("Game loaded")
+      }
+      "say its in Undo State" in {
+        val gameStateLoad = GameState.handle(UndoState())
+        gameStateLoad should be("Undo")
+      }
+      "say its in Redo State" in {
+        val gameStateLoad = GameState.handle(RedoState())
+        gameStateLoad should be("Redo")
       }
     }
 

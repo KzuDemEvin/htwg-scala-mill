@@ -17,18 +17,25 @@ val commonDependencies = Seq(
   "com.typesafe.akka" %% "akka-actor-typed" % "2.6.8",
   "com.typesafe.akka" %% "akka-stream" % "2.6.8",
   "com.typesafe.akka" %% "akka-http" % "10.2.4",
-  "com.google.code.gson" % "gson" % "2.8.6"
+  "com.google.code.gson" % "gson" % "2.8.6",
+  "com.typesafe.slick" %% "slick" % "3.3.3",
+  "org.slf4j" % "slf4j-nop" % "1.7.30" % Test,
+  "mysql" % "mysql-connector-java" % "8.0.24"
 )
 
+fork in run := true
 parallelExecution in Test := false
 coverageExcludedPackages := "<empty>;.*aview.*;.*Mill"
 coverageEnabled.in(Test, test) := true
+javaOptions += "-Dscala.concurrent.context.maxThreads=2"
 
 ThisBuild / trackInternalDependencies := TrackLevel.TrackIfMissing
 
-lazy val fileIO = (project in file("FileIO"))
-lazy val player = (project in file("Player"))
-lazy val root =  (project in file(".")).dependsOn(player, fileIO).aggregate(player, fileIO).settings(
+lazy val roundManager = project in file("RoundManager")
+lazy val player = project in file("Player")
+lazy val fileIO = project in file("FileIO")
+
+lazy val root =  (project in file(".")).dependsOn(player, fileIO, roundManager).aggregate(player, fileIO, roundManager).settings(
   name := "Mill",
   libraryDependencies ++= commonDependencies,
   assemblyMergeStrategy in assembly := {
@@ -42,6 +49,6 @@ lazy val root =  (project in file(".")).dependsOn(player, fileIO).aggregate(play
   .settings(daemonUser in Docker := "sbtuser")
   .settings(dockerExposedPorts := Seq(8080))
   .settings(mainClass in Compile := Some("de.htwg.se.mill.Mill"))
-  .aggregate(player, fileIO)
-  .dependsOn(player,fileIO)
+  .aggregate(player, fileIO, roundManager)
+  .dependsOn(player,fileIO, roundManager)
   .enablePlugins(sbtdocker.DockerPlugin, JavaAppPackaging)

@@ -1,8 +1,8 @@
 package de.htwg.se.mill
 
 import com.google.inject.{Guice, Injector}
-import de.htwg.se.mill.aview.{HttpServer, Tui}
 import de.htwg.se.mill.aview.gui.GUI
+import de.htwg.se.mill.aview.{HttpServer, Tui}
 import de.htwg.se.mill.controller.controllerComponent.ControllerInterface
 
 import java.awt.GraphicsEnvironment
@@ -16,7 +16,7 @@ object Mill {
   if (!GraphicsEnvironment.isHeadless) {
     val gui = new GUI(controller)
   }
-  val webserver = new HttpServer(controller)
+  val webserver: HttpServer = HttpServer(controller)
   var input: String = ""
   controller.createEmptyField(defaultSize)
 

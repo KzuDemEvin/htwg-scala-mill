@@ -1,39 +1,38 @@
 package de.htwg.se.mill.aview
 
 import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
-import de.htwg.se.mill.model.fieldComponent.Color
-import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class TuiSpec extends WordSpec with Matchers {
+class TuiSpec extends AnyWordSpec with Matchers {
 
   "A Mill Tui" should {
-    val controller = new Controller(new Field(7))
+    val controller = new Controller
     val tui = new Tui(controller)
     "create an empty Mill on input 'new'" in {
       tui.execInput("new")
-      controller.field.placedStones() should be(0)
+      controller.fieldsize should be(7)
     }
-    "set a black stone on input '00'" in {
+    "set a white stone on input '00'" in {
       val row = 0
       val col = 0
       tui.execInput(s"$row$col")
-      controller.field.available(row, col) should be(false)
-      controller.cell(row, col).content.color should be(Color.white)
+      controller.isSet(row, col)({ case Some(isSet) => isSet.toBoolean should be(true)})
+      controller.color(row, col)({ case Some(color) => color should be("White")})
     }
-    "set a white stone on input '03" in {
+    "set a black stone on input '03" in {
       val row = 0
       val col = 3
       tui.execInput(s"$row$col")
-      controller.field.available(row, col) should be(false)
-      controller.field.cell(row, col).content.color should be(Color.black)
+      controller.isSet(row, col)({ case Some(isSet) => isSet.toBoolean should be(true)})
+      controller.color(row, col)({ case Some(color) => color should be("Black")})
     }
     "undo on input 'undo'" in {
       val row = 6
       val col = 6
       tui.execInput(s"$row$col")
       tui.execInput("undo")
-      controller.cell(row, col).isSet should be (false)
+      // controller.isSet(row, col) should be (false)
     }
     "redo on input 'redo'" in {
       val row = 0
@@ -41,11 +40,11 @@ class TuiSpec extends WordSpec with Matchers {
       tui.execInput(s"$row$col")
       tui.execInput("undo")
       tui.execInput("redo")
-      controller.cell(row,col).isSet should be(true)
+      // controller.isSet(row, col) should be(true)
     }
     "place 18 random stones" in {
       tui.execInput("random")
-      controller.field.placedStones() should be(18)
+      // controller.mgr.field.placedStones() should be(18)
     }
   }
 }

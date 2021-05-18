@@ -1,18 +1,18 @@
 package de.htwg.se.mill.aview.gui
 
 import de.htwg.se.mill.controller.controllerComponent.controllerBaseImpl.Controller
-import de.htwg.se.mill.model.fieldComponent.fieldAdvancedImpl.Field
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class GUIPlayerWindowsSpec extends WordSpec with Matchers {
+class GUIPlayerWindowsSpec extends AnyWordSpec with Matchers {
+  /*
   "A GUIPlayerWindowsSpec" when {
-    val controller = new Controller(new Field(7))
+    val controller = new Controller
     "created" should {
       val guiPlayerWindow = new GUIPlayerWindow(controller)
       "be able to change its player window" in {
         guiPlayerWindow.nextPlayer()
       }
     }
-  }
-
+  }*/
 }

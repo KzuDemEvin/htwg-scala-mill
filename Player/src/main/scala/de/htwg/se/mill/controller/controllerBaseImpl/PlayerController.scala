@@ -2,13 +2,16 @@ package de.htwg.se.mill.controller.controllerBaseImpl
 
 import com.google.gson.Gson
 import de.htwg.se.mill.controller.PlayerControllerInterface
+import de.htwg.se.mill.model.dbComponent.PlayerDaoInterface
 import de.htwg.se.mill.model.playerComponent.Player
 
-class PlayerController extends PlayerControllerInterface {
+class PlayerController(daoInterface: PlayerDaoInterface) extends PlayerControllerInterface {
   var player1: Player = Player(name = "No name")
   var player2: Player = Player(name = "No name")
+  val gson = new Gson
 
   override def createPlayer(number: Int, name: String): Player = {
+    print(s"Creating Player ${number}!\n")
     val player: Player = Player(name)
     if (number % 2 == 0) {
       player1 = player
@@ -19,6 +22,7 @@ class PlayerController extends PlayerControllerInterface {
   }
 
   override def getPlayer(number: Int): Player = {
+    print(s"Player ${number} called!\n")
     if (number % 2 == 0) {
       player1
     } else {
@@ -27,6 +31,7 @@ class PlayerController extends PlayerControllerInterface {
   }
 
   override def updatePlayerMode(number: Int, mode: String): Player = {
+    print(s"Updating Playermode of Player ${number} to ${mode}!\n")
     if (number % 2 == 0) {
       player1 = player1.changeMode(mode)
       player1
@@ -37,6 +42,7 @@ class PlayerController extends PlayerControllerInterface {
   }
 
   override def deletePlayer(number: Int): Player = {
+    print(s"Deleting Player ${number} called!\n")
     if (number % 2 == 0) {
       player1 = Player(name = "No name")
       player1
@@ -46,8 +52,21 @@ class PlayerController extends PlayerControllerInterface {
     }
   }
 
-  override def toJson(player: Player): String = {
-    val gson = new Gson
-    gson.toJson(player)
+  override def save(number: Int): Unit = daoInterface.save(getPlayer(number))
+
+  override def load(id: Int): Player = {
+    val player = daoInterface.load(id)
+    /*if (id % 2 == 0) {
+      player1 = player
+    } else {
+      player2 = player
+    } */
+    player
   }
+
+  override def load(): Map[Int, Player] = daoInterface.load()
+
+  override def toJson(player: Player): String = gson.toJson(player)
+
+  override def toJson(players: Map[Int, Player]): String = gson.toJson(players)
 }

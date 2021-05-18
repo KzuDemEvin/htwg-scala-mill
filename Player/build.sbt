@@ -25,5 +25,8 @@ val commonDependencies = Seq(
   "com.typesafe.akka" %% "akka-actor-typed" % "2.6.8",
   "com.typesafe.akka" %% "akka-stream" % "2.6.8",
   "com.typesafe.akka" %% "akka-http" % "10.2.4",
-  "com.google.code.gson" % "gson" % "2.8.6"
+  "com.google.code.gson" % "gson" % "2.8.6",
+  "com.typesafe.slick" %% "slick" % "3.3.3",
+  "org.slf4j" % "slf4j-nop" % "1.7.30" % Test,
+  "mysql" % "mysql-connector-java" % "8.0.24"
 )

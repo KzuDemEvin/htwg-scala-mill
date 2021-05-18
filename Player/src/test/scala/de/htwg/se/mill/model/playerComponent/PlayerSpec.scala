@@ -1,8 +1,9 @@
 package de.htwg.se.mill.model.playerComponent
 
-import org.scalatest._
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class PlayerSpec extends WordSpec with Matchers {
+class PlayerSpec extends AnyWordSpec with Matchers {
 
   "A Player" when {
     "new" should {
@@ -29,6 +30,11 @@ class PlayerSpec extends WordSpec with Matchers {
         "should have a nice String representation" in {
           player1.toString should be("Name: Kevin, Amount of Stones: 9")
         }
+      }
+      "be able to change its mode" in {
+        var player = Player.apply("Josef")
+        player = player.changeMode("Chilling'")
+        player.mode should be("Chilling'")
       }
     }
   }

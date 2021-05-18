@@ -1,10 +1,9 @@
 package de.htwg.se.mill.util
 
-import java.security.KeyStore.TrustedCertificateEntry
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-import org.scalatest.{Matchers, WordSpec}
-
-class ObservableSpec extends WordSpec with Matchers {
+class ObservableSpec extends AnyWordSpec with Matchers {
   "An Observable" should {
     val observable = new Observable
     val observer = new Observer {
@@ -23,9 +22,8 @@ class ObservableSpec extends WordSpec with Matchers {
     }
     "remove an Observer" in {
       observable.remove(observer)
-      observable.subscribers should not contain (observer)
+      observable.subscribers should not contain observer
     }
 
   }
-
 }
