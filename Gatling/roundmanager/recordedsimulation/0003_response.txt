@@ -1,0 +1,8 @@
+Mill Gameboard:
+ w  -  -  b  -  -  b 
+ -  w  -  w  -  w  - 
+ -  -  o  w  b  -  - 
+ o  w  o  -  o  w  b 
+ -  -  w  o  b  -  - 
+ -  b  -  w  -  b  - 
+ b  -  -  o  -  -  b 

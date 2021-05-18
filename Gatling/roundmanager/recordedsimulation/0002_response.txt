@@ -1,0 +1,1 @@
+<p  style="font-family:'Lucida Console',monospace"> Mill Gameboard:<br> w  -  -  b  -  -  b <br> -  w  -  w  -  w  - <br> -  -  o  w  b  -  - <br> o  w  o  -  o  w  b <br> -  -  w  o  b  -  - <br> -  b  -  w  -  b  - <br> b  -  -  o  -  -  b <br></p>
