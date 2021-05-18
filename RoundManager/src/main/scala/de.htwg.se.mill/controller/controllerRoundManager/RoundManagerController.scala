@@ -121,6 +121,7 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
     new Gson().toJson(cell(row, col).content.color match {
       case Color.black => 1
       case Color.white => 0
+      case Color.noColor => -1
     })
   }
 
