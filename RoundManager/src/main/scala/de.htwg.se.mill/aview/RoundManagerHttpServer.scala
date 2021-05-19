@@ -19,11 +19,11 @@ class RoundManagerHttpServer(roundManagerController: RoundManagerControllerInter
 
   val route: Route =
     concat(
-        path("undo") {
-          post {
-            postResponse(roundManagerController.undo())
-          }
-        } ~
+      path("undo") {
+        post {
+          postResponse(roundManagerController.undo())
+        }
+      } ~
         path("handleClick") {
           post {
             parameters("row", "col") {
@@ -112,12 +112,12 @@ class RoundManagerHttpServer(roundManagerController: RoundManagerControllerInter
         } ~
         path("winnerText") {
           get {
-            postResponse(roundManagerController.winnerText())
+            complete(roundManagerController.winnerText())
           }
-        }~
-      path("") {
-        complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>RoundManager Server</h1>"))
-      }
+        } ~
+        path("") {
+          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>RoundManager Server</h1>"))
+        }
     )
 
   val bindingFuture = Http().newServerAt(interface, port).bind(route)

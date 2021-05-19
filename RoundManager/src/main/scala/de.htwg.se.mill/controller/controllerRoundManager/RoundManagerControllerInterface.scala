@@ -2,6 +2,8 @@ package de.htwg.se.mill.controller.controllerRoundManager
 
 import de.htwg.se.mill.model.fieldComponent.Cell
 
+import scala.concurrent.Future
+
 trait RoundManagerControllerInterface {
 
   def handleClick(row: Int, col: Int): String
@@ -12,7 +14,7 @@ trait RoundManagerControllerInterface {
   def turn(): String
   def roundCounter(): String
   def winner(): String
-  def winnerText(): String
+  def winnerText(): Future[String]
   def cell(row: Int, col: Int): Cell
   def isSet(row: Int, col: Int): String
   def color(row: Int, col: Int): String

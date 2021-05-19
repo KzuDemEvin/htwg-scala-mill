@@ -5,7 +5,7 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.javadsl.settings.ConnectionPoolSettings
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{HttpMethod, HttpRequest, HttpResponse}
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpMethod, HttpRequest, HttpResponse}
 import akka.http.scaladsl.model.HttpMethods.GET
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import com.google.gson.Gson
@@ -18,9 +18,9 @@ import de.htwg.se.mill.util.UndoManager
 import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
 import play.api.libs.json.{JsNumber, JsString, JsValue, Json}
 
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration.{Duration, DurationInt}
 import scala.concurrent.{Await, ExecutionContextExecutor, Future}
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 class RoundManagerController @Inject()(var field: FieldInterface) extends RoundManagerControllerInterface {
   var mgr: RoundManager = RoundManager(field)
@@ -100,7 +100,6 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
 
   def winnerText(): Future[String] = {
     print(s"WinnerText called!\n")
-    val player: String = blockRequest(s"http://$playerHttpServer/player/name?number=${winner + 1}", GET, s"Player ${(mgr.winner % 2) + 1}")
     val winnerText: String = {
       mgr.winner match {
         case 2 => " wins! (white)"
@@ -108,7 +107,9 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
         case _ => "No Winner"
       }
     }
-    new Gson().toJson(player + winnerText)
+    sendRequest(s"http://$playerHttpServer/player/name?number=${winner + 1}", GET, s"Player ${(mgr.winner % 2) + 1}")
+      .flatMap(_.entity.toStrict(2.second)
+        .map(s => new Gson().toJson(s.data.utf8String + winnerText)))
   }
 
   def cell(row: Int, col: Int): Cell = {
