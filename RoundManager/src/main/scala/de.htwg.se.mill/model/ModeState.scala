@@ -1,7 +1,7 @@
 package de.htwg.se.mill.model
 
 trait ModeState {
-  def handle:String
+  def handle: String
 }
 
 case class SetModeState() extends ModeState {
@@ -22,7 +22,7 @@ case class FlyModeState() extends ModeState {
 
 object ModeState {
 
-  def handle(e:ModeState):String = {
+  def handle(e: ModeState): String = {
     e match {
       case MoveModeState() => MoveModeState().handle
       case FlyModeState() => FlyModeState().handle
@@ -31,7 +31,7 @@ object ModeState {
     }
   }
 
-  def whichState(s:String):ModeState = {
+  def whichState(s: String): ModeState = {
     s match {
       case "SetMode" => SetModeState()
       case "RemoveMode" => RemoveModeState()
