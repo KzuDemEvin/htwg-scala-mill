@@ -13,83 +13,83 @@ class RecordedSimulation extends Simulation {
 		.inferHtmlResources()
 		.acceptHeader("*/*")
 		.acceptEncodingHeader("gzip, deflate")
+		.contentTypeHeader("application/json")
 		.userAgentHeader("PostmanRuntime/7.28.0")
 
-	val headers_0 = Map(
-		"Content-Type" -> "application/json",
-		"Postman-Token" -> "864391b1-fd24-4afb-bbf3-ceb4a81ac351")
+	val headers_0 = Map("Postman-Token" -> "934d9502-ea30-406e-a316-7f5984dc84cc")
 
-	val headers_1 = Map(
-		"Content-Type" -> "application/json",
-		"Postman-Token" -> "ae750d5b-63e5-4769-8e87-186bb4ea5487")
+	val headers_1 = Map("Postman-Token" -> "73ed1b3e-489a-4f0b-a57e-a34ae228ce09")
 
-	val headers_2 = Map("Postman-Token" -> "5f9047eb-3689-449c-9628-129ef3a75875")
+	val headers_2 = Map("Postman-Token" -> "dae0f2ff-ff2a-40c2-82f5-541c2729de27")
 
-	val headers_3 = Map(
-		"Content-Type" -> "application/json",
-		"Postman-Token" -> "c7ff45a9-190c-4fc6-950c-7c23a78ef2bd")
+	val headers_3 = Map("Postman-Token" -> "3ffa685b-9ec3-42bf-b6bc-666293ee7bd8")
 
-	val headers_4 = Map(
-		"Content-Type" -> "application/json",
-		"Postman-Token" -> "e4f3d30f-bd4f-4ea3-8e1b-427da0eca996")
+	val headers_4 = Map("Postman-Token" -> "61c037c1-d302-4652-89ad-36ee36888e6c")
 
-	val headers_5 = Map("Postman-Token" -> "b77939da-ead7-4a24-ae6b-ce85cce584a4")
+	val headers_5 = Map("Postman-Token" -> "496c00ab-1905-4c8a-add2-6ca858b7f71f")
 
-	val headers_6 = Map(
-		"Content-Type" -> "application/json",
-		"Postman-Token" -> "e4232db6-5cd2-42e8-af02-a47d300a715b")
+	val headers_6 = Map("Postman-Token" -> "7d19d77e-d4c6-4c85-9df5-1048e1721779")
 
-	val headers_7 = Map(
-		"Content-Type" -> "application/json",
-		"Postman-Token" -> "ff0129d4-dcd0-47e4-8ad1-2e23735f8cb5")
+	val headers_7 = Map("Postman-Token" -> "d9c8c440-4873-419b-9069-827292340730")
+
+	val headers_8 = Map("Postman-Token" -> "e201adc0-8d2f-402a-9534-8352c3ff05e0")
 
 
 
 	val scn = scenario("RecordedSimulation")
-		.exec(http("request_0")
-			.post("/fileio")
+		// FileIO
+		.exec(http("RecordedSimulation_0:GET_http://localhost:8082/")
+			.get("/")
 			.headers(headers_0)
-			.body(RawFileBody("fileIO/recordedsimulation/0000_request.json")))
-		.pause(4)
-		.exec(http("request_1")
-			.get("/fileio")
+			.body(RawFileBody("fileIO/recordedsimulation/0000_request.json"))
+			.check(bodyBytes.is(RawFileBody("fileIO/recordedsimulation/0000_response.html"))))
+		.pause(6)
+		.exec(http("RecordedSimulation_1:POST_http://localhost:8082/fileio")
+			.post("/fileio")
 			.headers(headers_1)
-			.body(RawFileBody("fileIO/recordedsimulation/0001_request.json"))
-			.check(bodyBytes.is(RawFileBody("fileIO/recordedsimulation/0001_response.json"))))
-		.pause(36)
-		.exec(http("request_2")
-			.put("/fileio/db?type=sql")
+			.body(RawFileBody("fileIO/recordedsimulation/0001_request.json")))
+		.pause(3)
+		.exec(http("RecordedSimulation_2:GET_http://localhost:8082/fileio")
+			.get("/fileio")
 			.headers(headers_2)
+			.body(RawFileBody("fileIO/recordedsimulation/0002_request.json"))
 			.check(bodyBytes.is(RawFileBody("fileIO/recordedsimulation/0002_response.json"))))
-		.pause(12)
-		.exec(http("request_3")
-			.post("/fileio/db")
+		.pause(11)
+		.exec(http("RecordedSimulation_3:PUT_http://localhost:8082/fileio/db?type=sql")
+			.put("/fileio/db?type=sql")
 			.headers(headers_3)
 			.body(RawFileBody("fileIO/recordedsimulation/0003_request.json"))
-			.check(bodyBytes.is(RawFileBody("fileIO/recordedsimulation/0003_response.txt"))))
-		.pause(27)
-		.exec(http("request_4")
-			.get("/fileio/db?id=1")
+			.check(bodyBytes.is(RawFileBody("fileIO/recordedsimulation/0003_response.json"))))
+		.pause(8)
+		.exec(http("RecordedSimulation_4:POST_http://localhost:8082/fileio/db")
+			.post("/fileio/db")
 			.headers(headers_4)
 			.body(RawFileBody("fileIO/recordedsimulation/0004_request.json"))
-			.check(bodyBytes.is(RawFileBody("fileIO/recordedsimulation/0004_response.json"))))
-		.pause(43)
-		.exec(http("request_5")
-			.put("/fileio/db?type=mongo")
+			.check(bodyBytes.is(RawFileBody("fileIO/recordedsimulation/0004_response.txt"))))
+		.pause(10)
+		.exec(http("RecordedSimulation_5:GET_http://localhost:8082/fileio/db?id=1")
+			.get("/fileio/db?id=1")
 			.headers(headers_5)
+			.body(RawFileBody("fileIO/recordedsimulation/0005_request.json"))
 			.check(bodyBytes.is(RawFileBody("fileIO/recordedsimulation/0005_response.json"))))
-		.pause(21)
-		.exec(http("request_6")
-			.get("/fileio/db?id=609ad0559428d12672bc9105")
+		.pause(13)
+		.exec(http("RecordedSimulation_6:PUT_http://localhost:8082/fileio/db?type=mongo")
+			.put("/fileio/db?type=mongo")
 			.headers(headers_6)
 			.body(RawFileBody("fileIO/recordedsimulation/0006_request.json"))
 			.check(bodyBytes.is(RawFileBody("fileIO/recordedsimulation/0006_response.json"))))
-		.pause(6)
-		.exec(http("request_7")
+		.pause(13)
+		.exec(http("RecordedSimulation_7:POST_http://localhost:8082/fileio/db")
 			.post("/fileio/db")
 			.headers(headers_7)
 			.body(RawFileBody("fileIO/recordedsimulation/0007_request.json"))
 			.check(bodyBytes.is(RawFileBody("fileIO/recordedsimulation/0007_response.txt"))))
+		.pause(10)
+		.exec(http("RecordedSimulation_8:GET_http://localhost:8082/fileio/db?id=609ad0559428d12672bc9105")
+			.get("/fileio/db?id=609ad0559428d12672bc9105")
+			.headers(headers_8)
+			.body(RawFileBody("fileIO/recordedsimulation/0008_request.json"))
+			.check(bodyBytes.is(RawFileBody("fileIO/recordedsimulation/0008_response.json"))))
 
 	setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
 }
