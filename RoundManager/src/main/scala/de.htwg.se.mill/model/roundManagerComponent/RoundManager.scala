@@ -6,11 +6,10 @@ import de.htwg.se.mill.model.fieldComponent.{Color, _}
 import play.api.libs.json.Json
 
 case class RoundManager(field: FieldInterface,
-                        player1Mode: String = ModeState.handle(SetModeState()),
-                        player2Mode: String = ModeState.handle(SetModeState()),
+                        player1Mode: ModeState = SetModeState(),
+                        player2Mode: ModeState = SetModeState(),
                         tmpCell: (Int, Int) = (-1, -1),
                         roundCounter: Int = 0,
-                        setCounter: Int = 0,
                         borderToMoveMode: Int = 18,
                         update: (Int, Int) = (-1, -1),
                         winner: Int = 0) {
@@ -24,7 +23,7 @@ case class RoundManager(field: FieldInterface,
   def whiteTurn(): Boolean = roundCounter % 2 == 0
 
   def handleClick(row: Int, col: Int): RoundManager = {
-    (ModeState.whichState(if (blackTurn()) player2Mode else player1Mode) match {
+    ((if (blackTurn()) player2Mode else player1Mode) match {
       case SetModeState() => set((row, col))
       case RemoveModeState() => remove((row, col))
       case MoveModeState() => move((row, col))
@@ -41,27 +40,27 @@ case class RoundManager(field: FieldInterface,
 
     if (field.millState != MillState.handle(NoMillState())) {
       MillState.whichState(field.millState) match {
-        case WhiteMillState() => player1Mode = ModeState.handle(RemoveModeState())
-        case BlackMillState() => player2Mode = ModeState.handle(RemoveModeState())
+        case WhiteMillState() => player1Mode = RemoveModeState()
+        case BlackMillState() => player2Mode = RemoveModeState()
       }
     } else if (roundCounter < borderToMoveMode) {
-      player1Mode = ModeState.handle(SetModeState())
-      player2Mode = ModeState.handle(SetModeState())
+      player1Mode = SetModeState()
+      player2Mode = SetModeState()
       if (roundCounter == borderToMoveMode - 1) {
-        player1Mode = ModeState.handle(MoveModeState())
+        player1Mode = MoveModeState()
       }
     } else if (placedBlackStones == 3 || placedWhiteStones == 3) {
-      player1Mode = ModeState.handle(MoveModeState())
-      player2Mode = ModeState.handle(MoveModeState())
+      player1Mode = MoveModeState()
+      player2Mode = MoveModeState()
       if (placedWhiteStones == 3) {
-        player1Mode = ModeState.handle(FlyModeState())
+        player1Mode = FlyModeState()
       }
       if (placedBlackStones == 3) {
-        player2Mode = ModeState.handle(FlyModeState())
+        player2Mode = FlyModeState()
       }
     } else {
-      player1Mode = ModeState.handle(MoveModeState())
-      player2Mode = ModeState.handle(MoveModeState())
+      player1Mode = MoveModeState()
+      player2Mode = MoveModeState()
     }
     copy(player1Mode = player1Mode, player2Mode = player2Mode)
   }
@@ -112,7 +111,7 @@ case class RoundManager(field: FieldInterface,
   private def checkIfCanMove(): Boolean = {
     // checks if the player has a cell where it can move to
     // if not it returns false
-    if ((whiteTurn() && player1Mode == "MoveMode") || (blackTurn() && player2Mode == "MoveMode")) {
+    if ((whiteTurn() && player1Mode.handle == "MoveMode") || (blackTurn() && player2Mode.handle == "MoveMode")) {
       val playerColor: Color.Value = if (blackTurn()) Color.black else Color.white
       field.cellsWithIndex
         .filter(c => c._2.content.color == playerColor)
@@ -123,9 +122,9 @@ case class RoundManager(field: FieldInterface,
   }
 
   private def checkIfHasOnly3Stones(): Boolean = {
-    if (blackTurn() && player2Mode != "SetMode") {
+    if (blackTurn() && player2Mode.handle != "SetMode") {
       field.placedBlackStones() < 3
-    } else if (whiteTurn() && player1Mode != "SetMode") {
+    } else if (whiteTurn() && player1Mode.handle != "SetMode") {
       field.placedWhiteStones() < 3
     } else {
       false

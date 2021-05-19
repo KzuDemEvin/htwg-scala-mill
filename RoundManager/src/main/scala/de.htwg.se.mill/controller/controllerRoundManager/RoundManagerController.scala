@@ -1,5 +1,6 @@
 package de.htwg.se.mill.controller.controllerRoundManager
 
+import de.htwg.se.mill.model._
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.javadsl.settings.ConnectionPoolSettings
@@ -24,8 +25,12 @@ import scala.util.{Failure, Success}
 class RoundManagerController @Inject()(var field: FieldInterface) extends RoundManagerControllerInterface {
   var mgr: RoundManager = RoundManager(field)
   val injector: Injector = Guice.createInjector(new RoundManagerModule)
-  private val undoManager: UndoManager = new UndoManager
-  val playerHttpServer: String = sys.env.getOrElse("PLAYERHTTPSERVER", "localhost:8081")
+  private lazy val undoManager: UndoManager = new UndoManager
+  lazy val playerHttpServer: String = sys.env.getOrElse("PLAYERHTTPSERVER", "localhost:8081")
+
+  implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
+  implicit val executionContext: ExecutionContextExecutor = system.executionContext
+
   doStep()
 
   def handleClick(row: Int, col: Int): String = {
@@ -41,7 +46,7 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
     fieldAsJson()
   }
 
-  def undo() = {
+  def undo(): String = {
     print(s"Undo called!\n")
     mgr = undoManager.undoStep() match {
       case Some(roundManager) => roundManager.copy()
@@ -62,7 +67,7 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
   def setField(fieldAsString: String): String = {
     print(s"Setting field called!\n")
     val field: FieldInterface = jsonToField(fieldAsString)
-    mgr = mgr.copy(field = field, roundCounter = field.savedRoundCounter, player1Mode = field.player1Mode, player2Mode = field.player2Mode)
+    mgr = mgr.copy(field = field, roundCounter = field.savedRoundCounter, player1Mode = ModeState.whichState(field.player1Mode), player2Mode = ModeState.whichState(field.player2Mode))
     fieldAsJson()
   }
 
@@ -93,9 +98,9 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
     new Gson().toJson(mgr.winner)
   }
 
-  def winnerText(): String = {
+  def winnerText(): Future[String] = {
     print(s"WinnerText called!\n")
-    val player: String = blockRequest(s"http://$playerHttpServer/player/name?number=${winner+1}", GET, s"Player ${(mgr.winner % 2) + 1}")
+    val player: String = blockRequest(s"http://$playerHttpServer/player/name?number=${winner + 1}", GET, s"Player ${(mgr.winner % 2) + 1}")
     val winnerText: String = {
       mgr.winner match {
         case 2 => " wins! (white)"
@@ -130,11 +135,11 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
   def millState(): String = new Gson().toJson(mgr.field.millState)
 
   def fieldAsJson(): String = {
-    val fieldAsJson = Json.obj(
+    Json.prettyPrint(Json.obj(
       "field" -> Json.obj(
         "roundCounter" -> JsNumber(mgr.roundCounter),
-        "player1Mode" -> JsString(mgr.player1Mode),
-        "player2Mode" -> JsString(mgr.player2Mode),
+        "player1Mode" -> JsString(mgr.player1Mode.handle),
+        "player2Mode" -> JsString(mgr.player2Mode.handle),
         "cells" -> Json.toJson(
           for {
             row <- 0 until mgr.field.size
@@ -148,8 +153,7 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
           }
         )
       )
-    )
-    Json.prettyPrint(fieldAsJson)
+    ))
   }
 
   def jsonToField(fieldInJson: String): FieldInterface = {
@@ -179,14 +183,10 @@ class RoundManagerController @Inject()(var field: FieldInterface) extends RoundM
   def fieldAsString(): String = mgr.field.toString
 
   private def sendRequest(uri: String, method: HttpMethod, errMsg: String = "Something went wrong."): Future[HttpResponse] = {
-    implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
-    implicit val executionContext: ExecutionContextExecutor = system.executionContext
     Http().singleRequest(HttpRequest(method = method, uri = uri))
   }
 
   private def unmarshal(value: HttpResponse): Future[String] = {
-    implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
-    implicit val executionContext: ExecutionContextExecutor = system.executionContext
     Unmarshal(value.entity).to[String]
   }
 
