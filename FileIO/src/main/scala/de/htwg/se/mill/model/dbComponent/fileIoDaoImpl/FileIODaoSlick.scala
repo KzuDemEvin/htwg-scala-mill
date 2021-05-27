@@ -9,8 +9,7 @@ import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.MySQLProfile.api._
 import slick.sql.SqlAction
 
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContextExecutor, Future}
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
 case class FileIODaoSlick() extends FileIODaoInterface {
   val databaseUrl: String = "jdbc:mysql://" + sys.env.getOrElse("DATABASE_HOST", "localhost:3306") + "/" + sys.env.getOrElse("MYSQL_DATABASE", "mill") + "?serverTimezone=UTC&useSSL=false"
@@ -31,7 +30,7 @@ case class FileIODaoSlick() extends FileIODaoInterface {
 
   override def save(field: String): Unit = {
     printf(s"Saving file in MySQL\n")
-    Await.ready(database.run(fileIOTable += (0, field)), Duration.Inf)
+    database.run(fileIOTable += (0, field))
   }
 
   override def load(fileIoID: String): Future[String] = {

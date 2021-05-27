@@ -7,9 +7,9 @@ import slick.jdbc.JdbcBackend
 import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.MySQLProfile.api._
 
-import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 
 case class PlayerDaoSlick() extends PlayerDaoInterface {
   val databaseUrl: String = "jdbc:mysql://" + sys.env.getOrElse("DATABASE_HOST", "localhost:3306") + "/" + sys.env.getOrElse("MYSQL_DATABASE", "mill") + "?serverTimezone=UTC&useSSL=false"
@@ -33,11 +33,10 @@ case class PlayerDaoSlick() extends PlayerDaoInterface {
     Await.ready(database.run(playerTable += (0, player.name, player.amountStones, player.mode)), Duration.Inf)
   }
 
-  override def load(playerId: Int): Player = {
+  override def load(playerId: String): Future[Any] = {
     printf(s"Loading player $playerId in MySQL\n")
-    val playerIdQuery = playerTable.filter(_.id === playerId).result.head
-    val player@(id, name, amountStones, mode) = Await.result(database.run(playerIdQuery), Duration.Inf)
-    Player.apply(name, amountStones).changeMode(mode)
+    val playerIdQuery = playerTable.filter(_.id === playerId.toInt).result.head
+    database.run(playerIdQuery)
   }
 
   override def load(): Map[Int, Player] = {

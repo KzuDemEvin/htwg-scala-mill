@@ -13,6 +13,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 class FileIOController extends FileIOControllerInterface {
+
   val fileIO: FileIO = new FileIO
   val injector: Injector = Guice.createInjector(new FileIOModule)
   var daoInterface: FileIODaoInterface = injector.instance[FileIODaoInterface](Names.named("mongo"))
@@ -27,7 +28,8 @@ class FileIOController extends FileIOControllerInterface {
 
   override def load(filename: Option[String]): String = {
     printf(s"Loading file ${filename.getOrElse("")}\n")
-    fileIO.load(filename)
+    val field = Await.result(fileIO.load(filename), Duration.Inf)
+    field
   }
 
   override def save(fieldInJson: String, filename: Option[String]): Unit = {

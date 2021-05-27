@@ -1,5 +1,7 @@
 package de.htwg.se.mill.controller.controllerBaseImpl
 
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
 import com.google.gson.Gson
 import com.google.inject.name.Names
 import com.google.inject.{Guice, Injector}
@@ -8,8 +10,15 @@ import de.htwg.se.mill.controller.PlayerControllerInterface
 import de.htwg.se.mill.model.dbComponent.PlayerDaoInterface
 import de.htwg.se.mill.model.playerComponent.Player
 import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
+import play.api.libs.json.{JsValue, Json}
+
+import scala.concurrent.ExecutionContextExecutor
+import scala.util.{Failure, Success}
 
 class PlayerController extends PlayerControllerInterface {
+  implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
+  implicit val executionContext: ExecutionContextExecutor = system.executionContext
+
   val injector: Injector = Guice.createInjector(new PlayerModule)
   var daoInterface: PlayerDaoInterface = injector.instance[PlayerDaoInterface](Names.named("mongo"))
   var player1: Player = Player(name = "No name")
@@ -65,7 +74,26 @@ class PlayerController extends PlayerControllerInterface {
 
   override def save(number: Int): Unit = daoInterface.save(getPlayer(number))
 
-  override def load(id: Int, number: Int): Player = setPlayer(number, daoInterface.load(id))
+  override def load(id: String, number: Int): Unit = {
+    daoInterface.load(id).onComplete {
+      case Success(player) => {
+        player match {
+          case (id: Int, name: String, amountStones: Int, mode: String) => {
+            val tmp: Player = Player.apply(name, amountStones).changeMode(mode)
+            setPlayer(number, tmp)
+          }
+          case (jsonString: String) => {
+            val json: JsValue = Json.parse(jsonString)
+            val name = (json \ "name").get.toString().replaceAll("\"", "")
+            val amountStones = (json \ "amountStones").get.toString().toInt
+            val mode = (json \ "mode").get.toString().replaceAll("\"", "")
+            setPlayer(number, Player.apply(name, amountStones).changeMode(mode))
+          }
+        }
+      }
+      case Failure(_) => print(s"Something went wrong when loading player ${number}!\n")
+    }
+  }
 
   override def load(): Map[Int, Player] = daoInterface.load()
 

@@ -52,7 +52,10 @@ class PlayerHttpServer(playerController: PlayerControllerInterface) {
         path(uriPath / "db") {
           get {
             parameters("id", "number") {
-              (id, number) => postResponse(playerController.toJson(playerController.load(id.toInt, number.toInt)))
+              (id, number) => {
+                playerController.load(id, number.toInt)
+                postResponse("Success")
+              }
             }
           } ~
           post {

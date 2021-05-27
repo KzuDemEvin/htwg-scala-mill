@@ -1,10 +1,18 @@
 package de.htwg.se.mill.model.fileIoComponent.fileIoComponent.fileIoXmlImpl
 
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
 import de.htwg.se.mill.model.fileIoComponent.fileToXmlImpl.FileIO
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
+import scala.concurrent.ExecutionContextExecutor
+import scala.util.{Failure, Success}
+
 class FileIOSpec extends AnyWordSpec with Matchers {
+  implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
+  implicit val executionContext: ExecutionContextExecutor = system.executionContext
+
   "A XML FileIO" when {
     "new" should {
       val fileIo = new FileIO
@@ -13,10 +21,14 @@ class FileIOSpec extends AnyWordSpec with Matchers {
         fileIo.save(xmlFieldString, Some("field_fileIO_Spec.xml"))
       }
       "Should be able to load the game" in {
-        val loadedField = fileIo.load(Some("field_fileIO_Spec.xml"))
-        loadedField.contains("roundCounter") should be(true)
-        loadedField.contains("player1Mode") should be(true)
-        loadedField.contains("player2Mode") should be(true)
+        fileIo.load(Some("field_fileIO_Spec.xml")).onComplete {
+          case Success(loadedField) => {
+            loadedField.contains("roundCounter") should be(true)
+            loadedField.contains("player1Mode") should be(true)
+            loadedField.contains("player2Mode") should be(true)
+          }
+          case Failure(_) => print(_)
+        }
       }
     }
   }
