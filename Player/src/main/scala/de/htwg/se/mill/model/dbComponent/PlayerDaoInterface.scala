@@ -8,7 +8,7 @@ trait PlayerDaoInterface {
 
   def save(player: Player): Unit
 
-  def load(id: Int): Future[Any]
+  def load(id: String): Future[Any]
 
   def load(): Map[Int, Player]
 

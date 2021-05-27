@@ -33,9 +33,9 @@ case class PlayerDaoSlick() extends PlayerDaoInterface {
     Await.ready(database.run(playerTable += (0, player.name, player.amountStones, player.mode)), Duration.Inf)
   }
 
-  override def load(playerId: Int): Future[Any] = {
+  override def load(playerId: String): Future[Any] = {
     printf(s"Loading player $playerId in MySQL\n")
-    val playerIdQuery = playerTable.filter(_.id === playerId).result.head
+    val playerIdQuery = playerTable.filter(_.id === playerId.toInt).result.head
     database.run(playerIdQuery)
   }
 

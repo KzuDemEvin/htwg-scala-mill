@@ -74,7 +74,7 @@ class PlayerController extends PlayerControllerInterface {
 
   override def save(number: Int): Unit = daoInterface.save(getPlayer(number))
 
-  override def load(id: Int, number: Int): Unit = {
+  override def load(id: String, number: Int): Unit = {
     daoInterface.load(id).onComplete {
       case Success(player) => {
         player match {

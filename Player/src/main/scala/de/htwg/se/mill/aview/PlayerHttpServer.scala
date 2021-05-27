@@ -50,7 +50,7 @@ class PlayerHttpServer(playerController: PlayerControllerInterface) {
           get {
             parameters("id", "number") {
               (id, number) => {
-                playerController.load(id.toInt, number.toInt)
+                playerController.load(id, number.toInt)
                 postResponse("Success")
               }
             }

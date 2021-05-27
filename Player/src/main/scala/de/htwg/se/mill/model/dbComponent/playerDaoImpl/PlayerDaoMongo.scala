@@ -5,7 +5,9 @@ import akka.actor.typed.scaladsl.Behaviors
 import com.google.gson.Gson
 import de.htwg.se.mill.model.dbComponent.PlayerDaoInterface
 import de.htwg.se.mill.model.playerComponent.Player
+import org.mongodb.scala.bson.ObjectId
 import org.mongodb.scala.model.Filters.equal
+import org.mongodb.scala.model.Projections.excludeId
 import org.mongodb.scala.result.InsertOneResult
 import org.mongodb.scala.{Document, MongoClient, MongoCollection, MongoDatabase, Observer, SingleObservable}
 import play.api.libs.json.{JsValue, Json}
@@ -35,9 +37,9 @@ case class PlayerDaoMongo() extends PlayerDaoInterface {
     })
   }
 
-  override def load(id: Int): Future[Any] = {
+  override def load(id: String): Future[Any] = {
     printf(s"Loading player $id in MongoDB\n")
-    playerCollection.find(equal("_id", id)).head().map(_.toJson())
+    playerCollection.find(equal("_id", new ObjectId(id))).projection(excludeId()).head().map(_.toJson())
   }
 
   override def load(): Map[Int, Player] = {
