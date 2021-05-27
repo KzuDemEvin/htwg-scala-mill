@@ -5,6 +5,8 @@ import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
 import de.htwg.se.mill.model.fieldComponent.{Color, _}
 import play.api.libs.json.Json
 
+import scala.math.abs
+
 case class RoundManager(field: FieldInterface,
                         player1Mode: ModeState = SetModeState(),
                         player2Mode: ModeState = SetModeState(),
@@ -18,9 +20,9 @@ case class RoundManager(field: FieldInterface,
     this(field = new Field(size = 7))
   }
 
-  def blackTurn(): Boolean = roundCounter % 2 == 1
+  def blackTurn(): Boolean = abs(roundCounter % 2) == 1
 
-  def whiteTurn(): Boolean = roundCounter % 2 == 0
+  def whiteTurn(): Boolean = abs(roundCounter % 2) == 0
 
   def handleClick(row: Int, col: Int): RoundManager = {
     ((if (blackTurn()) player2Mode else player1Mode) match {

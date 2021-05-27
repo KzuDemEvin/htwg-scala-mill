@@ -4,7 +4,7 @@ import de.htwg.se.mill.controller.controllerBaseImpl.FileIOController
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class FileIOSpec extends AnyWordSpec with Matchers {
+class FileIOControllerSpec extends AnyWordSpec with Matchers {
   "A JSON FileIO" when {
     "new" should {
       val controller: FileIOController = new FileIOController

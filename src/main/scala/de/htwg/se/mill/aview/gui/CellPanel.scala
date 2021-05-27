@@ -107,7 +107,7 @@ class CellPanel(row: Int, column: Int, controller: ControllerInterface) extends 
     listenTo(controller)
     listenTo(setButton)
     reactions += {
-      case ButtonClicked(component) =>
+      case ButtonClicked(_) =>
         controller.handleClick(row, column)({
           case Some(_) => redraw()
         })

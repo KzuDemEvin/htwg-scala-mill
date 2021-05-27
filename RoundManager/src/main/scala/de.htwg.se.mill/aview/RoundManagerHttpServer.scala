@@ -8,7 +8,7 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.{Http, server}
 import de.htwg.se.mill.controller.controllerRoundManager.RoundManagerControllerInterface
 
-import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
 class RoundManagerHttpServer(roundManagerController: RoundManagerControllerInterface) {
   implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "roundmanager")
@@ -120,7 +120,7 @@ class RoundManagerHttpServer(roundManagerController: RoundManagerControllerInter
         }
     )
 
-  val bindingFuture = Http().newServerAt(interface, port).bind(route)
+  val bindingFuture: Future[Http.ServerBinding] = Http().newServerAt(interface, port).bind(route)
 
   print(s"RoundManager Server is online at http://$interface:$port/\n")
 

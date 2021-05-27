@@ -134,7 +134,7 @@ class Controller extends ControllerInterface with Publisher {
   }
 
   def loadDB(id: Int): Unit = {
-    val field: String = blockRequest(s"http://$fileIOHttpServer/fileio/db?id=${id}", GET)
+    val field: String = blockRequest(s"http://$fileIOHttpServer/fileio/db?id=$id", GET)
     Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$roundManagerHttpServer/field/setField", entity = Json.prettyPrint(Json.parse(field))))
     gameState = GameState.handle(LoadState())
     publish(new FieldChanged)
@@ -170,7 +170,7 @@ class Controller extends ControllerInterface with Publisher {
 
   def getWinnerText(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://$roundManagerHttpServer/winnerText")(oncomplete)
 
-  private def sendRequest(uri: String, method: HttpMethod, errMsg: String = "Something went wrong."): Future[HttpResponse] = {
+  private def sendRequest(uri: String, method: HttpMethod): Future[HttpResponse] = {
     implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
     implicit val executionContext: ExecutionContextExecutor = system.executionContext
     Http().singleRequest(HttpRequest(method = method, uri = uri))
