@@ -1,5 +1,7 @@
 package de.htwg.se.mill.model.dbComponent.playerDaoImpl
 
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
 import com.google.gson.Gson
 import de.htwg.se.mill.model.dbComponent.PlayerDaoInterface
 import de.htwg.se.mill.model.playerComponent.Player
@@ -8,10 +10,13 @@ import org.mongodb.scala.result.InsertOneResult
 import org.mongodb.scala.{Document, MongoClient, MongoCollection, MongoDatabase, Observer, SingleObservable}
 import play.api.libs.json.{JsValue, Json}
 
-import scala.concurrent.Await
 import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContextExecutor, Future}
 
 case class PlayerDaoMongo() extends PlayerDaoInterface {
+  implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
+  implicit val executionContext: ExecutionContextExecutor = system.executionContext
+
   val uri: String = "mongodb://root:MILL@" + sys.env.getOrElse("MONGODB_HOST", "localhost:27017")
   val client: MongoClient = MongoClient(uri)
   val database: MongoDatabase = client.getDatabase("mill")
@@ -30,13 +35,9 @@ case class PlayerDaoMongo() extends PlayerDaoInterface {
     })
   }
 
-  override def load(id: Int): Player = {
+  override def load(id: Int): Future[Any] = {
     printf(s"Loading player $id in MongoDB\n")
-    val json: JsValue = Json.parse(Await.result(playerCollection.find(equal("_id", id)).first().head(), Duration.Inf).toJson())
-    val name = (json \ "name").get.toString().replaceAll("\"", "")
-    val amountStones = (json \ "amountStones").get.toString().toInt
-    val mode = (json \ "mode").get.toString().replaceAll("\"", "")
-    Player.apply(name, amountStones).changeMode(mode)
+    playerCollection.find(equal("_id", id)).head().map(_.toJson())
   }
 
   override def load(): Map[Int, Player] = {
