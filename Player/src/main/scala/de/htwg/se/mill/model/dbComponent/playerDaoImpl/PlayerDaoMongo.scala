@@ -27,7 +27,7 @@ case class PlayerDaoMongo() extends PlayerDaoInterface {
 
   override def save(player: Player): Unit = {
     printf(s"Saving player ${player.name} in MongoDB\n")
-    val doc: Document = Document("_id" -> 0, "name" -> player.name, "amountStones" -> player.amountStones, "mode" -> player.mode)
+    val doc: Document = Document("name" -> player.name, "amountStones" -> player.amountStones, "mode" -> player.mode)
 
     val insertObservable: SingleObservable[InsertOneResult] = playerCollection.insertOne(doc)
     insertObservable.subscribe(new Observer[InsertOneResult] {
