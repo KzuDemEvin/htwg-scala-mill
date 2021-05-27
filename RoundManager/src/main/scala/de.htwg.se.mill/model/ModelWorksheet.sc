@@ -31,7 +31,6 @@ print(fieldAsString
 )
 
 
-
 print(field)
 /*
 field = field.set(0,0, Cell(true, Stone("b+")))
@@ -61,7 +60,7 @@ field.toString
 //  printf("\n")
 //}
 
-field = field.moveStone(0,0,3,0)._1
+field = field.moveStone(0, 0, 3, 0)._1
 field.toString
 
 
