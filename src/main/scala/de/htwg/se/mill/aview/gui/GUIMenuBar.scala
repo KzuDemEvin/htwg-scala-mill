@@ -19,6 +19,10 @@ class GUIMenuBar(controller: ControllerInterface) extends MenuBar {
         mnemonic = Key.F
         contents += new MenuItem(Action("Save") {controller.save})
         contents += new MenuItem(Action("Load") {controller.load})
+        contents += new Menu("Change Savetype") {
+          contents += new MenuItem(Action("Database") { controller.changeSaveMethod("db") })
+          contents += new MenuItem(Action("File") { controller.changeSaveMethod("fileio") })
+        }
       }
       contents += new Menu("Edit") {
         mnemonic = Key.E
