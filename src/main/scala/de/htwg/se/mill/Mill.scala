@@ -17,7 +17,7 @@ object Mill {
     val gui = new GUI(controller)
   }
   val webserver: HttpServer = HttpServer(controller)
-  var input: String = _
+  var input: String = ""
   controller.createEmptyField(defaultSize)
 
   def main(args: Array[String]): Unit = {
