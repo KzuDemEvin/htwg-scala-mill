@@ -47,12 +47,22 @@ case class HttpServer(controller: ControllerInterface) {
             fieldToHtml
           }
         } ~
-        path(uriPath / "save") {
-          get {
-            controller.save()
-            fieldToHtml
+        path(uriPath / "changeSaveMethod") {
+          put {
+            parameters("type") {
+              dbType => {
+                controller.changeSaveMethod(dbType)
+                complete(HttpEntity(ContentTypes.`application/json`, "Database changed!"))
+              }
+            }
           }
-        } ~
+        },
+      path(uriPath / "save") {
+        get {
+          controller.save()
+          fieldToHtml
+        }
+      } ~
         path(uriPath / "save" / "db") {
           get {
             controller.saveDB()

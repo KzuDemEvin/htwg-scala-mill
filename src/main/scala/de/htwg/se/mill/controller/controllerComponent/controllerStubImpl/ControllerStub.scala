@@ -25,6 +25,7 @@ class ControllerStub extends ControllerInterface {
   override def handleClick(row: Int, column: Int)(oncomplete: Option[String] => Unit): Unit = oncomplete(Some((row, column).toString()))
   override def undo(): Unit = {}
   override def redo(): Unit = {}
+  override def changeSaveMethod(method: String): Unit = {}
   override def save(): Unit = {}
   override def load(): Unit = {}
   override def saveDB(): Unit = {}
@@ -36,4 +37,5 @@ class ControllerStub extends ControllerInterface {
   override def getWinner(oncomplete: Option[String] => Unit): Unit = oncomplete(Some(winner.toString))
   override def getWinnerText(oncomplete: Option[String] => Unit): Unit = oncomplete(Some(winnerText))
   override def getMillState(oncomplete: Option[String] => Unit): Unit = oncomplete(Some(millState))
+
 }
