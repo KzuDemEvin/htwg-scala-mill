@@ -10,12 +10,18 @@ class ControllerSpec extends AnyWordSpec with Matchers {
   val normalSize = 7
   "A Controller" when {
     "new" should {
-      val controllerUndoRedo = new Controller
+      val controller = new Controller
        "be able to undo and redo" in {
-         controllerUndoRedo.undo()
-         controllerUndoRedo.gameState should be("Undo")
-         controllerUndoRedo.redo()
-         controllerUndoRedo.gameState should be("Redo")
+         controller.undo()
+         controller.gameState should be("Undo")
+         controller.redo()
+         controller.gameState should be("Redo")
+      }
+      "be able to save and load a field" in {
+        controller.save()
+        controller.gameState should be("Game saved")
+        controller.load()
+        controller.gameState should be("Game loaded")
       }
     }
     "ready to play" should {

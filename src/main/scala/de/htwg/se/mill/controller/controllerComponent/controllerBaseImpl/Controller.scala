@@ -125,6 +125,7 @@ class Controller extends ControllerInterface with Publisher {
   }
 
   def save(): Unit = {
+    gameState = GameState.handle(SaveState())
     asyncRequest(s"http://$roundManagerHttpServer/field/json", GET) {
       case Some(field) =>
         Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = saveAddr.format(fileIOHttpServer), entity = Json.prettyPrint(Json.parse(field))))
