@@ -7,13 +7,13 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Route, StandardRoute}
 import de.htwg.se.mill.controller.controllerComponent.ControllerInterface
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
 case class HttpServer(controller: ControllerInterface) {
   val size: Int = 7
 
-  implicit val system = ActorSystem("mill")
-  implicit val executionContext = system.dispatcher
+  implicit val system: ActorSystem = ActorSystem("mill")
+  implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
   val interface: String = "0.0.0.0"
   val port: Int = 8080
@@ -47,12 +47,22 @@ case class HttpServer(controller: ControllerInterface) {
             fieldToHtml
           }
         } ~
-        path(uriPath / "save") {
-          get {
-            controller.save()
-            fieldToHtml
+        path(uriPath / "changeSaveMethod") {
+          put {
+            parameters("type") {
+              dbType => {
+                controller.changeSaveMethod(dbType)
+                complete(HttpEntity(ContentTypes.`application/json`, "Database changed!"))
+              }
+            }
           }
-        } ~
+        },
+      path(uriPath / "save") {
+        get {
+          controller.save()
+          fieldToHtml
+        }
+      } ~
         path(uriPath / "save" / "db") {
           get {
             controller.saveDB()
@@ -76,13 +86,13 @@ case class HttpServer(controller: ControllerInterface) {
         } ~
         path(uriPath / "undo") {
           get {
-            controller.undo
+            controller.undo()
             fieldToHtml
           }
         } ~
         path(uriPath / "redo") {
           get {
-            controller.redo
+            controller.redo()
             fieldToHtml
           }
         } ~
@@ -159,7 +169,7 @@ case class HttpServer(controller: ControllerInterface) {
 
   val bindingFuture: Future[Http.ServerBinding] = Http().newServerAt(interface, port).bind(route)
 
-  println(s"Mill server is online at http://${interface}:${port}/${uriPath}")
+  println(s"Mill server is online at http://$interface:$port/$uriPath")
 
   def unbind(): Unit = {
     bindingFuture

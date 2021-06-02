@@ -45,6 +45,7 @@ class ControllerStubSpec extends AnyWordSpec with Matchers {
         controllerStub.handleClick(100, 100)({ case Some(value) => value should be("(100,100)")})
       }
       "handle undo, redo, save and load" in {
+        controllerStub.changeSaveMethod("db")
         controllerStub.undo()
         controllerStub.redo()
         controllerStub.save()

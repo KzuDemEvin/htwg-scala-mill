@@ -18,6 +18,7 @@ trait ControllerInterface extends Publisher {
   def handleClick(row: Int, column: Int)(oncomplete: Option[String] => Unit): Unit
   def undo(): Unit
   def redo(): Unit
+  def changeSaveMethod(method: String): Unit
   def save(): Unit
   def load(): Unit
   def saveDB(): Unit

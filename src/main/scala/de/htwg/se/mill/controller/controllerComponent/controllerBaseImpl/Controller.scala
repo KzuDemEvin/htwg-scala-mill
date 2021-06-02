@@ -6,6 +6,9 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpMethods.{GET, POST}
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.unmarshalling.Unmarshal
+import com.google.inject.name._
+import com.google.inject.{Guice, Inject, Injector, Key}
+import de.htwg.se.mill.MillModule
 import de.htwg.se.mill.controller.controllerComponent._
 import play.api.libs.json.{JsValue, Json}
 
@@ -17,9 +20,14 @@ import scala.util.{Failure, Success}
 class Controller extends ControllerInterface with Publisher {
   implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
   implicit val executionContext: ExecutionContextExecutor = system.executionContext
+  val injector: Injector = Guice.createInjector(new MillModule)
   var gameState: String = GameState.handle(NewState())
   var cachedFieldAsHtml: String = ""
 
+  @Inject
+  @Named("savefio") var saveAddr: String = _
+  @Inject
+  @Named("loadfio") var loadAddr: String = _
 
   val playerHttpServer: String = sys.env.getOrElse("PLAYERHTTPSERVER", "localhost:8081")
   val fileIOHttpServer: String = sys.env.getOrElse("FILEIOHTTPSERVER", "localhost:8082")
@@ -103,41 +111,63 @@ class Controller extends ControllerInterface with Publisher {
     gameState = GameState.handle(RedoState())
   }
 
+  def changeSaveMethod(method: String): Unit = {
+    method match {
+      case "db" =>
+        printf(s"Changed to database saving.\n")
+        saveAddr = injector.getInstance(Key.get(classOf[String], Names.named("savedb")))
+        loadAddr = injector.getInstance(Key.get(classOf[String], Names.named("loaddb")))
+      case _ =>
+        printf(s"Changed to file saving.\n")
+        saveAddr = injector.getInstance(Key.get(classOf[String], Names.named("savefio")))
+        loadAddr = injector.getInstance(Key.get(classOf[String], Names.named("loadfio")))
+    }
+  }
+
   def save(): Unit = {
-    val field: String = blockRequest(s"http://$roundManagerHttpServer/field/json", GET, "failed")
-    if (field != "failed") {
-      Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$fileIOHttpServer/fileio", entity = Json.prettyPrint(Json.parse(field))))
-      gameState = GameState.handle(SaveState())
-      publish(new CellChanged)
-    } else {
-      print(s"Saving failed!")
+    asyncRequest(s"http://$roundManagerHttpServer/field/json", GET) {
+      case Some(field) =>
+        Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = saveAddr.format(fileIOHttpServer), entity = Json.prettyPrint(Json.parse(field))))
+        gameState = GameState.handle(SaveState())
+        publish(new CellChanged)
+      case None =>
+        print(s"Saving failed\n");
     }
   }
 
   def load(): Unit = {
     gameState = GameState.handle(LoadState())
-    val field: String = blockRequest(s"http://$fileIOHttpServer/fileio", GET, "failed")
-    if (field != "failed") {
-      Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$roundManagerHttpServer/field/setField", entity = Json.prettyPrint(Json.parse(field))))
-      gameState = GameState.handle(LoadState())
-      publish(new FieldChanged)
-    } else {
-      print(s"Loading failed!")
+    asyncRequest(s"http://$fileIOHttpServer/fileio", GET) {
+      case Some(field) =>
+        Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$roundManagerHttpServer/field/setField", entity = Json.prettyPrint(Json.parse(field))))
+        gameState = GameState.handle(LoadState())
+        publish(new FieldChanged)
+      case None =>
+        print(s"Loading failed\n");
     }
   }
 
   def saveDB(): Unit = {
-    val field: String = blockRequest(s"http://$roundManagerHttpServer/field/json", GET)
-    Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$fileIOHttpServer/fileio/db", entity = Json.prettyPrint(Json.parse(field))))
-    gameState = GameState.handle(SaveState())
-    publish(new CellChanged)
+    asyncRequest(s"http://$roundManagerHttpServer/field/json", GET) {
+      case Some(field) =>
+        Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$fileIOHttpServer/fileio/db", entity = Json.prettyPrint(Json.parse(field))))
+        gameState = GameState.handle(SaveState())
+        publish(new CellChanged)
+      case None =>
+        print(s"Saving failed\n");
+    }
   }
 
   def loadDB(id: Int): Unit = {
-    val field: String = blockRequest(s"http://$fileIOHttpServer/fileio/db?id=${id}", GET)
-    Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$roundManagerHttpServer/field/setField", entity = Json.prettyPrint(Json.parse(field))))
     gameState = GameState.handle(LoadState())
-    publish(new FieldChanged)
+    asyncRequest(s"http://$fileIOHttpServer/fileio/db?id=$id", GET) {
+      case Some(field) =>
+        Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$roundManagerHttpServer/field/setField", entity = Json.prettyPrint(Json.parse(field))))
+        gameState = GameState.handle(LoadState())
+        publish(new FieldChanged)
+      case None =>
+        print(s"Loading failed\n");
+    }
   }
 
   def isSet(row: Int, col: Int)(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://$roundManagerHttpServer/field/isSet?row=$row&col=$col")(oncomplete)
@@ -170,7 +200,7 @@ class Controller extends ControllerInterface with Publisher {
 
   def getWinnerText(oncomplete: Option[String] => Unit): Unit = asyncRequest(s"http://$roundManagerHttpServer/winnerText")(oncomplete)
 
-  private def sendRequest(uri: String, method: HttpMethod, errMsg: String = "Something went wrong."): Future[HttpResponse] = {
+  private def sendRequest(uri: String, method: HttpMethod): Future[HttpResponse] = {
     implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "SingleRequest")
     implicit val executionContext: ExecutionContextExecutor = system.executionContext
     Http().singleRequest(HttpRequest(method = method, uri = uri))

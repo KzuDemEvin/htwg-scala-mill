@@ -8,7 +8,7 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.{Http, server}
 import de.htwg.se.mill.controller.controllerRoundManager.RoundManagerControllerInterface
 
-import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
 class RoundManagerHttpServer(roundManagerController: RoundManagerControllerInterface) {
   implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "roundmanager")
@@ -19,11 +19,11 @@ class RoundManagerHttpServer(roundManagerController: RoundManagerControllerInter
 
   val route: Route =
     concat(
-        path("undo") {
-          post {
-            postResponse(roundManagerController.undo())
-          }
-        } ~
+      path("undo") {
+        post {
+          postResponse(roundManagerController.undo())
+        }
+      } ~
         path("handleClick") {
           post {
             parameters("row", "col") {
@@ -112,15 +112,15 @@ class RoundManagerHttpServer(roundManagerController: RoundManagerControllerInter
         } ~
         path("winnerText") {
           get {
-            postResponse(roundManagerController.winnerText())
+            complete(roundManagerController.winnerText())
           }
-        }~
-      path("") {
-        complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>RoundManager Server</h1>"))
-      }
+        } ~
+        path("") {
+          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>RoundManager Server</h1>"))
+        }
     )
 
-  val bindingFuture = Http().newServerAt(interface, port).bind(route)
+  val bindingFuture: Future[Http.ServerBinding] = Http().newServerAt(interface, port).bind(route)
 
   print(s"RoundManager Server is online at http://$interface:$port/\n")
 

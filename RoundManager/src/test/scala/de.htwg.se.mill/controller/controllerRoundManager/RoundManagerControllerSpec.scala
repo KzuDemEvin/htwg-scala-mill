@@ -3,10 +3,12 @@ package de.htwg.se.mill.controller.controllerRoundManager
 import com.google.gson.Gson
 import de.htwg.se.mill.model.fieldComponent.Color
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
-
-import scala.language.reflectiveCalls
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.language.reflectiveCalls
+import scala.util.{Failure, Success}
 
 class RoundManagerControllerSpec extends AnyWordSpec with Matchers {
   val normalSize = 7
@@ -144,7 +146,7 @@ class RoundManagerControllerSpec extends AnyWordSpec with Matchers {
 
         controller.handleClick(1, 1) ; controller.handleClick(3, 1) // white
         controller.handleClick(3, 5) // remove
-        controller.mgr.player2Mode should be("FlyMode")
+        controller.mgr.player2Mode.handle should be("FlyMode")
         controller.mgr.field.placedBlackStones() should be(3)
         printf(controller.mgr.field.toString)
       }
@@ -258,7 +260,10 @@ class RoundManagerControllerSpec extends AnyWordSpec with Matchers {
           controller.handleClick(1, 1) //remove
           controller.mgr.winner should be(1)
           controller.winner() should be(new Gson().toJson(1))
-          controller.winnerText() should be(new Gson().toJson("Player 2 wins! (black)"))
+          controller.winnerText().onComplete({
+            case Success(winnerText) => winnerText should be(new Gson().toJson("Player 2 wins! (black)"))
+            case Failure(e) => e
+          })
         }
         "white wins" in {
           val field = new Field(7)
@@ -321,7 +326,10 @@ class RoundManagerControllerSpec extends AnyWordSpec with Matchers {
           controller.handleClick(5, 3) //remove
           controller.mgr.winner should be(2)
           controller.winner() should be(new Gson().toJson(2))
-          controller.winnerText() should be(new Gson().toJson("Player 1 wins! (white)"))
+          controller.winnerText().onComplete({
+            case Success(winnerText) => winnerText should be(new Gson().toJson("Player 1 wins! (white)"))
+            case Failure(e) => e
+          })
         }
       }
     }

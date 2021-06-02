@@ -1,8 +1,8 @@
 package de.htwg.se.mill.model.roundManagerComponent
 
 import de.htwg.se.mill.controller.controllerRoundManager.RoundManagerController
-import de.htwg.se.mill.model.{FlyModeState, ModeState, MoveModeState, SetModeState}
 import de.htwg.se.mill.model.fieldComponent.fieldBaseImpl.Field
+import de.htwg.se.mill.model.{FlyModeState, MoveModeState, SetModeState}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -15,8 +15,8 @@ class RoundManagerSpec extends AnyWordSpec with Matchers {
         val field = new Field(normalSize)
         val controller = new RoundManagerController(field)
         "both should be in SetMode" in {
-          controller.mgr.player1Mode should be(ModeState.handle(SetModeState()))
-          controller.mgr.player2Mode should be(ModeState.handle(SetModeState()))
+          controller.mgr.player1Mode should be(SetModeState())
+          controller.mgr.player2Mode should be(SetModeState())
         }
         "player 1 should be in MoveMode and player 2 in RemoveMode" in {
           controller.handleClick(0,0)
@@ -62,15 +62,15 @@ class RoundManagerSpec extends AnyWordSpec with Matchers {
           controller.handleClick(4,3) //remove
           controller.handleClick(5,3) ; controller.handleClick(6,3)
           controller.handleClick(0,0) //remove
-          controller.mgr.player1Mode should be(ModeState.handle(MoveModeState()))
-          controller.mgr.player2Mode should be(ModeState.handle(MoveModeState()))
+          controller.mgr.player1Mode should be(MoveModeState())
+          controller.mgr.player2Mode should be(MoveModeState())
         }
         "player 1 in FlyMode" in {
           controller.handleClick(1,3) ; controller.handleClick(0,3)
           controller.handleClick(6,3) ; controller.handleClick(5,3)
           controller.handleClick(0,6) //remove
-          controller.mgr.player1Mode should be(ModeState.handle(FlyModeState()))
-          controller.mgr.player2Mode should be(ModeState.handle(MoveModeState()))
+          controller.mgr.player1Mode should be(FlyModeState())
+          controller.mgr.player2Mode should be(MoveModeState())
         }
         "both in fly mode" in {
           controller.handleClick(0,3) ; controller.handleClick(1,3)
@@ -80,8 +80,8 @@ class RoundManagerSpec extends AnyWordSpec with Matchers {
           controller.handleClick(3,0) ; controller.handleClick(6,0)
           controller.handleClick(0,3) ; controller.handleClick(1,3)
           controller.handleClick(6,0) //remove
-          controller.mgr.player1Mode should be(ModeState.handle(FlyModeState()))
-          controller.mgr.player2Mode should be(ModeState.handle(FlyModeState()))
+          controller.mgr.player1Mode should be(FlyModeState())
+          controller.mgr.player2Mode should be(FlyModeState())
         }
       }
     }

@@ -1,7 +1,7 @@
 package de.htwg.se.mill.model.fieldComponent
 
 trait MillState {
-  def handle:String
+  def handle: String
 }
 
 case class WhiteMillState() extends MillState {
@@ -13,7 +13,7 @@ case class BlackMillState() extends MillState {
 }
 
 case class NoMillState() extends MillState {
-  override def handle:String = "No Mill"
+  override def handle: String = "No Mill"
 }
 
 object MillState {
@@ -25,7 +25,7 @@ object MillState {
     }
   }
 
-  def whichState(s:String):MillState = {
+  def whichState(s: String): MillState = {
     s match {
       case "White Mill" => WhiteMillState()
       case "Black Mill" => BlackMillState()
